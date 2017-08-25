@@ -1,0 +1,17 @@
+#content{
+	margin-top: 20px;
+}
+
+.table-questoes {
+	margin-top: 10px;
+	font-size: 12px;
+}
+.table-questoes-opcoes {
+	width: 15%;
+}
+.excluir-alternativa {
+	margin-top: 0px;
+}
+.form-questao {
+	font-size: 12px;
+}

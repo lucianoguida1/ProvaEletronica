@@ -1,0 +1,223 @@
+$(function(){
+	var url_post = '../app.php';	
+	var msg_error = $('#j_error_cadastro');
+ 	
+ 	msg_error.hide();	
+
+ 	$('#modal-adicionar-questao').modal('handleUpdate');
+
+ 	//FUNCÇÃO DE MENSSAGEM PADRÃO MODAL CADASTRO QUESTÃO
+ 	function msgModalQuestao(tipo, msg) {
+ 		msg_error.addClass("alert alert-"+ tipo).text(msg);
+ 		msg_error.fadeIn("slow")		
+		window.setTimeout(function(){ msg_error.fadeOut("slow") }, 3000);
+ 	} 
+
+
+ 	// SCRIPT QUE DA UM FADEOUT NO TAG DE MENSAGEM DO SISTEMA
+ 	$("#msgSistema:visible").delay(3000).fadeOut('slow');
+
+   // INICIO AÇÃO QUE ADICIONA A QUESTÃO NA MODAL COM FORMULÁRIO DE CADASTRO DE ESQUESTÃO
+	var botaoAdicionarQuestao = $('.j_adicionar_questao');
+	var formProva = $('form[name="form-prova"]');
+
+	botaoAdicionarQuestao.click(function(){
+ 		var idProva = formProva.find('input[name="id"]').val();
+			
+		if(idProva != "") {
+			$('#modal-adicionar-questao').modal("show");
+		} else {			
+			$('.j_msg_modal_confirme').empty().html('Para adicionar questão é necessário salvar a prova!<p><strong>Deseja salvar a Prova?<strong></p>');
+			$('#modal-confirme').modal('show');
+		} 
+		return false;
+	})
+	// FIM AÇÃO QUE ADICIONA A QUESTÃO NA MODAL COM FORMULÁRIO DE CADASTRO DE ESQUESTÃO
+	 
+	
+	// INICIO ACAO DE EXCLUIR UMA QUESTÃO DA LISTA DE QUESTÃO
+	var tabelaQuestoes = $('.j_linha_tabela_questoes');		
+
+	tabelaQuestoes.on('click', '.j_excluir', function() {		
+		var acaoDelete = $(this).attr('href');
+		var aId = $(this).attr('id');	
+		var traction = $('tr[id="j_' + aId +'"]');       
+		traction.addClass('alert alert-danger');
+		$.ajax({
+			url: url_post,
+			data: acaoDelete,
+			type: 'post',
+			beforeSend: '',
+			error: function(){
+				msg_error('danger', 'Error na solicitação, procure Administrador!')
+			},
+			success: function(data){
+							
+				if(data == 1) {					
+					traction.fadeOut("slow");						
+				} else {
+					alert('error.........Entre em contato com Administrador!');					
+				}
+			},
+			complete: function(){				
+			}
+		})
+		
+		return false;
+	}); 		
+	// FIM ACAO DE EXCLUIR UMA QUESTÃO DA LISTA DE QUESTÃO
+	 
+	// INICIO ACAO DE ANULA UMA QUESTÃO DA LISTA DE QUESTÃO
+	tabelaQuestoes.on('click', '.j_anular', function() {
+		var acaoDelete = $(this).attr('href');
+		var aId = $(this).attr('id');	
+		var traction = $('tr[id="j_' + aId +'"]');  
+		var alink = $('.j_anular');
+		   
+		
+		$.ajax({
+			url: url_post,
+			data: acaoDelete,
+			type: 'post',
+			beforeSend: '',
+			error: function(){
+				msg_error('danger', 'Error na solicitação, procure Administrador!')
+			},
+			success: function(data){
+							
+				if(data == 1) {					
+					traction.addClass('alert alert-secondary');
+					//alink.removeClass('badge badge-secondary');
+					//alink.addClass('badge badge-success');								
+				} else {
+					traction.removeClass('alert alert-secondary');
+					//alink.removeClass('badge badge-success');
+					//alink.addClass('badge badge-secondary');									
+				}
+			},
+			complete: function(){				
+			}
+		})
+		
+		return false;
+	}); 	
+	// FIM ACAO DE ANULA UMA QUESTÃO DA LISTA DE QUESTÃO
+	
+	//// INICIO ACAO DE EDITAR UMA QUESTÃO DA LISTA DE QUESTÃO 
+	var conteudoQuestao = $('#conteudo-modal');
+	var tabelaQuestoes = $('.j_linha_tabela_questoes');		
+
+	tabelaQuestoes.on('click', '.j_editar', function() {		
+		var acaoEditar = $(this).attr('href');
+		var aId = $(this).attr('id');	
+		var traction = $('tr[id="j_' + aId +'"]');       
+		
+		$.ajax({
+			url: url_post,
+			data: acaoEditar,
+			type: 'post',
+			beforeSend: '',
+			error: function(){
+				msg_error('danger', 'Error na solicitação, procure Administrador!')
+			},
+			success: function(data){							
+				if(data == 0) {					
+					alert('error.........Entre em contato com Administrador!');							
+				} else {
+					conteudoQuestao.empty().html(data);	
+					$('#modal-adicionar-questao').modal("show");			
+				}
+			},
+			complete: function(){				
+			}
+		})
+		
+		return false;
+	}); 	
+	//// FIM ACAO DE EDITAR UMA QUESTÃO DA LISTA DE QUESTÃO 
+	
+	
+	var botaoConfirme = $('.j_confirme-sim');	
+
+	botaoConfirme.click(function(){			
+		$('#modal-confirme').modal('hide');
+		$('.j_salva_prova').trigger('click');			
+	})
+
+
+	var botaoAdicionarAlternativa = $('.j_adicinar_alternativa');
+    var listaAlternativa = $('.j_lista_alternativa');
+    var idAlternativa = 20;
+    var idNome = 0;
+
+	botaoAdicionarAlternativa.click(function(){
+		adicionarAlternativa();
+	})
+
+	function adicionarAlternativa() {
+		listaAlternativa.append('<li id="'+idAlternativa+'" class="list-group-item"><div class="form-check"><label class="form-check-label"><input class="form-check-input" type="checkbox" id="resposta_alternativa'+idNome+'" name="resposta_alternativa'+idNome+'" value="true" aria-label="..."><textarea class="form-control form-questao" id="alternativa'+idNome+'" name="alternativa'+idNome+'" rows="2" cols="80" required=""></textarea></label><a id="'+idAlternativa+'" href="" class="badge badge-danger excluir-alternativa">Excluir</a></div></li>');
+		idAlternativa += 1;
+		idNome +=1;
+	}
+
+	var botaoExcluirAlternativa = $('.excluir-alternativa');
+
+	listaAlternativa.on('click', '.excluir-alternativa', function(event) {
+		var idExcluir = $(this).attr('id');
+		var liExcluir = listaAlternativa.find('li[id="'+idExcluir+'"]');		
+		if($(this).attr('href') == "") {
+			liExcluir.remove();
+			return false;
+		}		
+	})
+
+	function removerAlternativa() {
+
+	}
+
+
+	//SCRIPT DE CADASTRO DA QUESTÃO
+	var formQuestao = $('form[name="form-questao"]');	
+
+	formQuestao.submit(function() {
+		var idProva = formProva.find('input[name="id"]').val();
+		var dados = $(this).serialize();
+		var action = $(this).attr('action');
+		var sender = action + '&' + dados + '&prova_id=' + idProva;
+		alert(sender);
+		 $.ajax({
+			url: url_post,
+			type: "post",			
+			data: sender,
+			dataType: "json",
+			beforeSend: "",		
+			error: function() {				
+				msgModalQuestao('danger', 'Valor inválido, verifique se campos foram preenchidos corretamente!');
+			},
+			success: function(data) {	
+						
+				if(data.erro == 0) {
+					msgModalQuestao('info', 'Defina a resposta correta!');
+				} else {
+					if (data.erro == 1) {
+						msgModalQuestao('danger', 'Error ao salvar a questão, verifique as campos!');
+					} else {
+						listaAlternativa.empty();
+						formQuestao.find("input").val('');
+						formQuestao.find("textarea").val('');
+						$('#modal-adicionar-questao').modal("hide");
+						$('.j_linha_tabela_questoes').append('<tr id="j_'+data.id+'"><th scope="row">'+data.id+'</th><td>'+data.enunciado+'</td><td><a id="'+data.id+'" href="acao=editarQuestao&modulo=questao&id='+data.id+'" class="badge badge-primary j_editar">Editar</a><a id="'+data.id+'" href="acao=anularQuestao&modulo=questao&id='+data.id+'" class="badge badge-secondary j_anular">Anular</a><a id="'+data.id+'" href="acao=excluirQuestao&modulo=questao&id='+data.id+'" class="badge badge-danger j_excluir">Excluir</a></td></tr>');
+					
+					}
+				} 
+			},
+			complete: function(){
+
+			} 		
+
+		});		 
+
+		 return false;
+	});
+
+})
