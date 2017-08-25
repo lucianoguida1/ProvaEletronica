@@ -49,15 +49,15 @@ class Template {
             switch ($tipo) {
                 case 'index':
                     $menu['menu']=array(
-                        "Login"=>"index/login",
+                        "Login"=>"usuario/login",
                         "Cadastro"=>"index/cadastro"
                     );
                     break;
                 case 'professor':
                     $menu['menu']=array(
-                        "Cadastrar Prova" => "home/cadastroProva",
-                        "Provas"          => "home/provas",
-                        "Sair" => "index/logout"
+                        "Cadastrar Prova" => "professor/cadastroProva",
+                        "Provas"          => "professor/provas",
+                        "Sair" => "usuario/logout"
                     );
                     break;
                 case 'estudante':

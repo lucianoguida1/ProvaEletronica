@@ -1,5 +1,5 @@
 $(function(){
-	var url_post = '../app.php';	
+	var url_post = 'http://localhost/prova/web/app.php';	
 	var msg_error = $('#j_error_cadastro');
  	
  	msg_error.hide();	
@@ -46,17 +46,16 @@ $(function(){
 		$.ajax({
 			url: url_post,
 			data: acaoDelete,
-			type: 'post',
+			type: 'POST',
 			beforeSend: '',
 			error: function(){
 				msg_error('danger', 'Error na solicitação, procure Administrador!')
 			},
 			success: function(data){
-							
 				if(data == 1) {					
 					traction.fadeOut("slow");						
 				} else {
-					alert('error.........Entre em contato com Administrador!');					
+					alert('error.........Entre em contfsfato com Administrador!');					
 				}
 			},
 			complete: function(){				
@@ -184,18 +183,17 @@ $(function(){
 		var dados = $(this).serialize();
 		var action = $(this).attr('action');
 		var sender = action + '&' + dados + '&prova_id=' + idProva;
-		alert(sender);
 		 $.ajax({
 			url: url_post,
 			type: "post",			
 			data: sender,
 			dataType: "json",
-			beforeSend: "",		
+			beforeSend: "",
 			error: function() {				
 				msgModalQuestao('danger', 'Valor inválido, verifique se campos foram preenchidos corretamente!');
 			},
 			success: function(data) {	
-						
+				
 				if(data.erro == 0) {
 					msgModalQuestao('info', 'Defina a resposta correta!');
 				} else {
@@ -206,7 +204,7 @@ $(function(){
 						formQuestao.find("input").val('');
 						formQuestao.find("textarea").val('');
 						$('#modal-adicionar-questao').modal("hide");
-						$('.j_linha_tabela_questoes').append('<tr id="j_'+data.id+'"><th scope="row">'+data.id+'</th><td>'+data.enunciado+'</td><td><a id="'+data.id+'" href="acao=editarQuestao&modulo=questao&id='+data.id+'" class="badge badge-primary j_editar">Editar</a><a id="'+data.id+'" href="acao=anularQuestao&modulo=questao&id='+data.id+'" class="badge badge-secondary j_anular">Anular</a><a id="'+data.id+'" href="acao=excluirQuestao&modulo=questao&id='+data.id+'" class="badge badge-danger j_excluir">Excluir</a></td></tr>');
+						$('.j_linha_tabela_questoes').append('<tr id="j_'+data.id+'"><th scope="row">'+data.id+'</th><td>'+data.enunciado+'</td><td><a id="'+data.id+'" href="acao=editarQuestao&modulo=prova&id='+data.id+'" class="badge badge-primary j_editar">Editar</a><a id="'+data.id+'" href="acao=anularQuestao&modulo=prova&id='+data.id+'" class="badge badge-secondary j_anular">Anular</a><a id="'+data.id+'" href="acao=excluirQuestao&modulo=prova&id='+data.id+'" class="badge badge-danger j_excluir">Excluir</a></td></tr>');
 					
 					}
 				} 
@@ -215,7 +213,7 @@ $(function(){
 
 			} 		
 
-		});		 
+			});		 
 
 		 return false;
 	});

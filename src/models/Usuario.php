@@ -42,7 +42,7 @@ class Usuario extends Model
         if(!empty($dados['email'])){
             if(!empty($dados['senha'])){
                 $login = Usuario::selecionar("login='".$dados['email']."'");
-                if(!is_null($login[0]) && isset($login[0]) || !empty($login[0]))
+                if(isset($login[0]) && null != ($login[0]) || !empty($login[0]))
                 {
                     $password = md5($dados['senha']);
                     if($login[0]->getSenha() == $password)

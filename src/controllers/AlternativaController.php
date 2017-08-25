@@ -15,6 +15,6 @@ class AlternativaController
 
 	public function ExcluirAlternativa()
 	{
-		asdasdasdasdasdasdsd
+		
 	}
 }

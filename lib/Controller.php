@@ -3,8 +3,7 @@
 class Controller {   
 
     public static function inicializar() {
-            
-            $modulo = isset($_GET['modulo']) ? $_GET['modulo'] : 'home';
+            $modulo = isset($_GET['modulo']) ? $_GET['modulo'] : 'index';
             $acao = isset($_GET['acao']) ? $_GET['acao'] : 'index';
             $classe = ucfirst($modulo) . 'Controller';
             
@@ -36,7 +35,7 @@ class Controller {
         header("Location: ?acao=$separado[1]&modulo=$separado[0]");
     }
 
-    public  function render($arquivo = 'erro404',$data = array(),$adicionais=array()){
+    public function render($arquivo = 'erro404',$data = array(),$adicionais=array()){
         /**
             $arquivo: RECEBE A VIEW A SER EXIBIDA
             $data: RECEBE OS DADOS A SEREM MOTRADO NA VIEW
@@ -45,6 +44,30 @@ class Controller {
         Template::exibir('_header',$adicionais);
         Template::exibir($arquivo, $data);
         Template::exibir('_Footer');
+    }
+
+    public function redirectCheck()
+    {
+        if($_SESSION['login']){
+            switch ($_SESSION['tipo']) {
+                case 'professor':
+                        $this->redirectTo("professor/index");
+                        break;
+                    case 'estudante':
+                        $this->redirectTo("aluno/index");
+                        break;
+                    case 'admin':
+                        $this->redirectTo("administrador/index");
+                        break;
+                    default:
+                        $this->redirectTo("usuario/login");
+                        break;
+            }
+        }
+        else
+        {
+            $this->redirectTo("usuario/login");
+        }
     }
 }
 

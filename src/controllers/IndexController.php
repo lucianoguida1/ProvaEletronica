@@ -6,9 +6,7 @@ class IndexController extends Controller
     public function index(){       
         $this->render('index',array(),array('title'=>'Prova Eletronica'));
     }
-    public function login(){       
-        $this->render('login',array(),array('title'=>'Prova Eletronica'));
-    }
+    
     public function cadastro(){
         $this->render('usuario/cadastro',array(),array('title'=>'Prova Eletronica'));
     }
@@ -55,29 +53,5 @@ class IndexController extends Controller
         }else{
             $this->render('usuario/cadastro',array(),array('title'=>'Prova Eletronica','msg'=>$valid->getErrors()));
         }
-    }
-    public function logar(){
-        if(isset($_SESSION['login']) && $_SESSION['login'] == true) $this->redirectTo("home/index");
-
-        $callback = Usuario::logar($_REQUEST);    
-        if($callback['status'] == true)
-        {
-            $_SESSION['user_id'] = $callback['user']['id_user'];
-            $_SESSION['tipo'] = $callback['user']['tipo'];
-            $_SESSION['user_email'] = $callback['user']['tipo'];
-            $_SESSION['login'] = $callback['status'];
-            $this->render("home/index",[],['title' => 'Bem-vindo']);
-        }
-        else
-        {
-            $this->render("index",[],['msg'=>$callback['alert']]);
-        }
-    }
-
-    public function logout()
-    {
-        $_SESSION['login'] == true;
-        session_destroy();
-        $this->redirectTo("index/index");
     }
 }
