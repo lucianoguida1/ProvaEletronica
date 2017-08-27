@@ -1,10 +1,10 @@
 <div class="col-md-12">
 	<div class="card border-primary m-0">
-		<div class="card-header"> 
-			Informações da Prova				
+		<div class="card-header">
+			Informações da Prova
 		</div>
 		<div class="card-body">
-			<form name="form-prova" action="?acao=salvarProva&modulo=prova" method="POST">				
+			<form name="form-prova" action="?acao=salvarProva&modulo=prova" method="POST">
 				<div class="form-row">
 				<input type="hidden" name="id" value="<?= isset($prova)?$prova->getId():""  ?>">
 					<div class="form-group col-md-4">
@@ -22,7 +22,7 @@
 						<input type="date" class="form-control form-control-sm" id="data_prova" name="data_prova" placeholder="Data da Prova" required="" value="<?= isset($prova)?$prova->getData_prova():""  ?>">
 					</div>
 				</div>
-				<div class="form-row">					
+				<div class="form-row">
 					<div class="form-group col-md-3">
 						<label class="sr-only" for="inicio"></label>
 						<div class="input-group input-group-sm">
@@ -60,11 +60,11 @@
 						<th style="width:15%; overflow:auto;"></th>
 					</tr>
 				</thead>
-				<tbody class="j_linha_tabela_questoes">					
-					<?php 
+				<tbody class="j_linha_tabela_questoes">
+					<?php
 						if(isset($questoes)) :
 							$cont = 1;
-							foreach ($questoes as $questao) {							
+							foreach ($questoes as $questao) {
 					?>
 						<tr id="j_<?= $questao->getId() ?>" class="<?= !$questao->getStatus()? "alert alert-secondary":"" ?>">
 						<th scope="row"><?= $cont ?></th>
@@ -81,64 +81,72 @@
 					 ?>
 				</tbody>
 			</table>
-		</div>				
+		</div>
 	</div>
 
 	<div class="modal fade" id="modal-adicionar-questao" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Questão</h5>									
+					<h5 class="modal-title">Questão</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 						<span class="sr-only">Close</span>
-					</button>																		
-				</div>							
+					</button>
+				</div>
 
 				<div id="conteudo-modal" class="modal-body">
 					<form name="form-questao" action="acao=cadastrarQuestaoAjax&modulo=prova" method="post">
 						<input type="hidden" name="questao_id" value="<?= isset($questao)?$questao->getId():"" ?>">
+
 						<div class="form-group">
-						<label for="enunciado">Enunciado</label>
+							<label for="enunciado">Enunciado</label>
 							<textarea class="form-control form-questao" id="enunciado" name="enunciado" rows="3" required=""><?= isset($questao)? $questao->getEnunciado():"" ?></textarea>
 						</div>
-						<div class="form-row">											
+						<div class="form-row">
 							<button type="button" class="btn btn-primary btn-sm j_adicinar_alternativa">+ Adicionar Alternativa</button>
+							<div class="col-md-2">
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon" id="ordem">Nº</span>
+									<input type="number" class="form-control" placeholder="Questão" name="ordem" aria-label="ordem" aria-describedby="ordem" value="<?= isset($questao)? $questao->getOrdem():"" ?>" required="">
+								</div>
+							</div>
 							<div class="col-md-4">
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="valor">Valor</span>
-									<input type="text" class="form-control" placeholder="Questão" name="valor" aria-label="valor" aria-describedby="valor" value="<?= isset($questao)? $questao->getValor():"" ?>" required="">
+									<input type="number" class="form-control" placeholder="Questão" name="valor" aria-label="valor" aria-describedby="valor" value="<?= isset($questao)? $questao->getValor():"" ?>" required="">
 								</div>
-							</div>																
+							</div>
 						</div>
 						<hr>
 						<ul class="list-group j_lista_alternativa">
-							<?php 
-								if (isset($alternativas)) : 
-										foreach ($alternativas as $alternativa) {
+							<?php
+							if (isset($alternativas)) :
+								foreach ($alternativas as $alternativa) {
+									?>
+									<li id="<?= $alternativa->getId() ?>" class="list-group-item">
+										<input type="text" name="id_alternativa<?= $alternativa->getId() ?>" value="<?= $alternativa->getId() ?>">
+										<div class="form-check">
+											<label class="form-check-label">
+												<input class="form-check-input" type="checkbox" id="certa_alternativa<?= $alternativa->getId() ?>" name="certa_alternativa<?= $alternativa->getId() ?>"  value="true" aria-label="...">
+												<?php
+												if($alternativa->getAlternativa_certa() == 1) {
+													echo "checked";
+												}
+												?>
+												>
+												<textarea class="form-control form-questao" id="alternativa_enun<?= $alternativa->getId() ?>" name="alternativa_enun<?= $alternativa->getId() ?>" rows="2" cols="80" required=""><?= $alternativa->getEnunciado() ?></textarea>
+											</label>
+											<a href="acao=excluirAlternativa&modulo=alternativa&id=<?= $alternativa->getId() ?>" class="badge badge-danger excluir-alternativa">Excluir</a>
+										</div>
+									</li>
+									<?php
+								}
+							endif;
 							?>
-											<li id="<?= $alternativa->getId() ?>" class="list-group-item"> 
-												<div class="form-check">
-													<label class="form-check-label">
-														<input class="form-check-input" type="checkbox" id="resposta_alternativa<?= $alternativa->getId() ?>" name="resposta_alternativa<?= $alternativa->getId() ?>"  value="true" aria-label="..."
-														<?php 
-														if($alternativa->getAlternativa_certa() == 1) {
-															echo "checked";
-														} 
-														?>	
-														>
-														<textarea class="form-control form-questao" id="alternativa<?= $alternativa->getId() ?>" name="alternativa<?= $alternativa->getId() ?>" rows="2" cols="80" required=""><?= $alternativa->getEnunciado() ?></textarea>	
-													</label>
-													<a href="acao=excluirAlternativa&modulo=alternativa&id=<?= $alternativa->getId() ?>" class="badge badge-danger excluir-alternativa">Excluir</a>
-												</div>	
-											</li>
-							<?php 
-										}	
-								endif;	
-							?>										
-						</ul>										
+						</ul>
 						<div id="j_error_cadastro"><!-- ERROR PREENCHIDO VIA JAVASCRIPT--></div>
-				
+
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">CANCELAR</button>
 							<button type="submit" class="btn btn-primary btn-sm">SALVAR</button>

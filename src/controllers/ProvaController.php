@@ -5,19 +5,19 @@ class ProvaController extends Controller
 {
 
 	public function iniciar()
-	{		
+	{
 	}
 
 	public function finalizar()
-	{		
+	{
 	}
 
 	public function calcularNota()
-	{		
+	{
 	}
 
 	public function apresentarNota()
-	{		
+	{
 	}
 
 	public function salvarProva()
@@ -34,9 +34,9 @@ class ProvaController extends Controller
 			$prov['horario_inicio'] = $_POST['inicio'];
 			$prov['horario_fim'] = $_POST['fim'];
 			$prov['professor_id'] = $_SESSION['user_id'];
-			$prov['qtd_questoes'] = $_POST['quantidade']; 
+			$prov['qtd_questoes'] = $_POST['quantidade'];
 			$prov['status'] = 0;
-			
+
 			$prova = new Prova($prov);
 			$prova->save();
 			$data['prova'] = $prova;
@@ -45,9 +45,16 @@ class ProvaController extends Controller
 				$data['questoes'] = Questao::selecionar("prova_id='".$prova->getId()."'");
 			}
 
+			if(isset($_POST['id'])) {
+				$msg = 'Prova atualizada com sucesso.';
+			} else {
+				$msg = 'Prova cadastrada com sucesso.';
+			}
+
+
 			$this->render('professor/cadastroProva', $data,array('title'=>'Prova Eletronica','msg'=>array(
                 'success',
-                'Prova cadastrada com sucesso.',
+                $msg,
                 'Agora você já pode adicionar Questões!'
                 )));;
 
@@ -59,52 +66,68 @@ class ProvaController extends Controller
 
 	public function cadastrarQuestaoAjax()
 	{
-		$resposta = false;
-			
-			for($i = 0; $i < sizeof($_POST); $i++) {
-				if(isset($_POST["resposta_alternativa$i"]))  
-					if($_POST["resposta_alternativa$i"]){
-						$resposta = true;						
-						break;				
-					}			
-			}
-			if ($resposta == 1 ) {
-				
-				if($_POST['questao_id'] == ""){ unset($_POST['questao_id']);}else{$prov['id'] = $_POST['questao_id'];}
-				$quest['enunciado']		= $_POST['enunciado'];
-				$quest['valor'] 		= $_POST['valor'];
-				$quest['prova_id'] 		= $_POST['prova_id'];
-				$quest['status'] 		= true;
-				$questao = new Questao($quest);
-				if($questao->save()){
 
-					if(empty($_POST['alternativa_id'])) unset($_POST['alternativa_id']);		
-					if(isset($_POST['alternativa_id'])) $prov['id'] = $_POST['alternativa_id'];
-					$alter['questao_id'] = $questao->getId();
-					for($i = 0; $i < sizeof($_POST); $i++) {													
-							if(isset($_POST["resposta_alternativa$i"])) {
-								$alter['alternativa_certa'] = 1;
-							} else {
-								$alter['alternativa_certa'] = 0;
-							}	
-							if (isset($_POST["alternativa$i"])) {
-								$alter['enunciado_alter'] = $_POST["alternativa$i"];
-								$alternativa = 	new Alternativa($alter);
-								$alternativa->save();
-							}									
-					}			
-					$quest['id'] = $questao->getId();												
-					echo json_encode($quest);
-				} else {
-					//ERRO AO SALVAR A QUESTÃO;
-					$erro['erro'] = 1;
-					echo json_encode($erro);
-				}
-			} else {
-				// DEFINA UMA RESPOSTA CERTA
-				$erro['erro'] = 0;
-				echo json_encode($erro);
+		$existeResposta = false;
+		$data = array();
+		foreach ($_POST as $key => $value) {
+			if(substr($key, 0, 5) === 'certa') {
+				$existeResposta = true;
+				break;
 			}
+
+		}
+
+
+		if ($existeResposta == 1 ) {
+			if(empty($_POST['questao_id'])){
+				$prov['id'] = $_POST['questao_id'];
+			}
+			$quest['enunciado']		= $_POST['enunciado'];
+			$quest['valor'] 		= $_POST['valor'];
+			$quest['prova_id'] 		= $_POST['prova_id'];
+			$quest['ordem']			= $_POST['ordem'];
+			$quest['status'] 		= true;
+			$questao = new Questao($quest);
+			if($questao->save()){
+
+				$alter['questao_id'] = $questao->getId();
+				foreach($_POST as $key => $value) {
+					if(substr($key, 0, 11) == 'alternativa') {
+						$id = substr($key, 16);
+						if($_POST["id_alternativa".$id] != " "){
+							$alter['id'] = $_POST["id_alternativa".$id];
+						}
+						if(isset($_POST["certa_alternativa".$id])){
+							$alter["alternativa_certa"] = true;
+						}
+						$alter['enunciado_alter'] = $_POST[$key];
+
+						$alternativa = new Alternativa($alter);
+						$alternativa->save();
+					}
+					$alter["alternativa_certa"] = false;
+				}
+
+				$html = "
+				<tr id='j_".$questao->getId()."'>
+					<th scope='row'>".$questao->getOrdem().".</th>
+					<td>".$questao->getEnunciado()."</td>
+					<td>
+						<a id='".$questao->getId()."' href='acao=editarQuestao&modulo=questao&id=".$questao->getId()."' class='badge badge-primary j_editar'>Editar</a>
+						<a id='".$questao->getId()."' href='acao=anularQuestao&modulo=questao&id=".$questao->getId()."' class='badge badge-secondary j_anular'>Anular</a>
+						<a id='".$questao->getId()."' href='acao=excluirQuestao&modulo=questao&id=".$questao->getId()."' class='badge badge-danger j_excluir'>Excluir</a>
+					</td>
+				</tr>";
+
+				echo $html;
+			} else {
+					//ERRO AO SALVAR A QUESTÃO;
+				echo '1';
+			}
+		} else {
+				// DEFINA UMA RESPOSTA CERTA
+			echo '0';
+		}
 	}
 
 	public function excluirQuestao()
@@ -121,7 +144,7 @@ class ProvaController extends Controller
 		} else {
 			//VALOR ENVIAR PARA O AJAX
 			echo "0";
-		}			
+		}
 	}
 
 	public function anularQuestao()
@@ -135,23 +158,23 @@ class ProvaController extends Controller
 			$questao->setStatus(1);
 			$questao->save();
 			echo "2";
-		}		
+		}
 	}
 
 	public function editarQuestao()
 	{
 		$questao = Questao::selecionarUm($_POST['id']);
-		$data['questao'] = $questao; 
+		$data['questao'] = $questao;
 		$alternativas = Alternativa::selecionar("questao_id='".$questao->getId()."'");
 		$data['alternativas'] = $alternativas;
 		Template::exibir('prova/modalQuestao', $data);
 	}
 
 	public function elaborarQuestao()
-	{		
+	{
 	}
 
 	public function VerificarResposta()
-	{		
+	{
 	}
 }

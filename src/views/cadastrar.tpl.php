@@ -17,7 +17,7 @@
                     <label for="exampleInputtext1">Especificação</label>
                     <input type="text" class="form-control" name="especificacao" required="">
                 </div>
-                <button class="btn btn-success">Cadastrar</button>   
+                <button class="btn btn-success">Cadastrar</button>
             </form>
         </div>
     </div>
