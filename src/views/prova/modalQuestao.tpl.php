@@ -37,9 +37,9 @@
 							}
 							?>
 							>
-							<textarea class="form-control form-questao" id="alternativa_enun<?= $alternativa->getId() ?>" name="alternativa_enun<?= $alternativa->getId() ?>" rows="2" cols="80" required=""><?= $alternativa->getEnunciado() ?></textarea>
+							<textarea class="form-control form-questao" id="alternativa_enun<?= $alternativa->getId() ?>" name="alternativa_enun<?= $alternativa->getId() ?>" rows="2" cols="80" required=""><?= $alternativa->getEnunciado_alter() ?></textarea>
 						</label>
-						<a href="acao=excluirAlternativa&modulo=alternativa&id=<?= $alternativa->getId() ?>" class="badge badge-danger excluir-alternativa">Excluir</a>
+						<a id="<?= $alternativa->getId() ?>" href="acao=excluirAlternativa&modulo=alternativa&id=<?= $alternativa->getId() ?>" class="badge badge-danger excluir-alternativa">Excluir</a>
 					</div>
 				</li>
 				<?php
@@ -54,5 +54,5 @@
 		<button type="submit" class="btn btn-primary btn-sm">SALVAR</button>
 	</div>
 
-					</form>
-	<script type="text/javascript" src="assets/js/app.js"></script>
+</form>
+<script type="text/javascript" src="assets/js/app.js"></script>

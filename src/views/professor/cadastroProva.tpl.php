@@ -57,25 +57,30 @@
 					<tr>
 						<th style="width:5%;  overflow:auto;">Questão</th>
 						<th>Enunciado</th>
-						<th style="width:15%; overflow:auto;"></th>
+						<th style="width:16%; overflow:auto;"></th>
+
 					</tr>
 				</thead>
 				<tbody class="j_linha_tabela_questoes">
 					<?php
 						if(isset($questoes)) :
-							$cont = 1;
+
 							foreach ($questoes as $questao) {
 					?>
 						<tr id="j_<?= $questao->getId() ?>" class="<?= !$questao->getStatus()? "alert alert-secondary":"" ?>">
-						<th scope="row"><?= $cont ?></th>
-						<td><?= $questao->getEnunciado() ?></td>
-						<td>
-						<a id="<?= $questao->getId() ?>" href="acao=editarQuestao&modulo=prova&id=<?= $questao->getId() ?>" class="badge badge-primary j_editar">Editar</a>
-						<a id="<?= $questao->getId() ?>" href="acao=anularQuestao&modulo=prova&id=<?= $questao->getId() ?>" class="badge badge-secondary j_anular">Anular</a>
-						<a id="<?= $questao->getId() ?>" href="acao=excluirQuestao&modulo=prova&id=<?= $questao->getId() ?>" class="badge badge-danger j_excluir">Excluir</a></td>
+							<th scope="row"><?= $questao->getOrdem(); ?></th>
+							<td><?= $questao->getEnunciado() ?></td>
+							<td>
+								<a id="<?= $questao->getId() ?>" href="acao=editarQuestao&modulo=prova&id=<?= $questao->getId() ?>" class="badge badge-primary j_editar">Editar</a>
+								<a id="<?= $questao->getId() ?>" href="acao=anularQuestao&modulo=prova&id=<?= $questao->getId() ?>" class="badge badge-secondary j_anular">Anular</a>
+								<a id="<?= $questao->getId() ?>" href="acao=excluirQuestao&modulo=prova&id=<?= $questao->getId() ?>" class="badge badge-danger j_excluir">Excluir</a>
+								<i  class="fa fa-check" aria-hidden="true"></i>
+
+							</td>
+
 						</tr>
 					<?php
-							$cont++;
+
 							}
 						endif;
 					 ?>
@@ -137,7 +142,7 @@
 												>
 												<textarea class="form-control form-questao" id="alternativa_enun<?= $alternativa->getId() ?>" name="alternativa_enun<?= $alternativa->getId() ?>" rows="2" cols="80" required=""><?= $alternativa->getEnunciado() ?></textarea>
 											</label>
-											<a href="acao=excluirAlternativa&modulo=alternativa&id=<?= $alternativa->getId() ?>" class="badge badge-danger excluir-alternativa">Excluir</a>
+											<a id="<?= $alternativa->getId() ?>" href="acao=excluirAlternativa&modulo=alternativa&id=<?= $alternativa->getId() ?>" class="badge badge-danger excluir-alternativa">Excluir</a>
 										</div>
 									</li>
 									<?php
