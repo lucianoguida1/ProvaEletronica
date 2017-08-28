@@ -8,9 +8,9 @@ class Alternativa extends Model
 	static $chave_primaria = 'id';
 
 	protected $id,
-			  $enunciado_alter,
-			  $alternativa_certa,
-			  $questao_id;
+		   $enunciado_alter,
+		   $alternativa_certa,
+		   $questao_id;
 
 	public function getTabela()
 	{
@@ -21,9 +21,9 @@ class Alternativa extends Model
 	{
 		return array(
 			'id'				=> array('rotulo' => 'id'),
-			'enunciado_alter'	=> array('rotulo' => 'enunciado_alter'),
-			'alternativa_certa' => array('rotulo' => 'alternativa_certa'),
-			'questao_id'		=> array('rotulo' => 'questao_id')
+			'enunciado_alter'		=> array('rotulo' => 'enunciado_alter'),
+			'alternativa_certa'		 => array('rotulo' => 'alternativa_certa'),
+			'questao_id'			=> array('rotulo' => 'questao_id')
 			);
 	}
 

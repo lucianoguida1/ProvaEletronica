@@ -6,7 +6,7 @@
 		<div class="card-body">
 			<form name="form-prova" action="?acao=salvarProva&modulo=prova" method="POST">
 				<div class="form-row">
-				<input type="hidden" name="id" value="<?= isset($prova)?$prova->getId():""  ?>">
+				<input type="text" name="id" value="<?= isset($prova)?$prova->getId():""  ?>">
 					<div class="form-group col-md-4">
 						<label for="titulo">Título da Prova</label>
 						<input type="text" class="form-control form-control-sm" id="titulo" name="titulo" placeholder="Título da Prova" required=""
@@ -130,7 +130,7 @@
 								foreach ($alternativas as $alternativa) {
 									?>
 									<li id="<?= $alternativa->getId() ?>" class="list-group-item">
-										<input type="text" name="id_alternativa<?= $alternativa->getId() ?>" value="<?= $alternativa->getId() ?>">
+										<input type="hidden" name="id_alternativa<?= $alternativa->getId() ?>" value="<?= $alternativa->getId() ?>">
 										<div class="form-check">
 											<label class="form-check-label">
 												<input class="form-check-input" type="checkbox" id="certa_alternativa<?= $alternativa->getId() ?>" name="certa_alternativa<?= $alternativa->getId() ?>"  value="true" aria-label="...">

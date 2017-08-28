@@ -39,7 +39,7 @@
 							>
 							<textarea class="form-control form-questao" id="alternativa_enun<?= $alternativa->getId() ?>" name="alternativa_enun<?= $alternativa->getId() ?>" rows="2" cols="80" required=""><?= $alternativa->getEnunciado_alter() ?></textarea>
 						</label>
-						<a id="<?= $alternativa->getId() ?>" href="acao=excluirAlternativa&modulo=alternativa&id=<?= $alternativa->getId() ?>" class="badge badge-danger excluir-alternativa">Excluir</a>
+						<a id="<?= $alternativa->getId() ?>" href="acao=excluirAlternativa&modulo=prova&id=<?= $alternativa->getId() ?>" class="badge badge-danger excluir-alternativa">Excluir</a>
 					</div>
 				</li>
 				<?php

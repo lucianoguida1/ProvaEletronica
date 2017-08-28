@@ -8,11 +8,11 @@ class Questao extends Model
 	static $chave_primaria = 'id';
 
 	protected $id,
-			  $enunciado,
-			  $valor,
-			  $status,
-			  $ordem,
-			  $prova_id;
+		  $enunciado,
+		  $valor,
+		  $status,
+		  $ordem,
+		  $prova_id;
 
 	public function getTabela()
 	{
@@ -25,7 +25,7 @@ class Questao extends Model
 				'id'			=> array('rotulo' => 'id'),
 				'enunciado'		=> array('rotulo' => 'enunciado'),
 				'valor'			=> array('rotulo' => 'valor'),
-				'status'		=> array('rotulo' => 'status'),
+				'status'			=> array('rotulo' => 'status'),
 				'ordem'			=> array('rotulo' => 'ordem'),
 				'prova_id'		=> array('rotulo' => 'prova_id')
 			);

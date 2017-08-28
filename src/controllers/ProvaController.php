@@ -63,51 +63,65 @@ class ProvaController extends Controller
 
 
 		if ($existeResposta == 1 ) {
-			if(empty($_POST['questao_id'])){
-				$prov['id'] = $_POST['questao_id'];
+			if(!empty($_POST['questao_id'])){
+				$quest['id'] = $_POST['questao_id'];
 			}
-			$quest['enunciado']		= $_POST['enunciado'];
+			$quest['enunciado']	= $_POST['enunciado'];
 			$quest['valor'] 		= $_POST['valor'];
-			$quest['prova_id'] 		= $_POST['prova_id'];
-			$quest['ordem']			= $_POST['ordem'];
+			$quest['prova_id'] 	= $_POST['prova_id'];
+			$quest['ordem']		= $_POST['ordem'];
 			$quest['status'] 		= true;
 			$questao = new Questao($quest);
 			if($questao->save()){
 
-				$alter['questao_id'] = $questao->getId();
-
 				foreach($_POST as $key => $value) {
 					if(substr($key, 0, 11) == 'alternativa') {
 						$id = substr($key, 16);
-						$dataId = empty($_POST["id_alternativa".$id]);
-						if($dataId != 1){
+
+
+						if(!empty($_POST["id_alternativa".$id])){
 							$alter['id'] = $_POST["id_alternativa".$id];
+
 						}
 						if(isset($_POST["certa_alternativa".$id])){
 							$alter["alternativa_certa"] = 1;
+
+						} else {
+							$alter["alternativa_certa"] = 0;
 						}
 						$alter['enunciado_alter'] = $_POST[$key];
-
+						$alter['questao_id'] = $questao->getId();
 						$alternativa = new Alternativa($alter);
 						$alternativa->save();
-
+						unset($alter);
 					}
-					unset($alter['id']);
-					$alter["alternativa_certa"] = 0;
+
+
 				}
-
+					if(!empty($_POST['questao_id'])) {
 					$html = "
-					<tr id='j_".$questao->getId()."'>
-						<th scope='row'>".$questao->getOrdem().".</th>
-						<td>".$questao->getEnunciado()."</td>
-						<td>
-							<a id='".$questao->getId()."' href='acao=editarQuestao&modulo=prova&id=".$questao->getId()."' class='badge badge-primary j_editar'>Editar</a>
-							<a id='".$questao->getId()."' href='acao=anularQuestao&modulo=prova&id=".$questao->getId()."' class='badge badge-secondary j_anular'>Anular</a>
-							<a id='".$questao->getId()."' href='acao=excluirQuestao&modulo=prova&id=".$questao->getId()."' class='badge badge-danger j_excluir'>Excluir</a>
-							<i  class='fa fa-check' aria-hidden='true'></i>
-						</td>
-					</tr>";
+						<tr id='j_".$questao->getId()."'>
+							<th scope='row'>".$questao->getOrdem().".</th>
+							<td>".$questao->getEnunciado()."</td>
+							<td>
+								<a id='".$questao->getId()."' href='acao=editarQuestao&modulo=prova&id=".$questao->getId()."' class='badge badge-primary j_editar'>Editar</a>
+								<a id='".$questao->getId()."' href='acao=anularQuestao&modulo=prova&id=".$questao->getId()."' class='badge badge-secondary j_anular'>Anular</a>
+								<a id='".$questao->getId()."' href='acao=excluirQuestao&modulo=prova&id=".$questao->getId()."' class='badge badge-danger j_excluir'>Excluir</a>
+								<i  class='fa fa-check' aria-hidden='true'></i>
+							</td>
+						</tr>";
+					} else {
+					$html = "
 
+							<th scope='row'>".$questao->getOrdem().".</th>
+							<td>".$questao->getEnunciado()."</td>
+							<td>
+								<a id='".$questao->getId()."' href='acao=editarQuestao&modulo=prova&id=".$questao->getId()."' class='badge badge-primary j_editar'>Editar</a>
+								<a id='".$questao->getId()."' href='acao=anularQuestao&modulo=prova&id=".$questao->getId()."' class='badge badge-secondary j_anular'>Anular</a>
+								<a id='".$questao->getId()."' href='acao=excluirQuestao&modulo=prova&id=".$questao->getId()."' class='badge badge-danger j_excluir'>Excluir</a>
+								<i  class='fa fa-check' aria-hidden='true'></i>
+							</td>";
+					}
 
 				echo $html;
 			} else {

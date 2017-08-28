@@ -1,12 +1,12 @@
 <?php
 abstract class Model {
-    
+
     protected $campos_alterados = array();
-    
+
     abstract public function getTabela();
     abstract public function getCampos();
     abstract public function getCamposObrigatorios();
-    
+
     public function __construct(array $data = null) {
         if (!is_null($data)) {
             $this->setData($data);
@@ -17,9 +17,9 @@ abstract class Model {
         $campos = $this->getCampos();
         return isset($campos[$campo]) ? $campos[$campo] : null;
     }
-    
+
     public function setData($data) {
-        $atrObrigatorios = $this->getCamposObrigatorios();           
+        $atrObrigatorios = $this->getCamposObrigatorios();
         foreach ($atrObrigatorios as $key) {
             if (!array_key_exists($key, $data)) {
                 throw new Exception("Atributo $key é obrigatório");
@@ -40,7 +40,7 @@ abstract class Model {
         $metodo = 'set' . ucfirst(static::$chave_primaria);
         $this->$metodo($id);
     }
-    
+
     protected function _set($campo, $valor) {
         $this->$campo = $valor;
         if (!is_null($this->getChavePrimaria())
@@ -60,9 +60,9 @@ abstract class Model {
            return $this->$campo;
         } else {
             throw new Exception('M�todo n�o existe!');
-        }       
+        }
     }
-    
+
     public function save() {
         if (isset($this->id)) {
             $this->update();
@@ -71,74 +71,75 @@ abstract class Model {
         }
         return true;
     }
-    
+
     protected function update() {
         $pdo = Banco::instanciar();
-        $campos = array_values($this->campos_alterados);        
+        $campos = array_values($this->campos_alterados);
         $camposUpdate = array();
         foreach ($campos as $campo) {
             $camposUpdate[] = "$campo = ?";
         }
-        $camposUpdate = implode(',', $camposUpdate);        
-        $updateSQL = "UPDATE {$this->getTabela()} " 
+        $camposUpdate = implode(',', $camposUpdate);
+        $updateSQL = "UPDATE {$this->getTabela()} "
                    . "SET $camposUpdate WHERE " . static::$chave_primaria .  " = ? ";
-        
+
         $dados = array();
         foreach ($campos as $campo) {
             $metodo = 'get' . ucfirst($campo);
             $dados[] = $this->$metodo();
         }
-        
+
         $dados[] = $this->getChavePrimaria();
         $statement = $pdo->prepare($updateSQL);
+
         $statement->execute($dados);
 
     }
-    
+
     protected function insert() {
         $pdo = Banco::instanciar();
         $campos = implode(',', array_keys($this->getCampos()));
         $values = implode(',', array_fill(0, count($this->getCampos()), '?'));
         $insertSQL = "INSERT INTO {$this->getTabela()} "
                    . "( {$campos} ) VALUES ( $values )";
-        
+
         $dados = array();
         foreach (array_keys($this->getCampos()) as $campo) {
             $metodo = 'get' . ucfirst($campo);
             $dados[] = $this->$metodo();
         }
-        
+
         $statement = $pdo->prepare($insertSQL);
         $statement->execute($dados);
         $this->setChavePrimaria($pdo->lastInsertId());
     }
-    
+
     public static function selecionarUm($id) {
         $pdo = Banco::instanciar();
-        $selectSQL = "SELECT * FROM " . static::$tabela 
+        $selectSQL = "SELECT * FROM " . static::$tabela
                   . " WHERE " . static::$chave_primaria .  " = ? ";
         $statement = $pdo->prepare($selectSQL);
         $dados = array($id);
         $statement->execute($dados);
         $data = $statement->fetch();
-        
+
         if ($data){
             $classe = static::$classe;
             return new $classe($data);
         } else {
             return NULL;
         }
-        
+
     }
-    
+
     public function deletar() {
         if (is_null($this->getChavePrimaria())) {
             throw new Exception('Impossível excluir objeto não persistido!');
         }
         $pdo = Banco::instanciar();
-        $deleteSQL = "DELETE FROM {$this->getTabela()} " 
+        $deleteSQL = "DELETE FROM {$this->getTabela()} "
                   . "WHERE " . static::$chave_primaria . " = ? ";
-        
+
         $statement = $pdo->prepare($deleteSQL);
         $dados = array($this->getChavePrimaria());
         if ($statement->execute($dados)) {
@@ -150,23 +151,23 @@ abstract class Model {
     }
 
     public static function selecionar(
-            $condicao = null, 
-            $ordem = null, 
-            $limite = null, 
+            $condicao = null,
+            $ordem = null,
+            $limite = null,
             $deslocamento = null) {
-        
+
         if(!is_null($limite)) {
             if (!is_null($deslocamento)) {
                 $limite = "$deslocamento , $limite";
             }
         }
-        
+
         $pdo = Banco::instanciar();
         $selectSQL = "SELECT * FROM " . static::$tabela
                      . (!is_null($condicao) ? " WHERE $condicao" : '')
                      . (!is_null($ordem) ? " ORDER BY $ordem" : '')
                      . (!is_null($limite) ? " LIMIT $limite" : '');
-        
+
         $statement = $pdo->prepare($selectSQL);
         $statement->execute();
         $results = $statement->fetchAll();
@@ -180,5 +181,5 @@ abstract class Model {
 
         return $objects;
     }
-    
+
 }

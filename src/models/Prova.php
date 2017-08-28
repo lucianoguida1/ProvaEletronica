@@ -8,13 +8,13 @@ class Prova extends Model
 	static $chave_primaria = 'id';
 
 	protected $id,
-			  $titulo,
-			  $disciplina,
-			  $data_prova,
-			  $horario_inicio,
-			  $horario_fim,
-			  $professor_id,
-			  $qtd_questoes;
+		  $titulo,
+		  $disciplina,
+		  $data_prova,
+		  $horario_inicio,
+		  $horario_fim,
+		  $professor_id,
+		  $qtd_questoes;
 
 	public function getTabela()
 	{
@@ -25,13 +25,13 @@ class Prova extends Model
 	{
 		return array(
 				'id'			=> array('rotulo' => 'id'),
-				'titulo'		=> array('rotulo' => 'titulo'),
-				'disciplina'    => array('rotulo' => 'disciplina'),
-				'data_prova'	=> array('rotulo' => 'data_prova'),
-				'horario_inicio' => array('rotulo' => 'horario_inicio'),
-				'horario_fim'	=> array('rotulo' => 'horario_fim'),
-				'professor_id'	=> array('rotulo' => 'professor_id'),
-				'qtd_questoes'   => array('rotulo' => 'qtd_questoes')
+				'titulo'			=> array('rotulo' => 'titulo'),
+				'disciplina'   		 => array('rotulo' => 'disciplina'),
+				'data_prova'		=> array('rotulo' => 'data_prova'),
+				'horario_inicio'		 => array('rotulo' => 'horario_inicio'),
+				'horario_fim'		=> array('rotulo' => 'horario_fim'),
+				'professor_id'		=> array('rotulo' => 'professor_id'),
+				'qtd_questoes' 		 => array('rotulo' => 'qtd_questoes')
 			);
 	}
 

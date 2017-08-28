@@ -173,14 +173,14 @@ $(function(){
 		var idExcluir = $(this).attr('id');
 		var liExcluir = listaAlternativa.find('li[id="'+idExcluir+'"]');
 		var sender = $(this).attr('href');
-		alert(sender);
+
 		if(sender == "") {
-			alert('oi');
 			liExcluir.remove();
 		} else {
 				$.ajax({
 				url: url_post,
 				data: $(this).attr('href'),
+				type: "post",
 				beforeSend: '',
 				erro: function(){
 					msgModalQuestao('danger', 'Erro na solicitação, procure o Administrador.');
@@ -208,7 +208,7 @@ $(function(){
 
 	formQuestao.submit(function() {
 		var idProva = formProva.find('input[name="id"]').val();
-		var idQuestao = $(this).find('input[name="id_questao"]').val();
+		var idQuestao = $(this).find('input[name="questao_id"]').val();
 		var dados = $(this).serialize();
 		var action = $(this).attr('action');
 		var sender = action + '&' + dados + '&prova_id=' + idProva;
@@ -230,7 +230,8 @@ $(function(){
 					if (data == 1) {
 						msgModalQuestao('danger', 'Error ao salvar a questão, verifique as campos!');
 					} else {
-						if (idQuestao != "") {
+						if (idQuestao != " ") {
+
 							tabelaQuestoes.find('tr[id="j_'+idQuestao+'"]');
 						}
 						formQuestao.find("input").val('');
