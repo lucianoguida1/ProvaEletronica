@@ -6,7 +6,7 @@
 		<div class="card-body">
 			<form name="form-prova" action="?acao=salvarProva&modulo=prova" method="POST">
 				<div class="form-row">
-				<input type="text" name="id" value="<?= isset($prova)?$prova->getId():""  ?>">
+				<input type="hidden" name="id" value="<?= isset($prova)?$prova->getId():""  ?>">
 					<div class="form-group col-md-4">
 						<label for="titulo">Título da Prova</label>
 						<input type="text" class="form-control form-control-sm" id="titulo" name="titulo" placeholder="Título da Prova" required=""
