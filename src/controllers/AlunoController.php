@@ -13,13 +13,14 @@ class AlunoController extends Controller
 
     public function index()
     {       
-        $this->render("index",[],[]);
+        $provas = new Prova;
+        $this->render("aluno/index",['provas' => $provas->allProvasAluno()],[]);
     }
 
     
 
     public function provas()
     {
-        $this->render("home/provas",[],[]);
+        $this->render("provas",[],[]);
     }
 }
