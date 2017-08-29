@@ -19,7 +19,40 @@ class AlunoController extends Controller
 
     public function perfil()
     {
-        $this->render("aluno/perfil",['estudante' => Estudante::selecionar("usuario_id = '".$_SESSION['user_id']."'"), 'usuario' => Usuario::selecionarUm($_SESSION['user_id'])],[]);
+        $usuario = Usuario::selecionarUm($_SESSION['user_id']);
+        $estudante = Estudante::selecionar("usuario_id = '".$_SESSION['user_id']."'");
+
+        if(isset($_GET['id']) && !empty($_GET['id']))
+        {
+            $valid = new Validator($_POST);
+            $valid->field_email('email');
+            $valid->field_cadastropessoa('cpf');
+            $valid->field_filledIn($_POST);
+            if($valid->valid)
+            {
+                $usuario->setLogin($_POST['email']);
+                if(!empty($_POST['senha']))
+                    $usuario->setSenha(md5($_POST['senha']));
+                $usuario->save();
+                $estudante[0]->setNome_estudante($_POST['nome']);
+                $estudante[0]->setMatricula_estudante($_POST['matricula']);
+                $estudante[0]->setCpf_estudante($_POST['cpf']);
+                $estudante[0]->setEmail_estudante($_POST['email']);
+                $estudante[0]->setSexo_estudante($_POST['sexo']);
+                $estudante[0]->save();
+                $this->render('aluno/perfil',array(),array('title'=>'Prova Eletronica','msg'=>array(
+                    'success',
+                    'Cadastro realizado com sucesso.',
+                    'Seu cadastro esta aguardando aprovação, em brece você pode utilizar o sistema!'
+                    )));
+            }else{
+                $this->render('aluno/perfil',array(),array('title'=>'Prova Eletronica','msg'=>$valid->getErrors()));
+            }
+        }
+        else
+        {
+        $this->render("aluno/perfil",['estudante' => $estudante, 'usuario' => $usuario],[]);
+        }
     }
 
     public function minhasProvas()
