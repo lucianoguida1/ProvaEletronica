@@ -44,7 +44,7 @@
 				<option value="F">Feminino</option>
 			</select>
 		</div>
-		<button type="submit" class="btn btn-primary form-control" id="envia">Cadastrar</button>
+		<button type="submit" class="btn btn-primary form-control" id="envia">Salvar Alterações</button>
 
 	</form>
 </div>

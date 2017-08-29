@@ -4,7 +4,7 @@
 			Informações da Prova
 		</div>
 		<div class="card-body">
-			<form name="form-prova" action="?acao=salvarProva&modulo=prova" method="POST">
+			<form name="form-prova" action="?acao=salvarProva&modulo=professor" method="POST">
 				<div class="form-row">
 				<input type="hidden" name="id" value="<?= isset($prova)?$prova->getId():""  ?>">
 					<div class="form-group col-md-4">
@@ -73,9 +73,9 @@
 							<th scope="row"><?= $questao->getOrdem(); ?></th>
 							<td><?= $questao->getEnunciado() ?></td>
 							<td>
-								<a id="<?= $questao->getId() ?>" href="acao=editarQuestao&modulo=prova&id=<?= $questao->getId() ?>" class="badge badge-primary j_editar">Editar</a>
-								<a id="<?= $questao->getId() ?>" href="acao=anularQuestao&modulo=prova&id=<?= $questao->getId() ?>" class="badge badge-secondary j_anular">Anular</a>
-								<a id="<?= $questao->getId() ?>" href="acao=excluirQuestao&modulo=prova&id=<?= $questao->getId() ?>" class="badge badge-danger j_excluir">Excluir</a>
+								<a id="<?= $questao->getId() ?>" href="acao=editarQuestao&modulo=professor&id=<?= $questao->getId() ?>" class="badge badge-primary j_editar">Editar</a>
+								<a id="<?= $questao->getId() ?>" href="acao=anularQuestao&modulo=professor&id=<?= $questao->getId() ?>" class="badge badge-secondary j_anular">Anular</a>
+								<a id="<?= $questao->getId() ?>" href="acao=excluirQuestao&modulo=professor&id=<?= $questao->getId() ?>" class="badge badge-danger j_excluir">Excluir</a>
 								<i  class="fa fa-check" aria-hidden="true"></i>
 
 							</td>
@@ -103,7 +103,7 @@
 				</div>
 
 				<div id="conteudo-modal" class="modal-body">
-					<form name="form-questao" action="acao=cadastrarQuestaoAjax&modulo=prova" method="post">
+					<form name="form-questao" action="acao=cadastrarQuestaoAjax&modulo=professor" method="post">
 						<input type="hidden" name="questao_id" value="<?= isset($questao)?$questao->getId():"" ?>">
 
 						<div class="form-group">
@@ -144,7 +144,7 @@
 												>
 												<textarea class="form-control form-questao" id="alternativa_enun<?= $alternativa->getId() ?>" name="alternativa_enun<?= $alternativa->getId() ?>" rows="2" cols="80" required=""><?= $alternativa->getEnunciado() ?></textarea>
 											</label>
-											<a id="<?= $alternativa->getId() ?>" href="acao=excluirAlternativa&modulo=alternativa&id=<?= $alternativa->getId() ?>" class="badge badge-danger excluir-alternativa">Excluir</a>
+											<a id="<?= $alternativa->getId() ?>" href="acao=excluirAlternativa&modulo=professor&id=<?= $alternativa->getId() ?>" class="badge badge-danger excluir-alternativa">Excluir</a>
 										</div>
 									</li>
 									<?php
