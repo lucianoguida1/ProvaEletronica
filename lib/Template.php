@@ -63,7 +63,7 @@ class Template {
                 case 'estudante':
                     $menu['menu']= [
                         "Home" => "aluno/index",
-                        "Minhas Provas" => "aluno/minhas_provas",
+                        "Minhas Provas" => "aluno/minhasProvas",
                         "Perfil" => "aluno/perfil",
                         "Sair" => "usuario/logout"
                     ];

@@ -80,7 +80,7 @@ class Prova extends Model
 					<td>".date('H:i',strtotime($value->getHorario_inicio()))." as ".date('H:i',strtotime($value->getHorario_fim()))."</td>
 					<td>".$status[$value->getStatus()]."</td>
 					<td>";
-					if($value->getStatus() == 1 && $this->validarDataHora($value->getHorario_inicio(),$this->getHorario_fim(),$this->getData_prova()))
+					if($value->getStatus() == 1 && $this->validarDataHora(['inicio' => $value->getHorario_inicio(),'fim' => $value->getHorario_fim(),'data' => $value->getData_prova()]))
 					{ 
 						$html .= "<a class='btn btn-light' href='acao=responderProva&modulo=aluno&id=".$value->getId()."' role='button'> Responder</a>"; 
 					}
@@ -94,13 +94,15 @@ class Prova extends Model
 		return $html;
 	}
 
-	private function validarDataHora($hora_inicio,$hora_fim,$data)
+	public function validarDataHora(array $array)
 	{
-		$data_hora_atual = DateTime::createFromFormat('Y-m-d H:i', date('Y-m-d H:i'));
-		$date_time_start = new DateTime($data." ".date('H:i',strtotime($hora_inicio)));
-		$date_time_end = new DateTime($data." ".date('H:i',strtotime($hora_fim)));
-		if($date_time_start > $data_hora_atual && $date_time_end > $data_hora_atual)
-			return false;
-		return true;
+		$data_start = $array['data']." ".$array['inicio'];
+		$data_fim = $array['data']." ".$array['fim'];
+		$data_hora_atual = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'));
+		$date_time_start = DateTime::createFromFormat('Y-m-d H:i:s', $data_start);
+		$date_time_end = DateTime::createFromFormat('Y-m-d H:i:s',$data_fim);
+		if($data_hora_atual >= $date_time_start && $data_hora_atual <= $date_time_end)
+			return true;
+		return false;
 	}
 }

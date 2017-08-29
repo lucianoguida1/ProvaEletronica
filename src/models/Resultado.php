@@ -21,7 +21,7 @@ class Resultado extends Model
 	public function getCampos()
 	{
 		return array(
-				'id'			=> array('rotulo' => 'id'),
+				'id'            => array('rotulo' => 'id'),
 				'resposta'  	=> array('rotulo' => 'resposta'),
 				'estudante_id'	=> array('rotulo' => 'estudante_id'),
 				'prova_id'		=> array('rotulo' => 'prova_id'),
@@ -31,6 +31,6 @@ class Resultado extends Model
 
 	public function getCamposObrigatorios()
 	{
-		return array('reposta', 'estudante_id', 'prova_id', 'questoes_id');
+		return array('resposta', 'estudante_id', 'prova_id', 'questoes_id');
 	}
 }

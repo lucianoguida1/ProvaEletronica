@@ -19,8 +19,14 @@ class AlunoController extends Controller
 
     
 
-    public function provas()
+    public function minhasProvas()
     {
-        $this->render("provas",[],[]);
+        $provas = new EstudanteProva();
+        $this->render("aluno/minhasprovas",['provas' =>$provas->allProvasRespondidasAluno($_SESSION['user_id'])],[]);
+    }
+
+    public function responderProva()
+    {
+        $id_prova = $_GET['id'];
     }
 }
