@@ -4,7 +4,7 @@
 	<div class="form-group">
 		<label for="enunciado">Enunciado</label>
 		<textarea class="form-control form-questao" id="enunciado" name="enunciado" rows="3" required=""><?= isset($questao)? $questao->getEnunciado():"" ?></textarea>
-	</div>
+</div>
 	<div class="form-row">
 		<button type="button" class="btn btn-primary btn-sm j_adicinar_alternativa">+ Adicionar Alternativa</button>
 		<div class="col-md-2">
@@ -55,4 +55,4 @@
 	</div>
 
 </form>
-<script type="text/javascript" src="assets/js/app.js"></script>
+ <script type="text/javascript" src="assets/js/app.js">

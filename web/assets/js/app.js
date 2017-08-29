@@ -14,6 +14,14 @@ $(function(){
 		window.setTimeout(function(){ msg_error.fadeOut("slow") }, 3000);
  	}
 
+ 	function isEmpty(obj) {
+		    for(var prop in obj) {
+		        if(obj.hasOwnProperty(prop))
+		            return false;
+		   	 }
+   			 return true;
+	}
+
 
  	// SCRIPT QUE DA UM FADEOUT NO TAG DE MENSAGEM DO SISTEMA
  	$("#msgSistema:visible").delay(3000).fadeOut('slow');
@@ -212,6 +220,7 @@ $(function(){
 		var dados = $(this).serialize();
 		var action = $(this).attr('action');
 		var sender = action + '&' + dados + '&prova_id=' + idProva;
+		var trquestao = tabelaQuestoes.find('tr[id="j_'+idQuestao+'"]');
 
 		 $.ajax({
 			url: url_post,
@@ -230,14 +239,23 @@ $(function(){
 					if (data == 1) {
 						msgModalQuestao('danger', 'Error ao salvar a questão, verifique as campos!');
 					} else {
-						if (idQuestao != " ") {
+						if (isEmpty(idQuestao)) {
 
-							tabelaQuestoes.find('tr[id="j_'+idQuestao+'"]');
+							formQuestao.find("input").val('');
+							formQuestao.find("textarea").val('');
+							$('#modal-adicionar-questao').modal("hide");
+							$('.j_linha_tabela_questoes').append(data);
+						} else {
+
+							formQuestao.find("input").val('');
+							formQuestao.find("textarea").val('');
+							$('#modal-adicionar-questao').modal("hide");
+							trquestao.empty();
+							trquestao.html(data);
+							window.setTimeout(function(){ $('.j_carregando').empty().html('<i  class="fa fa-check" aria-hidden="true"></i>');
+							}, 1000);
 						}
-						formQuestao.find("input").val('');
-						formQuestao.find("textarea").val('');
-						$('#modal-adicionar-questao').modal("hide");
-						$('.j_linha_tabela_questoes').append(data);
+
 
 					}
 				}

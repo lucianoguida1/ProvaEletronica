@@ -98,7 +98,8 @@ class ProvaController extends Controller
 
 
 				}
-					if(!empty($_POST['questao_id'])) {
+					if(empty($_POST['questao_id'])) {
+
 					$html = "
 						<tr id='j_".$questao->getId()."'>
 							<th scope='row'>".$questao->getOrdem().".</th>
@@ -111,6 +112,7 @@ class ProvaController extends Controller
 							</td>
 						</tr>";
 					} else {
+
 					$html = "
 
 							<th scope='row'>".$questao->getOrdem().".</th>
@@ -119,7 +121,7 @@ class ProvaController extends Controller
 								<a id='".$questao->getId()."' href='acao=editarQuestao&modulo=prova&id=".$questao->getId()."' class='badge badge-primary j_editar'>Editar</a>
 								<a id='".$questao->getId()."' href='acao=anularQuestao&modulo=prova&id=".$questao->getId()."' class='badge badge-secondary j_anular'>Anular</a>
 								<a id='".$questao->getId()."' href='acao=excluirQuestao&modulo=prova&id=".$questao->getId()."' class='badge badge-danger j_excluir'>Excluir</a>
-								<i  class='fa fa-check' aria-hidden='true'></i>
+								<span class='j_carregando'><i  class='fa fa-spinner fa-spin' aria-hidden='true'></i></span>
 							</td>";
 					}
 

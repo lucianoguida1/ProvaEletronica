@@ -11,15 +11,17 @@
 						<label for="titulo">Título da Prova</label>
 						<input type="text" class="form-control form-control-sm" id="titulo" name="titulo" placeholder="Título da Prova" required=""
 						value="<?= isset($prova)?$prova->getTitulo():""  ?>"
-						>
+						oninvalid="setCustomValidity('Por favor, digite o Título.')" onchange="try{setCustomValidity('')}catch(e){}">
 					</div>
 					<div class="form-group col-md-4">
 						<label for="disciplina">Disciplina</label>
-						<input type="text" class="form-control form-control-sm" id="disciplina" name="disciplina" placeholder="Disciplina" required="" value="<?= isset($prova)?$prova->getDisciplina():""  ?>">
+						<input type="text" class="form-control form-control-sm" id="disciplina" name="disciplina" placeholder="Disciplina" required="" value="<?= isset($prova)?$prova->getDisciplina():""  ?>"
+						oninvalid="setCustomValidity('Por favor, digite a Disciplina.')" onchange="try{setCustomValidity('')}catch(e){}">
 					</div>
 					<div class="form-group col-md-3">
 						<label for="data_prova">Data da Prova</label>
-						<input type="date" class="form-control form-control-sm" id="data_prova" name="data_prova" placeholder="Data da Prova" required="" value="<?= isset($prova)?$prova->getData_prova():""  ?>">
+						<input type="date" class="form-control form-control-sm" id="data_prova" name="data_prova" placeholder="Data da Prova" required="" pattern="[0-9]{2}\/[0-9]{2}\/[0-9]{4}$" min="<?= date("Y-m-d"); ?>" max="2020-02-18" value="<?= isset($prova)?$prova->getData_prova():""  ?>"
+						oninvalid="setCustomValidity('Por favor, digite a data da Prova.')" onchange="try{setCustomValidity('')}catch(e){}">
 					</div>
 				</div>
 				<div class="form-row">
@@ -41,7 +43,7 @@
 						<label class="sr-only" for="fim"></label>
 						<div class="input-group input-group-sm">
 							<div class="input-group-addon">Qtd.</div>
-							<input type="number" class="form-control form-control-sm" id="quantidade" name="quantidade" placeholder="Questões" required="" value="<?= isset($prova)?$prova->getQtd_questoes():""  ?>">
+							<input type="text" class="form-control form-control-sm" id="quantidade" name="quantidade" placeholder="Questões" required="" pattern="[0-9]+$" value="<?= isset($prova)?$prova->getQtd_questoes():""  ?>">
 						</div>
 					</div>
 				</div>
