@@ -1,3 +1,21 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+@import url(http://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,700italic,900,900italic);
+@import url(bucket-ico-fonts.css);
+
+html {
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+}
+body {
+   /* color:#767676;*/
+    background: url('../images/shattered.png');
+    font-family:'Open Sans',sans-serif;
+    padding:0px !important;
+    margin:0px !important;
+    font-size:14px;
+    text-rendering:optimizeLegibility;
+}
+
 #content{
 	margin-top: 20px;
 }
@@ -18,4 +36,65 @@
 #msgSistema {
     margin-top: 10px;
     margin-bottom: 0px;
+}
+
+input:focus:invalid:focus,textarea:focus:invalid:focus,select:focus:invalid:focus,.cmxform .form-group input.error,.cmxform .form-group textarea.error {
+    border-color:#B94A48 !important;
+}
+
+/*advanced table*/
+.general-table .progress {
+    margin-bottom:0;
+}
+.adv-table table tr td {
+    padding:10px;
+}
+.adv-table table.display thead th {
+    border-bottom:1px solid #DDDDDD;
+    padding:10px;
+}
+tr.odd.gradeA td.sorting_1,tr.odd td.sorting_1,tr.even.gradeA td.sorting_1 {
+    background:none;
+}
+td.details {
+    background-color:#eee;
+}
+td.details table tr td,.dataTable tr:last-child {
+    border:none;
+}
+.adv-table table.display tr.odd.gradeA {
+    background-color:#F9F9F9;
+}
+.adv-table table.display tr.even.gradeA {
+    background-color:#FFFFFF;
+}
+.adv-table .dataTables_filter label input {
+    float:right;
+    margin-left:10px;
+    width:78%;
+}
+.adv-table .dataTables_filter label {
+    line-height:33px;
+    width:100%;
+}
+.adv-table .dataTables_length select {
+    display:inline-block;
+    margin:0 10px 0 0;
+    padding:5px 8px;
+    width:65px;
+}
+.adv-table .dataTables_info,.dataTables_paginate {
+    padding:15px 0;
+}
+.adv-table .dataTables_length,.adv-table .dataTables_filter {
+    padding:15px 0;
+}
+.cke_chrome {
+    border:none !important;
+}
+.editable-table .dataTables_filter {
+    width:80%;
+}
+tr.odd.gradeX td.sorting_1,tr.even.gradeX td.sorting_1,table.display tr.even.gradeX,table.display tr.gradeX,tr.even.gradeU td.sorting_1,tr.even td.sorting_1,table.display tr.even.gradeC,table.display tr.gradeC,tr.odd.gradeC td.sorting_1,table.display tr.even.gradeU,table.display tr.gradeU,tr.odd.gradeU td.sorting_1 {
+    background: none !important;
 }

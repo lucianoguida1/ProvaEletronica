@@ -21,7 +21,7 @@
 					<div class="form-group col-md-3">
 						<label for="data_prova">Data da Prova</label>
 						<input type="date" class="form-control form-control-sm" id="data_prova" name="data_prova" placeholder="Data da Prova" required="" pattern="[0-9]{2}\/[0-9]{2}\/[0-9]{4}$" min="<?= date("Y-m-d"); ?>" max="2020-02-18" value="<?= isset($prova)?$prova->getData_prova():""  ?>"
-						oninvalid="setCustomValidity('Por favor, digite a data da Prova.')" onchange="try{setCustomValidity('')}catch(e){}">
+						>
 					</div>
 				</div>
 				<div class="form-row">

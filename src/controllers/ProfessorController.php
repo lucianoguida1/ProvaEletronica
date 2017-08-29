@@ -1,12 +1,12 @@
 <?php
 
-class ProfessorController extends Controller 
+class ProfessorController extends Controller
 {
 	function __construct()
 	{
 		if(isset($_SESSION['login']) && $_SESSION['tipo'] != 'professor') {
-            $this->redirectCheck();
-        }
+            		$this->redirectCheck();
+       	 }
 	}
 	public function index()
 	{
@@ -38,9 +38,9 @@ class ProfessorController extends Controller
 	{
 		$provas = new Prova;
 		$this->render("professor/provas",['provas' => $provas->allProvas()],[]);
-	}	
+	}
 
 	public function buscarProva()
-	{		
+	{
 	}
 }
