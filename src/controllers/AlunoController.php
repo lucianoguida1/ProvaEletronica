@@ -17,7 +17,10 @@ class AlunoController extends Controller
         $this->render("aluno/index",['provas' => $provas->allProvasAluno()],[]);
     }
 
-    
+    public function perfil()
+    {
+        $this->render("aluno/perfil",['estudante' => Estudante::selecionar("usuario_id = '".$_SESSION['user_id']."'"), 'usuario' => Usuario::selecionarUm($_SESSION['user_id'])],[]);
+    }
 
     public function minhasProvas()
     {
@@ -29,4 +32,6 @@ class AlunoController extends Controller
     {
         $id_prova = $_GET['id'];
     }
+
+    
 }

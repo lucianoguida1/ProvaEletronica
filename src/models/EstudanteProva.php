@@ -45,16 +45,11 @@ class EstudanteProva extends Prova
 						<td>".date('d/m/y',strtotime($value->getData_prova()))."</td>
 						<td>".date('H:i',strtotime($value->getHorario_inicio()))." as ".date('H:i',strtotime($value->getHorario_fim()))."</td>
 						<td>".$status[$value->getStatus()]."</td>
-						<td>";
-						if($value->getStatus() == 1 && $this->validarDataHora($value->getHorario_inicio(),$this->getHorario_fim(),$this->getData_prova()))
-						{ 
-							$html .= "<a class='btn btn-light' href='acao=responderProva&modulo=aluno&id=".$value->getId()."' role='button'> Responder</a>"; 
-						}
-						else
-						{ 
-							$html .= "<button class='btn btn-light' disabled> Indisponivel</button>";
-						}	
-						$html .= "<td/></tr>";
+						<td>
+							<a class='btn btn-light' href='acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Resultado </a>
+							<a class='btn btn-light' href='acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Informações </a>
+							<a class='btn btn-light' href='acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Ver </a>
+						<td/></tr>";
 				}
 			}
 		return $html;

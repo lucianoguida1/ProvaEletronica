@@ -47,7 +47,6 @@ class Prova extends Model
 	{
 		$provas = Prova::selecionar("status <= 1");
 		$html = "";
-		$cont = 1;
 		foreach ($provas as $key => $value) {
 			$html .= "
 				<tr id='j_". $value->getId()."'>
@@ -60,7 +59,6 @@ class Prova extends Model
 						<a id=' ".$value->getId()."' href='acao=anularProva&modulo=professor&id=".$value->getId()."' class='badge badge-secondary j_anular'>Anular</a>
 						<a id=' ".$value->getId()."' href='acao=excluirProva&modulo=professor&id=".$value->getId()."' class='badge badge-danger j_excluir'>Excluir</a></td>
 					</tr>";
-					$cont++;
 			}
 		return $html;
 	}
@@ -69,7 +67,6 @@ class Prova extends Model
 	{
 		$provas = Prova::selecionar("status <= 1");
 		$html = "";
-		$cont = 1;
 		$status = ['0' => 'Inativa', '1' => 'Ativa'];
 		foreach ($provas as $key => $value) {
 			$html .= "
@@ -89,7 +86,6 @@ class Prova extends Model
 						$html .= "<button class='btn btn-light' disabled> Indisponivel</button>";
 					}	
 					$html .= "<td/></tr>";
-					$cont++;
 			}
 		return $html;
 	}
