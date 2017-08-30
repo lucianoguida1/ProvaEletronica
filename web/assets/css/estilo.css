@@ -52,6 +52,15 @@ body {
 .form-questao {
 	font-size: 12px;
 }
+
+.title-nav {
+    margin-bottom: 1.75rem;
+}
+
+.lista-nav li a{
+    color: #000;
+    font-size: 14px;
+}
 #msgSistema {
     margin-top: 10px;
     margin-bottom: 0px;

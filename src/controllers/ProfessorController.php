@@ -77,9 +77,9 @@ class ProfessorController extends Controller
 
 
 			$this->render('professor/cadastroProva', $data,array('title'=>'Prova Eletronica','msg'=>array(
-                'success',
-                $msg,
-                'Agora você já pode adicionar Questões!'
+				                'success',
+				                $msg,
+				                'Agora você já pode adicionar Questões!'
                 )));;
 
 		} else {
@@ -118,7 +118,6 @@ class ProfessorController extends Controller
 					if(substr($key, 0, 11) == 'alternativa') {
 						$id = substr($key, 16);
 
-
 						if(!empty($_POST["id_alternativa".$id])){
 							$alter['id'] = $_POST["id_alternativa".$id];
 
@@ -135,8 +134,6 @@ class ProfessorController extends Controller
 						$alternativa->save();
 						unset($alter);
 					}
-
-
 				}
 					if(empty($_POST['questao_id'])) {
 

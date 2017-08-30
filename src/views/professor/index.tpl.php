@@ -1,8 +1,9 @@
 <div class="col-md-12">
            <div class="card border-primary m-0">
            	<div class="card-body">
+           		<h4 class="title-nav">Informações</h4>
            		<!-- Nav tabs -->
-           		<ul class="nav nav-tabs" id="myTab" role="tablist">
+           		<ul class="nav nav-tabs lista-nav" id="myTab" role="tablist">
            			<li class="nav-item">
            				<a class="nav-link active" data-toggle="tab" href="#provaspublicadas" role="tab">Provas Publicadas</a>
            			</li>
@@ -26,6 +27,7 @@
                                             					<th></th>
                                             					<th>Qtd. Questões</th>
                                             					<th>Valor Prova</th>
+                                            					<th>Inicio-Fim</th>
                                             					<th>Data da Prova</th>
                                             					<th></th>
                                             				</tr>
@@ -36,6 +38,7 @@
                                             					<td></td>
                                             					<td></td>
                                             					<td><span class="badge badge-info pull-right">Em Andamento</span></td>
+                                            					<td></td>
                                             					<td></td>
                                             					<td></td>
                                             					<td></td>

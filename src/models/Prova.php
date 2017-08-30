@@ -78,13 +78,13 @@ class Prova extends Model
 					<td>".$status[$value->getStatus()]."</td>
 					<td>";
 					if($value->getStatus() == 1 && $this->validarDataHora(['inicio' => $value->getHorario_inicio(),'fim' => $value->getHorario_fim(),'data' => $value->getData_prova()]))
-					{ 
-						$html .= "<a class='btn btn-light' href='acao=responderProva&modulo=aluno&id=".$value->getId()."' role='button'> Responder</a>"; 
+					{
+						$html .= "<a class='btn btn-light' href='acao=responderProva&modulo=aluno&id=".$value->getId()."' role='button'> Responder</a>";
 					}
 					else
-					{ 
+					{
 						$html .= "<button class='btn btn-light' disabled> Indisponivel</button>";
-					}	
+					}
 					$html .= "<td/></tr>";
 			}
 		return $html;
@@ -101,4 +101,6 @@ class Prova extends Model
 			return true;
 		return false;
 	}
+
+
 }
