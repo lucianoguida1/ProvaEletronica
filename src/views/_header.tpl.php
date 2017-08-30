@@ -17,8 +17,6 @@
     <link rel="stylesheet" type="text/css" href="assets/css/dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="assets/css/dataTables.bootstrap4.css">
 
-    <link href="js/advanced-datatable/css/demo_page.css" rel="stylesheet" />
-    <link href="js/advanced-datatable/css/demo_table.css" rel="stylesheet" />
     <!-- Optional theme -->
     <link rel="stylesheet" href="assets/css/bootstrap-theme.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
   <!--  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->

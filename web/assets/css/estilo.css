@@ -16,6 +16,25 @@ body {
     text-rendering:optimizeLegibility;
 }
 
+.form-login {
+    max-width: 380px;
+    height: 390px;
+    margin: 50px auto auto auto;
+    border-radius: 8px;
+    padding: 8px 0px 20px 0px;
+
+    border-right: 10px;
+    background: rgba(0,0,0,.1);
+}
+
+.form-login form {
+    margin: 25px 10px 10px 10px;
+}
+
+.title-login {
+    margin-top: 15px;
+}
+
 #content{
 	margin-top: 20px;
 }
