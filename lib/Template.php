@@ -19,7 +19,7 @@ class Template {
 
             $dirs = array(
             'home',
-            'usuario'            
+            'usuario'
         );
 
         $verdade = false;
@@ -35,7 +35,7 @@ class Template {
                 $verdade = true;
             }
         }
-        
+
         if(!$verdade) {
             require_once $dir . $template . '.tpl.php';
         }
@@ -55,9 +55,10 @@ class Template {
                     break;
                 case 'professor':
                     $menu['menu']=array(
-                        "Cadastrar Prova" => "professor/cadastroProva",
-                        "Provas"          => "professor/provas",
-                        "Sair" => "usuario/logout"
+                        "Inicio"                       => "professor/index",
+                        "Cadastrar Prova"   => "professor/cadastroProva",
+                        "Provas"                    => "professor/provas",
+                        "Sair"                          => "usuario/logout"
                     );
                     break;
                 case 'estudante':

@@ -7,15 +7,15 @@ html {
     -webkit-font-smoothing: antialiased !important;
 }
 body {
-   /* color:#767676;*/
+   /* color:#767676;
     background: url('../images/shattered.png');
     font-family:'Open Sans',sans-serif;
     padding:0px !important;
     margin:0px !important;
     font-size:14px;
-    text-rendering:optimizeLegibility;
+    text-rendering:optimizeLegibility;*/
 }
-
+/*
 .form-login {
     max-width: 380px;
     height: 390px;
@@ -33,7 +33,7 @@ body {
 
 .title-login {
     margin-top: 15px;
-}
+}*/
 
 #content{
 	margin-top: 20px;
