@@ -1,35 +1,11 @@
 <?php 
 
 
-class AdministradorController
+class AdministradorController extends Controller
 {
-	public function validarCadProf()
-	{		
-	}
-
-	public function validarCadEstudante()
-	{		
-	}
-
-	public function verPerfilProf()
-	{		
-	}
-
-	public function verPerfilEstudante()
-	{
-
-	}
-
-	public function editarPerfilProf()
-	{
-
-	}
-
-	public function excluirPerfilProf()
-	{		
-	}
-
-	public function excluirPerfilEstudante()
-	{		
+	public function index(){
+		$us = New Usuario();
+		$data['usuarios'] = $us->selecionar('status = 0');
+		$this->render('admin/index',$data);
 	}
 }

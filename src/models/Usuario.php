@@ -32,6 +32,15 @@ class Usuario extends Model
     public function getCamposObrigatorios(){
     	return array('login', 'senha', 'tipo', 'status');
     }
+    public function getProfessor(){
+        $return = new Professor();
+        return $return->selecionar("usuario_id = ".$this->getId())[0];
+    }
+
+    public function getEstudante(){
+        $return = new Estudante();
+        return $return->selecionar("usuario_id = ".$this->getId())[0];
+    }
 
     public static function logar($dados)
     {

@@ -70,6 +70,11 @@ class Template {
                     break;
                 case 'admin':
                     $menu['menu'] = [
+                        "Inicio"        => "administrador/index",
+                        "Professores"   => "administrador/professores",
+                        "Estudantes"    => "administrador/estudantes",
+                        "Prova"         => "administrador/index",
+                        "Sair"          => "usuario/logout",
                     ];
                     break;
             }

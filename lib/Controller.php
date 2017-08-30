@@ -41,6 +41,8 @@ class Controller {
             $data: RECEBE OS DADOS A SEREM MOTRADO NA VIEW
             $adicionais: RECEBE OS ADICIONAIS A SEREM EXIBIDO NO HEADER
         **/
+        if(!isset($adicionais['title']))
+            $adicionais['title'] = "Prova Eletronica";
         Template::exibir('_header',$adicionais);
         Template::exibir($arquivo, $data);
         Template::exibir('_Footer');
