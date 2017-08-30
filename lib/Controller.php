@@ -1,24 +1,24 @@
 <?php
 
-class Controller {   
+class Controller {
 
     public static function inicializar() {
             $modulo = isset($_GET['modulo']) ? $_GET['modulo'] : 'index';
             $acao = isset($_GET['acao']) ? $_GET['acao'] : 'index';
             $classe = ucfirst($modulo) . 'Controller';
-            
+
             try {
                 if (!class_exists($classe)){
                     throw new Exception('Controller inexistente!');
                 }
-                
+
                 $classeInstancia = new $classe;
                 if (!method_exists($classeInstancia, $acao)){
                     throw new Exception("Não existe acao $acao no controller $classe!");
                 }
-                
+
                 $classeInstancia->$acao();
-                
+
             } catch (Exception $exc) {
                 echo $exc->getMessage();
                 echo $exc->getTraceAsString();
@@ -26,8 +26,8 @@ class Controller {
             }
 
         }
-    
-        
+
+
 
     public function redirectTo($endereco)
     {
@@ -43,6 +43,7 @@ class Controller {
         **/
         if(!isset($adicionais['title']))
             $adicionais['title'] = "Prova Eletronica";
+
         Template::exibir('_header',$adicionais);
         Template::exibir($arquivo, $data);
         Template::exibir('_Footer');

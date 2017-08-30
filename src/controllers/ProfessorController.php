@@ -10,7 +10,9 @@ class ProfessorController extends Controller
 	}
 	public function index()
 	{
-		$this->render("professor/index",[],["title" => "Bem-vindo"]);
+		$data['provasPublicadas'] = Prova::selecionar("status= 1");
+		$data['provasAPublicar'] = Prova::selecionar("status=0");
+		$this->render("professor/index", $data,["title" => "Bem-vindo"]);
 	}
 
 	public function verPerfilProf()

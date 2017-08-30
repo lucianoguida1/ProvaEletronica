@@ -1,7 +1,7 @@
 <?php
 
 
-class Usuario extends Model 
+class Usuario extends Model
 {
 	static $tabela = 'usuarios';
 	static $classe = 'Usuario';
@@ -25,7 +25,7 @@ class Usuario extends Model
     			'login'		=> array('rotulo' => 'login'),
     			'senha'		=> array('rotulo' => 'senha'),
     			'tipo'		=> array('rotulo' => 'tipo'),
-    			'status'	=> array('rotulo' => 'status')	
+    			'status'	               => array('rotulo' => 'status')
     		);
     }
 
