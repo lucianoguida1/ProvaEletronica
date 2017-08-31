@@ -1,6 +1,6 @@
 $(function(){
-	//var url_post = 'http://localhost/prova/web/app.php';
-	var url_post = '../app.php';
+	var url_post = 'http://localhost/provaeletronica/web/app.php';
+	//var url_post = '../app.php';
 	var msg_error = $('#j_error_cadastro');
 
  	msg_error.hide();
@@ -229,6 +229,7 @@ $(function(){
 			//dataType: "json",
 			beforeSend: "",
 			error: function() {
+
 				msgModalQuestao('danger', 'Valor inválido, verifique se campos foram preenchidos corretamente!');
 			},
 			success: function(data) {

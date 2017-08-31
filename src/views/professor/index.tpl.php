@@ -41,7 +41,7 @@
 								<td><span class="badge badge-success pull-right">Aberto</span></td>
 								<td><?=$provaAPublicar->getQtd_questoes()?></td>
 								<td><?=$provaAPublicar->getValor()?></td>
-								<td><?=$provaAPublicar->getData_prova()?></td>
+								<td><?=date('d/m/y',strtotime($provaAPublicar->getData_prova()))?></td>
 								<td><a href="?acao=publicarProva&modulo=professor&id=<?=$provaAPublicar->getId()?>" class="btn btn-secondary btn-sm pull-right">Publicar</a></td>
 							</tr>
 							<?php } ?>

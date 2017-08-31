@@ -31,8 +31,13 @@ class EstudanteProva extends Prova
 
 	public function allProvasRespondidasAluno($id_aluno)
 	{
-		$id_estudante = Estudante::selecionar('usuario_id = '.$id_aluno)[0]->getId();
+		$id_estudante = Estudante::selecionar("usuario_id = '".$id_aluno."'");
+		if(empty($id_estudante[0]))
+			return "<tr><th><td>Falha na busca de dados!</td></th></tr>";
+		$id_estudante = $id_estudante[0]->getId();	
 		$resultado = EstudanteProva::selecionar("estudante_id='".$id_estudante."'");
+		if(empty($resultado))
+			return "<tr><th><td>Nenhuma prova encontrada para este usuario!</td></th></tr>";
 		$html = "";
 		$status = ['0' => 'Inativa', '1' => 'Ativa'];
 		foreach ($resultado as $key => $provas) {
@@ -46,9 +51,9 @@ class EstudanteProva extends Prova
 						<td>".date('H:i',strtotime($value->getHorario_inicio()))." as ".date('H:i',strtotime($value->getHorario_fim()))."</td>
 						<td>".$status[$value->getStatus()]."</td>
 						<td>
-							<a class='btn btn-light' href='acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Resultado </a>
-							<a class='btn btn-light' href='acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Informações </a>
-							<a class='btn btn-light' href='acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Ver </a>
+							<a class='btn btn-light' href='?acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Resultado </a>
+							<a class='btn btn-light' href='?acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Informações </a>
+							<a class='btn btn-light' href='?acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Ver </a>
 						<td/></tr>";
 				}
 			}
