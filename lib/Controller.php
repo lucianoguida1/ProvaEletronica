@@ -3,9 +3,16 @@
 class Controller {
 
     public static function inicializar() {
+        if(isset($_POST['modulo']) &&  isset($_POST['acao'])) {
+            $modulo = $_POST['modulo'];
+            $acao = $_POST['acao'];
+            $classe = ucfirst($modulo) . 'Controller';
+        } else {
             $modulo = isset($_GET['modulo']) ? $_GET['modulo'] : 'index';
             $acao = isset($_GET['acao']) ? $_GET['acao'] : 'index';
             $classe = ucfirst($modulo) . 'Controller';
+        }
+
 
             try {
                 if (!class_exists($classe)){
