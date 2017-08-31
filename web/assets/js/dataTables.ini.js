@@ -27,13 +27,19 @@ $(document).ready(function() {
 
         }
         });
+    $('.msg-provas').hide();
+    function msgprovas(msg) {
+        $('.msg-provas').text(msg);
+        window.setTimeout(function(){ $('.msg-provas').fadeOut("slow") }, 3000);
+    }
 
-         var table = $('#j_provas').DataTable();
+     var table = $('#j_provas').DataTable();
 
-         $('#j_provas tbody').on('click', 'tr', function () {
-                 var data = table.row( this ).data();
-                alert( 'You clicked on '+data[0]+'\'s row' );
+         $('#j_provas tbody').on('click', '.j_excluir', function () {
+         	var tr = $(this).attr('id');
+            window.setTimeout(function(){  table.row("#j_" + tr).remove().draw( false ) }, 100);
+
+	return false;
              } );
-
 
 });

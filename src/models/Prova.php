@@ -59,9 +59,9 @@ class Prova extends Model
 					<td>".$value->getData_prova()."</td>
 					<td>".$value->getQtd_questoes()."</td>
 					<td>
-						<a id='".$value->getId()."' href='acao=cadastroProva&modulo=professor&id=".$value->getId()." ' class='badge badge-primary j_editar'>Editar</a>
-						<a id=' ".$value->getId()."' href='acao=anularProva&modulo=professor&id=".$value->getId()."' class='badge badge-secondary j_anular'>Anular</a>
-						<a id=' ".$value->getId()."' href='acao=excluirProva&modulo=professor&id=".$value->getId()."' class='badge badge-danger j_excluir'>Excluir</a></td>
+						<a  href='?acao=editarProva&modulo=professor&id=".$value->getId()." ' class='badge badge-primary'>Editar</a>
+						<a id='".$value->getId()."' href='acao=anularProva&modulo=professor&id=".$value->getId()."' class='badge badge-secondary j_anular'>Anular</a>
+						<a id='".$value->getId()."' href='acao=excluirProva&modulo=professor&id=".$value->getId()."' class='badge badge-danger j_excluir'>Excluir</a></td>
 					</tr>";
 			}
 		return $html;
@@ -107,46 +107,46 @@ class Prova extends Model
 	}
 
 	public static function getProvas(
-            $condicao = null,
-            $ordem = null,
-            $limite = null,
-            $deslocamento = null) {
+		$condicao = null,
+		$ordem = null,
+		$limite = null,
+		$deslocamento = null) {
 
-        if(!is_null($limite)) {
-            if (!is_null($deslocamento)) {
-                $limite = "$deslocamento , $limite";
-            }
-        }
+		if(!is_null($limite)) {
+			if (!is_null($deslocamento)) {
+				$limite = "$deslocamento , $limite";
+			}
+		}
 
-        $pdo = Banco::instanciar();
-        $selectSQL = "SELECT
-        				provas.id,
-		  				provas.titulo,
-		  				provas.disciplina,
-		  				provas.data_prova,
-		  				provas.horario_inicio,
-		  				provas.horario_fim,
-		  				provas.professor_id,
-		  				provas.qtd_questoes,
-		  				provas.status,
-		  				sum(questoes.valor) as valor
-        			 FROM " . static::$tabela
-        			 ." INNER JOIN questoes ON questoes.prova_id = provas.id "
-                     . (!is_null($condicao) ? " WHERE $condicao" : '')
-                     . (!is_null($ordem) ? " ORDER BY $ordem" : '')
-                     . (!is_null($limite) ? " LIMIT $limite" : '')
-                 	 . 	" group by provas.id, provas.titulo, provas.disciplina, provas.data_prova, provas.horario_inicio,
-                 	 provas.horario_fim, provas.professor_id, provas.qtd_questoes, provas.status";
+		$pdo = Banco::instanciar();
+		$selectSQL = "SELECT
+		provas.id,
+		provas.titulo,
+		provas.disciplina,
+		provas.data_prova,
+		provas.horario_inicio,
+		provas.horario_fim,
+		provas.professor_id,
+		provas.qtd_questoes,
+		provas.status,
+		sum(questoes.valor) as valor
+		FROM " . static::$tabela
+		." INNER JOIN questoes ON questoes.prova_id = provas.id "
+		. (!is_null($condicao) ? " WHERE $condicao" : '')
+		. (!is_null($ordem) ? " ORDER BY $ordem" : '')
+		. (!is_null($limite) ? " LIMIT $limite" : '')
+		. "  group by provas.id, provas.titulo, provas.disciplina, provas.data_prova, provas.horario_inicio,
+		provas.horario_fim, provas.professor_id, provas.qtd_questoes, provas.status";
 
-        $statement = $pdo->prepare($selectSQL);
-        $statement->execute();
-        $results = $statement->fetchAll();
-        $objects = array();
-        $classe = static::$classe;
+		$statement = $pdo->prepare($selectSQL);
+		$statement->execute();
+		$results = $statement->fetchAll();
+		$objects = array();
+		$classe = static::$classe;
 
-        foreach ($results as $row) {
-            $objects[] = new $classe($row);
-        }
+		foreach ($results as $row) {
+			$objects[] = new $classe($row);
+		}
 
         return $objects;
     }

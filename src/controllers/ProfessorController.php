@@ -5,8 +5,8 @@ class ProfessorController extends Controller
 	function __construct()
 	{
 		if(isset($_SESSION['login']) && $_SESSION['tipo'] != 'professor') {
-            		$this->redirectCheck();
-       	 }
+			$this->redirectCheck();
+		}
 	}
 	public function index()
 	{
@@ -29,12 +29,17 @@ class ProfessorController extends Controller
 	}
 
 	public function cadastroProva()
-    {
-        $this->render("professor/cadastroProva",[],[]);
-    }
+	{
+		$this->render("professor/cadastroProva",[],[]);
+	}
 
 	public function editarProva()
 	{
+		$prova = Prova::selecionarUm($_GET['id']);
+		$questoes = Questao::selecionar("prova_id='".$prova->getId()."'", 'ordem');
+		$data['prova'] = $prova;
+		$data['questoes'] = $questoes;
+		$this->render("professor/cadastroProva", $data);
 	}
 
 	public function excluirProva()
@@ -88,10 +93,10 @@ class ProfessorController extends Controller
 
 
 			$this->render('professor/cadastroProva', $data,array('title'=>'Prova Eletronica','msg'=>array(
-				                'success',
-				                $msg,
-				                'Agora você já pode adicionar Questões!'
-                )));;
+				'success',
+				$msg,
+				'Agora você já pode adicionar Questões!'
+				)));;
 
 		} else {
 			$this->render('professor/cadastroProva',array(),array('title'=>'Prova Eletronica','msg'=>$valid->getErrors()));
@@ -146,32 +151,32 @@ class ProfessorController extends Controller
 						unset($alter);
 					}
 				}
-					if(empty($_POST['questao_id'])) {
+				if(empty($_POST['questao_id'])) {
 
 					$html = "
-						<tr id='j_".$questao->getId()."'>
-							<th scope='row'>".$questao->getOrdem().".</th>
-							<td>".$questao->getEnunciado()."</td>
-							<td>
-								<a id='".$questao->getId()."' href='acao=editarQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-primary j_editar'>Editar</a>
-								<a id='".$questao->getId()."' href='acao=anularQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-secondary j_anular'>Anular</a>
-								<a id='".$questao->getId()."' href='acao=excluirQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-danger j_excluir'>Excluir</a>
-								<i  class='fa fa-check' aria-hidden='true'></i>
-							</td>
-						</tr>";
-					} else {
+					<tr id='j_".$questao->getId()."'>
+						<th scope='row'>".$questao->getOrdem().".</th>
+						<td>".$questao->getEnunciado()."</td>
+						<td>
+							<a id='".$questao->getId()."' href='acao=editarQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-primary j_editar'>Editar</a>
+							<a id='".$questao->getId()."' href='acao=anularQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-secondary j_anular'>Anular</a>
+							<a id='".$questao->getId()."' href='acao=excluirQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-danger j_excluir'>Excluir</a>
+							<i  class='fa fa-check' aria-hidden='true'></i>
+						</td>
+					</tr>";
+				} else {
 
 					$html = "
 
-							<th scope='row'>".$questao->getOrdem().".</th>
-							<td>".$questao->getEnunciado()."</td>
-							<td>
-								<a id='".$questao->getId()."' href='acao=editarQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-primary j_editar'>Editar</a>
-								<a id='".$questao->getId()."' href='acao=anularQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-secondary j_anular'>Anular</a>
-								<a id='".$questao->getId()."' href='acao=excluirQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-danger j_excluir'>Excluir</a>
-								<span class='j_carregando'><i  class='fa fa-spinner fa-spin' aria-hidden='true'></i></span>
-							</td>";
-					}
+					<th scope='row'>".$questao->getOrdem().".</th>
+					<td>".$questao->getEnunciado()."</td>
+					<td>
+						<a id='".$questao->getId()."' href='acao=editarQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-primary j_editar'>Editar</a>
+						<a id='".$questao->getId()."' href='acao=anularQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-secondary j_anular'>Anular</a>
+						<a id='".$questao->getId()."' href='acao=excluirQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-danger j_excluir'>Excluir</a>
+						<span class='j_carregando'><i  class='fa fa-spinner fa-spin' aria-hidden='true'></i></span>
+					</td>";
+				}
 
 				echo $html;
 			} else {

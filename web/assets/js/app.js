@@ -53,6 +53,7 @@ $(function(){
 	// INICIO ACAO DE EXCLUIR UMA QUESTÃO DA LISTA DE QUESTÃO
 	var tabelaQuestoes = $('.j_linha_tabela_questoes');
 
+
 	tabelaQuestoes.on('click', '.j_excluir', function() {
 		var acaoDelete = $(this).attr('href');
 		var aId = $(this).attr('id');
@@ -69,7 +70,6 @@ $(function(){
 			},
 			success: function(data){
 				if(data == 1) {
-
 					traction.fadeOut("slow");
 				} else {
 					alert('error.........Entre em contfsfato com Administrador!');
