@@ -78,13 +78,13 @@ class Prova extends Model
 					<td>".$status[$value->getStatus()]."</td>
 					<td>";
 					if($value->getStatus() == 1 && $this->validarDataHora(['inicio' => $value->getHorario_inicio(),'fim' => $value->getHorario_fim(),'data' => $value->getData_prova()]))
-					{ 
-						$html .= "<a class='btn btn-light' href='acao=responderProva&modulo=aluno&id=".$value->getId()."' role='button'> Responder</a>"; 
+					{
+						$html .= "<a class='btn btn-light' href='acao=responderProva&modulo=aluno&id=".$value->getId()."' role='button'> Responder</a>";
 					}
 					else
-					{ 
+					{
 						$html .= "<button class='btn btn-light' disabled> Indisponivel</button>";
-					}	
+					}
 					$html .= "<td/></tr>";
 			}
 		return $html;
@@ -101,4 +101,51 @@ class Prova extends Model
 			return true;
 		return false;
 	}
+
+	public static function getProvas(
+            $condicao = null,
+            $ordem = null,
+            $limite = null,
+            $deslocamento = null) {
+
+        if(!is_null($limite)) {
+            if (!is_null($deslocamento)) {
+                $limite = "$deslocamento , $limite";
+            }
+        }
+
+        $pdo = Banco::instanciar();
+        $selectSQL = "SELECT
+        				provas.id,
+		  				provas.titulo,
+		  				provas.disciplina,
+		  				provas.data_prova,
+		  				provas.horario_inicio,
+		  				provas.horario_fim,
+		  				provas.professor_id,
+		  				provas.qtd_questoes,
+		  				provas.status,
+		  				sum(questoes.valor) as valor
+        			 FROM " . static::$tabela
+        			 ." INNER JOIN questoes ON questoes.prova_id = provas.id "
+                     . (!is_null($condicao) ? " WHERE $condicao" : '')
+                     . (!is_null($ordem) ? " ORDER BY $ordem" : '')
+                     . (!is_null($limite) ? " LIMIT $limite" : '')
+                 	 . 	" group by provas.id, provas.titulo, provas.disciplina, provas.data_prova, provas.horario_inicio,
+                 	 provas.horario_fim, provas.professor_id, provas.qtd_questoes, provas.status";
+
+        $statement = $pdo->prepare($selectSQL);
+        $statement->execute();
+        $results = $statement->fetchAll();
+        $objects = array();
+        $classe = static::$classe;
+
+        foreach ($results as $row) {
+            $objects[] = new $classe($row);
+        }
+
+        return $objects;
+    }
+
+
 }

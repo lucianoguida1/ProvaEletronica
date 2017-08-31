@@ -10,11 +10,22 @@ class ProfessorController extends Controller
 	}
 	public function index()
 	{
-		$this->render("professor/index",[],["title" => "Bem-vindo"]);
+		$data['provasPublicadas'] = Prova::getProvas("provas.status= 1 and provas.data_prova >='". date('Y-m-d')."'");
+		$data['provasFinalizadas'] = Prova::getProvas("provas.status= 1 and provas.data_prova <'". date('Y-m-d')."'");
+		$data['provasAPublicar'] = Prova::getProvas("provas.status=0");
+		$this->render("professor/index", $data,["title" => "Bem-vindo"]);
 	}
 
 	public function verPerfilProf()
 	{
+	}
+
+	public function publicarProva()
+	{
+		$prova = Prova::selecionarUm($_GET['id']);
+		$prova->setStatus(1);
+		$prova->save();
+		$this->redirectTo("professor/index");
 	}
 
 	public function cadastroProva()
@@ -77,9 +88,9 @@ class ProfessorController extends Controller
 
 
 			$this->render('professor/cadastroProva', $data,array('title'=>'Prova Eletronica','msg'=>array(
-                'success',
-                $msg,
-                'Agora você já pode adicionar Questões!'
+				                'success',
+				                $msg,
+				                'Agora você já pode adicionar Questões!'
                 )));;
 
 		} else {
@@ -118,7 +129,6 @@ class ProfessorController extends Controller
 					if(substr($key, 0, 11) == 'alternativa') {
 						$id = substr($key, 16);
 
-
 						if(!empty($_POST["id_alternativa".$id])){
 							$alter['id'] = $_POST["id_alternativa".$id];
 
@@ -135,8 +145,6 @@ class ProfessorController extends Controller
 						$alternativa->save();
 						unset($alter);
 					}
-
-
 				}
 					if(empty($_POST['questao_id'])) {
 
