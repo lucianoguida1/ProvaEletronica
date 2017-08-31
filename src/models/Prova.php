@@ -43,6 +43,10 @@ class Prova extends Model
 
 	}
 
+	public function getProfessor(){
+		$return = new Professor();
+        return $return->selecionar("id = ".$this->getId())[0];
+	}
 	public function allProvas()
 	{
 		$provas = Prova::selecionar("status <= 1");
@@ -55,9 +59,9 @@ class Prova extends Model
 					<td>".$value->getData_prova()."</td>
 					<td>".$value->getQtd_questoes()."</td>
 					<td>
-						<a id='".$value->getId()."' href='acao=cadastroProva&modulo=professor&id=".$value->getId()." ' class='badge badge-primary j_editar'>Editar</a>
-						<a id=' ".$value->getId()."' href='acao=anularProva&modulo=professor&id=".$value->getId()."' class='badge badge-secondary j_anular'>Anular</a>
-						<a id=' ".$value->getId()."' href='acao=excluirProva&modulo=professor&id=".$value->getId()."' class='badge badge-danger j_excluir'>Excluir</a></td>
+						<a  href='?acao=editarProva&modulo=professor&id=".$value->getId()." ' class='badge badge-primary'>Editar</a>
+						<a id='".$value->getId()."' href='acao=anularProva&modulo=professor&id=".$value->getId()."' class='badge badge-secondary j_anular'>Anular</a>
+						<a id='".$value->getId()."' href='acao=excluirProva&modulo=professor&id=".$value->getId()."' class='badge badge-danger j_excluir'>Excluir</a></td>
 					</tr>";
 			}
 		return $html;
@@ -79,7 +83,7 @@ class Prova extends Model
 					<td>";
 					if($value->getStatus() == 1 && $this->validarDataHora(['inicio' => $value->getHorario_inicio(),'fim' => $value->getHorario_fim(),'data' => $value->getData_prova()]))
 					{
-						$html .= "<a class='btn btn-light' href='?acao=responderProva&modulo=aluno&id=".$value->getId()."' role='button'> Responder</a>";
+						$html .= "<a class='btn btn-light' href='acao=responderProva&modulo=aluno&id=".$value->getId()."' role='button'> Responder</a>";
 					}
 					else
 					{
@@ -146,4 +150,6 @@ class Prova extends Model
 
         return $objects;
     }
+
+
 }

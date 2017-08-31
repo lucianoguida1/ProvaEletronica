@@ -1,24 +1,31 @@
 <?php
 
-class Controller {   
+class Controller {
 
     public static function inicializar() {
+        if(isset($_POST['modulo']) &&  isset($_POST['acao'])) {
+            $modulo = $_POST['modulo'];
+            $acao = $_POST['acao'];
+            $classe = ucfirst($modulo) . 'Controller';
+        } else {
             $modulo = isset($_GET['modulo']) ? $_GET['modulo'] : 'index';
             $acao = isset($_GET['acao']) ? $_GET['acao'] : 'index';
             $classe = ucfirst($modulo) . 'Controller';
-            
+        }
+
+
             try {
                 if (!class_exists($classe)){
                     throw new Exception('Controller inexistente!');
                 }
-                
+
                 $classeInstancia = new $classe;
                 if (!method_exists($classeInstancia, $acao)){
                     throw new Exception("Não existe acao $acao no controller $classe!");
                 }
-                
+
                 $classeInstancia->$acao();
-                
+
             } catch (Exception $exc) {
                 echo $exc->getMessage();
                 echo $exc->getTraceAsString();
@@ -26,8 +33,8 @@ class Controller {
             }
 
         }
-    
-        
+
+
 
     public function redirectTo($endereco)
     {
@@ -35,7 +42,7 @@ class Controller {
         header("Location: ?acao=$separado[1]&modulo=$separado[0]");
     }
 
-    public function render($arquivo = 'erro404',$data = array(),$adicionais=array(),$footer = true){
+    public function render($arquivo = 'erro404',$data = array(),$adicionais=array()){
         /**
             $arquivo: RECEBE A VIEW A SER EXIBIDA
             $data: RECEBE OS DADOS A SEREM MOTRADO NA VIEW
@@ -43,8 +50,8 @@ class Controller {
         **/
         if(!isset($adicionais['title']))
             $adicionais['title'] = "Prova Eletronica";
-        if($footer)
-            Template::exibir('_header',$adicionais);
+
+        Template::exibir('_header',$adicionais);
         Template::exibir($arquivo, $data);
         Template::exibir('_Footer');
     }

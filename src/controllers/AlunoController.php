@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 
 class AlunoController extends Controller
@@ -41,13 +40,13 @@ class AlunoController extends Controller
                 $estudante[0]->setEmail_estudante($_POST['email']);
                 $estudante[0]->setSexo_estudante($_POST['sexo']);
                 $estudante[0]->save();
-                $this->render('aluno/perfil',['estudante' => $estudante, 'usuario' => $usuario],array('title'=>'Prova Eletronica','msg'=>array(
+                $this->render('aluno/perfil',array(),array('title'=>'Prova Eletronica','msg'=>array(
                     'success',
-                    'Perfil Atualizado.',
-                    'Obrigado!'
+                    'Cadastro realizado com sucesso.',
+                    'Seu cadastro esta aguardando aprovação, em brece você pode utilizar o sistema!'
                     )));
             }else{
-                $this->render('aluno/perfil',['estudante' => $estudante, 'usuario' => $usuario],array('title'=>'Prova Eletronica','msg'=>$valid->getErrors()));
+                $this->render('aluno/perfil',array(),array('title'=>'Prova Eletronica','msg'=>$valid->getErrors()));
             }
         }
         else
@@ -65,9 +64,7 @@ class AlunoController extends Controller
     public function responderProva()
     {
         $id_prova = $_GET['id'];
-        $this->render("aluno/responder_prova",[],[],false);
     }
 
     
 }
-
