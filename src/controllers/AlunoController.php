@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
 class AlunoController extends Controller
@@ -69,3 +70,4 @@ class AlunoController extends Controller
 
     
 }
+

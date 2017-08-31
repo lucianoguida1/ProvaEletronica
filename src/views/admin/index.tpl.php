@@ -1,18 +1,55 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$(".liberar").click(function(event) {
-			
+			var a = $(this).parent().parent().parent();
+			$.ajax({
+				url: '?acao=adminAceita&modulo=ajax',
+				type: 'POST',
+				dataType: 'html',
+				data: "id="+$(this).val(),
+				success: function(e){
+					if(e){
+						a.removeAttr('class');
+						a.addClass('table-success');
+						$("#atu").show("fast");
+					}else{
+						a.removeAttr('class');
+						a.addClass('table-warning');
+					}
+				}
+			});
 		});
 		$(".recusar").click(function(event) {
-			
+			var a = $(this).parent().parent().parent();
+			$.ajax({
+				url: '?acao=adminRecusa&modulo=ajax',
+				type: 'POST',
+				dataType: 'html',
+				data: "id="+$(this).val(),
+				success: function(e){
+					if(e){
+						a.removeAttr('class');
+						a.addClass('table-danger');
+						$("#atu").show("fast");
+					}else{
+						a.removeAttr('class');
+						a.addClass('table-warning');
+					}
+				}
+			});
 		});
+		$('#atu').click(function() {
+		    location.reload();
+		});
+		$('.table').DataTable();
 	});
 </script>
-
+<div id="re"></div>
 <div class="col-md-10">
 	<div class="card">
 		<h4 class="card-header">Solicitação de cadastro</h4>
 		<div class="card-body">
+			<button id="atu" style="display: none;" type="button" class="btn btn-outline-info">Atualizar Tabela</button>
 			<table class="table">
 				<thead class="thead-default">
 					<tr>
@@ -25,7 +62,7 @@
 				</thead>
 				<tbody>
 					<?php if(empty($usuarios))
-					echo "<th colspan='4' class='table-success'>Nenhum novo usuário encontrado!</th>";
+					echo "<th colspan='5' class='table-success'>Nenhum novo usuário encontrado!</th>";
 					else{ $i=1;
 						foreach ($usuarios as $val) {
 							?>

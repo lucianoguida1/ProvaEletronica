@@ -102,5 +102,48 @@ class Prova extends Model
 		return false;
 	}
 
+	public static function getProvas(
+		$condicao = null,
+		$ordem = null,
+		$limite = null,
+		$deslocamento = null) {
 
+		if(!is_null($limite)) {
+			if (!is_null($deslocamento)) {
+				$limite = "$deslocamento , $limite";
+			}
+		}
+
+		$pdo = Banco::instanciar();
+		$selectSQL = "SELECT
+		provas.id,
+		provas.titulo,
+		provas.disciplina,
+		provas.data_prova,
+		provas.horario_inicio,
+		provas.horario_fim,
+		provas.professor_id,
+		provas.qtd_questoes,
+		provas.status,
+		sum(questoes.valor) as valor
+		FROM " . static::$tabela
+		." INNER JOIN questoes ON questoes.prova_id = provas.id "
+		. (!is_null($condicao) ? " WHERE $condicao" : '')
+		. (!is_null($ordem) ? " ORDER BY $ordem" : '')
+		. (!is_null($limite) ? " LIMIT $limite" : '')
+		. "  group by provas.id, provas.titulo, provas.disciplina, provas.data_prova, provas.horario_inicio,
+		provas.horario_fim, provas.professor_id, provas.qtd_questoes, provas.status";
+
+		$statement = $pdo->prepare($selectSQL);
+		$statement->execute();
+		$results = $statement->fetchAll();
+		$objects = array();
+		$classe = static::$classe;
+
+		foreach ($results as $row) {
+			$objects[] = new $classe($row);
+		}
+
+        return $objects;
+    }
 }
