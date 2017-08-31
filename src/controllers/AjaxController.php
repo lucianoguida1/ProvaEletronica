@@ -16,6 +16,13 @@ class AjaxController extends controller{
             }
         }
     }
+    public function adminAltera(){
+        if(isset($_REQUEST['id'])){
+            $us = new Usuario();
+            $us = $us->selecionarUm((int)$_REQUEST['id']);
+            $prof = $us->getProfessor(); //// PAREI AQUI VEA
+        }
+    }
     public function adminRecusa(){
         if(isset($_REQUEST['id'])){
             $us = new Usuario();

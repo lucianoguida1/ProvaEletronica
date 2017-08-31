@@ -41,7 +41,7 @@
 		$('#atu').click(function() {
 		    location.reload();
 		});
-		$('.table').DataTable();
+		$('#organiza').DataTable();
 	});
 </script>
 <div id="re"></div>
@@ -50,7 +50,7 @@
 		<h4 class="card-header">Solicitação de cadastro</h4>
 		<div class="card-body">
 			<button id="atu" style="display: none;" type="button" class="btn btn-outline-info">Atualizar Tabela</button>
-			<table class="table">
+			<table class="table" id="organiza">
 				<thead class="thead-default">
 					<tr>
 						<th>#</th>

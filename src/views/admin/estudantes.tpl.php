@@ -41,16 +41,16 @@
 		$('#atu').click(function() {
 		    location.reload();
 		});
-		$('.table').DataTable();
+		$('#organiza').DataTable();
 	});
 </script>
 <div id="re"></div>
 <div class="col-md-10">
 	<div class="card">
-		<h4 class="card-header">Solicitação de cadastro estudantes</h4>
+		<h4 class="card-header">Lista de estudantes</h4>
 		<div class="card-body">
 			<button id="atu" style="display: none;" type="button" class="btn btn-outline-info">Atualizar Tabela</button>
-			<table class="table">
+			<table class="table" id="organiza">
 				<thead class="thead-default">
 					<tr>
 						<th>#</th>
@@ -66,15 +66,18 @@
 					else{ $i=1;
 						foreach ($usuarios as $val) {
 							?>
-							<tr>
+							<tr <?php if($val->getStatus() == 2){ echo "class='table-danger'"; }?>>
 								<th scope="row"><?=$i++?></th>
 								<th><?=$val->getTipo()?></th>
 								<td><?=$val->getTipo()=="professor"?$val->getProfessor()->getNome_prof():$val->getEstudante()->getNome_estudante()?></td>
 								<td><?=$val->getLogin()?></td>
 								<td>
 									<div class="btn-group" role="group" aria-label="Basic example">
+										<?php if($val->getStatus() == 2){ ?>
 										<button class="btn btn-success liberar" value="<?=$val->getId()?>">Liberar</button>
-										<button class="btn btn-danger recusar" value="<?=$val->getId()?>">Recusar</button>
+										<?php }else{ ?>
+										<button class="btn btn-danger recusar" value="<?=$val->getId()?>">Desativar</button>
+										<?php } ?>
 										<button class="btn btn-info" data-toggle="modal" data-target="#exampleModal<?=$val->getId()?>">+ Informação</button>
 									</div>
 									<div class="modal fade" id="exampleModal<?=$val->getId()?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

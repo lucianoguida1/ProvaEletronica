@@ -39,18 +39,35 @@
 			});
 		});
 		$('#atu').click(function() {
-		    location.reload();
+			location.reload();
 		});
-		$('.table').DataTable();
+		$('#organiza').DataTable();
+		$(".salva").click(function(event) {
+			var a = "";
+			$(this).parent().parent().find('input').each(function(index, el) {
+				if(!$(this).attr('disabled')){
+					a += $(this).attr('id')+"='"+$(this).val()+"'&";
+				}
+			});
+			$.ajax({
+				url: '?acao=adminAltera&modulo=ajax',
+				type: 'POST',
+				dataType: 'html',
+				data: a,
+				success: function(e){
+					alert(e);
+				}
+			});
+		});
 	});
 </script>
 <div id="re"></div>
 <div class="col-md-10">
 	<div class="card">
-		<h4 class="card-header">Solicitação de cadastro professores</h4>
+		<h4 class="card-header">Lista de professores</h4>
 		<div class="card-body">
 			<button id="atu" style="display: none;" type="button" class="btn btn-outline-info">Atualizar Tabela</button>
-			<table class="table">
+			<table class="table" id="organiza">
 				<thead class="thead-default">
 					<tr>
 						<th>#</th>
@@ -66,15 +83,18 @@
 					else{ $i=1;
 						foreach ($usuarios as $val) {
 							?>
-							<tr>
+							<tr <?php if($val->getStatus() == 2){ echo "class='table-danger'"; }?>>
 								<th scope="row"><?=$i++?></th>
 								<th><?=$val->getTipo()?></th>
 								<td><?=$val->getTipo()=="professor"?$val->getProfessor()->getNome_prof():$val->getEstudante()->getNome_estudante()?></td>
 								<td><?=$val->getLogin()?></td>
 								<td>
 									<div class="btn-group" role="group" aria-label="Basic example">
+										<?php if($val->getStatus() == 2){ ?>
 										<button class="btn btn-success liberar" value="<?=$val->getId()?>">Liberar</button>
-										<button class="btn btn-danger recusar" value="<?=$val->getId()?>">Recusar</button>
+										<?php }else{ ?>
+										<button class="btn btn-danger recusar" value="<?=$val->getId()?>">Desativar</button>
+										<?php } ?>
 										<button class="btn btn-info" data-toggle="modal" data-target="#exampleModal<?=$val->getId()?>">+ Informação</button>
 									</div>
 									<div class="modal fade" id="exampleModal<?=$val->getId()?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -87,27 +107,34 @@
 													</button>
 												</div>
 												<div class="modal-body">
-													<table class="table">
-														<thead class="thead-default">
-															<tr>
-																<th>Nome</th>
-																<th>Matricua</th>
-																<th>CPF</th>
-																<th>E-mail</th>
-																<th>Sexo</th>
-															</tr>
-														</thead>
-														<tbody>
-															<th scope="row"><?=$val->getTipo()=="professor"?$val->getProfessor()->getNome_prof():$val->getEstudante()->getNome_estudante()?></th>
-															<td><?=$val->getTipo()=="professor"?$val->getProfessor()->getMatricula_prof():$val->getEstudante()->getMatricula_estudante()?></td>
-															<td><?=$val->getTipo()=="professor"?$val->getProfessor()->getCpf_prof():$val->getEstudante()->getCpf_estudante()?></td>
-															<td><?=$val->getLogin()?></td>
-															<td><?=($val->getTipo()=="professor"?$val->getProfessor()->getSexo_prof():$val->getEstudante()->getSexo_estudante())=="M"?"Masculino":"Feminino"?></td>
-														</tbody>
-													</table>
+													<div class="col-md-10" id="dadosSalva">
+														<input type="text" id="id" value="<?=$val->getId()?>" style="display: none;">
+														<div class="form-group">
+															<label for="exampleInputEmail1">Nome</label>
+															<input type="text" name="text" class="form-control" id="nome" required="" value="<?=$val->getProfessor()->getNome_prof()?>">
+														</div>
+														<div class="form-group">
+															<label for="exampleInputEmail1">Matricula</label>
+															<input type="text" name="text" class="form-control" id="matricula" required="" value="<?=$val->getProfessor()->getMatricula_prof()?>">
+														</div>
+														<div class="form-group">
+															<label for="exampleInputEmail1">CPF</label>
+															<input type="text" disabled="" name="text" class="form-control" id="cpf" required="" value="<?=$val->getProfessor()->getCpf_prof()?>">
+														</div>
+														<div class="form-group">
+															<label for="exampleInputEmail1">E-mail</label>
+															<input type="email" name="email" class="form-control" id="email" required="" value="<?=$val->getProfessor()->getEmail_prof()?>">
+														</div>
+														<div class="form-group">
+															<label for="exampleInputEmail1">Sexo</label>
+															<input type="text" disabled="" name="text" class="form-control" id="sexo" required="" value="<?=($val->getProfessor()->getSexo_prof()=="M")?"Masculino":"Feminino"?>">
+														</div>
+													</div>
+
 												</div>
 												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+													<button type="button" class="btn btn-success salva" data-dismiss="modal">Salvar</button>
+													<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
 												</div>
 											</div>
 										</div>
