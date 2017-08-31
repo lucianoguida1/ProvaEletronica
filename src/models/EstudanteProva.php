@@ -46,9 +46,9 @@ class EstudanteProva extends Prova
 						<td>".date('H:i',strtotime($value->getHorario_inicio()))." as ".date('H:i',strtotime($value->getHorario_fim()))."</td>
 						<td>".$status[$value->getStatus()]."</td>
 						<td>
-							<a class='btn btn-light' href='acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Resultado </a>
-							<a class='btn btn-light' href='acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Informações </a>
-							<a class='btn btn-light' href='acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Ver </a>
+							<a class='btn btn-light' href='?acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Resultado </a>
+							<a class='btn btn-light' href='?acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Informações </a>
+							<a class='btn btn-light' href='?acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Ver </a>
 						<td/></tr>";
 				}
 			}

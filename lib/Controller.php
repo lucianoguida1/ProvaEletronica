@@ -35,7 +35,7 @@ class Controller {
         header("Location: ?acao=$separado[1]&modulo=$separado[0]");
     }
 
-    public function render($arquivo = 'erro404',$data = array(),$adicionais=array()){
+    public function render($arquivo = 'erro404',$data = array(),$adicionais=array(),$footer = true){
         /**
             $arquivo: RECEBE A VIEW A SER EXIBIDA
             $data: RECEBE OS DADOS A SEREM MOTRADO NA VIEW
@@ -43,7 +43,8 @@ class Controller {
         **/
         if(!isset($adicionais['title']))
             $adicionais['title'] = "Prova Eletronica";
-        Template::exibir('_header',$adicionais);
+        if($footer)
+            Template::exibir('_header',$adicionais);
         Template::exibir($arquivo, $data);
         Template::exibir('_Footer');
     }
