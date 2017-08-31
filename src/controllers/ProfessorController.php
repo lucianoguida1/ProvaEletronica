@@ -10,13 +10,22 @@ class ProfessorController extends Controller
 	}
 	public function index()
 	{
-		$data['provasPublicadas'] = Prova::selecionar("status= 1");
-		$data['provasAPublicar'] = Prova::selecionar("status=0");
+		$data['provasPublicadas'] = Prova::getProvas("provas.status= 1 and provas.data_prova >='". date('Y-m-d')."'");
+		$data['provasFinalizadas'] = Prova::getProvas("provas.status= 1 and provas.data_prova <'". date('Y-m-d')."'");
+		$data['provasAPublicar'] = Prova::getProvas("provas.status=0");
 		$this->render("professor/index", $data,["title" => "Bem-vindo"]);
 	}
 
 	public function verPerfilProf()
 	{
+	}
+
+	public function publicarProva()
+	{
+		$prova = Prova::selecionarUm($_GET['id']);
+		$prova->setStatus(1);
+		$prova->save();
+		$this->redirectTo("professor/index");
 	}
 
 	public function cadastroProva()
