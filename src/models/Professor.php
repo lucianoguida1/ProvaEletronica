@@ -19,7 +19,6 @@ class Professor extends Usuario
 	{
 		return static::$tabela;
 	}
-
 	public function getCampos()
 	{
 		return array(

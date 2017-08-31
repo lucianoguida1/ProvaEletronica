@@ -43,6 +43,10 @@ class Prova extends Model
 
 	}
 
+	public function getProfessor(){
+		$return = new Professor();
+        return $return->selecionar("id = ".$this->getId())[0];
+	}
 	public function allProvas()
 	{
 		$provas = Prova::selecionar("status <= 1");
