@@ -4,7 +4,7 @@
 			Relação de Provas				
 		</div>
 		<div class="card-body">
-			<table class="table table-responsive table-sm table-questoes">
+			<table id="tabela" class="table table-responsive table-sm table-questoes">
 			
 				<thead>
 					<tr>
@@ -24,3 +24,8 @@
 		</div>
 	</div> 	
 </div>		
+<script type="text/javascript">
+	$(document).ready(function($) {
+		$("#tabela").DataTable();	
+	});
+</script>

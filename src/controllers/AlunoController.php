@@ -58,12 +58,23 @@ class AlunoController extends Controller
     public function minhasProvas()
     {
         $provas = new EstudanteProva();
-        $this->render("aluno/minhasprovas",['provas' =>$provas->allProvasRespondidasAluno($_SESSION['user_id'])],[]);
+        $html_provas = $provas->allProvasRespondidasAluno($_SESSION['user_id']);
+        /*if($html_provas)
+        {
+            
+        }
+        else
+        {
+            $this->render("aluno/minhasprovas",[],['msg'=> ['info','Falha na busca de dados!', 'Contate o administrador do sistema.']]);
+            exit();
+        }*/
+        $this->render("aluno/minhasprovas",['provas' => $html_provas],[]);
     }
 
     public function responderProva()
     {
         $id_prova = $_GET['id'];
+        $this->render("aluno/responder_prova",[],[],false);
     }
 
     

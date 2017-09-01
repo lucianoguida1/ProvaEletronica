@@ -4,7 +4,7 @@
 			Relação de Provas				
 		</div>
 		<div class="card-body">
-			<table class="table table-responsive table-sm table-questoes">
+			<table id="tabela" class="table table-responsive table-sm table-questoes">
 			
 				<thead>
 					<tr>
@@ -18,9 +18,14 @@
 					</tr>
 				</thead>
 				<tbody class="j_linha_tabela_questoes">					
-					<?php echo $provas; ?>
+					<?php echo $provas;?>
 				</tbody>
 			</table>
 		</div>
 	</div> 	
 </div>		
+<script type="text/javascript">
+	$(document).ready(function($) {
+		$("#tabela").DataTable();	
+	});
+</script>>
