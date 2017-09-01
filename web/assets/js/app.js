@@ -1,6 +1,6 @@
 $(function(){
-	var url_post = 'http://localhost/provaeletronica/web/app.php';
-	//var url_post = '../app.php';
+	//var url_post = 'http://localhost/provaeletronica/web/app.php';
+	var url_post = '../index.php';
 	var msg_error = $('#j_error_cadastro');
 
  	msg_error.hide();
