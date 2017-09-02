@@ -71,10 +71,20 @@ class ProfessorController extends Controller
 	public function editarProva()
 	{
 		$prova = Prova::selecionarUm($_GET['id']);
-		$questoes = Questao::selecionar("prova_id='".$prova->getId()."'", 'ordem');
-		$data['prova'] = $prova;
-		$data['questoes'] = $questoes;
-		$this->render("professor/cadastroProva", $data);
+		if($prova->getData_prova() < date('Y-m-d')) {
+			$provas = new Prova;
+			$this->render("professor/provas",['provas' => $provas->allProvas()],array('msg' => array(
+				'info',
+				'Edição não disponível',
+				'Não é possível editar uma prova finalizada'
+			)));
+
+		} else {
+			$questoes = Questao::selecionar("prova_id='".$prova->getId()."'", 'ordem');
+			$data['prova'] = $prova;
+			$data['questoes'] = $questoes;
+			$this->render("professor/cadastroProva", $data);
+		}
 	}
 
 	public function excluirProva()
@@ -97,10 +107,16 @@ class ProfessorController extends Controller
 
 	public function salvarProva()
 	{
+
 		if(empty($_POST['id'])) unset($_POST['id']);
 		$valid = new Validator($_POST);
 		$valid->field_filledIn($_POST);
 		if ($valid->valid) {
+
+			if(strlen($_POST['disciplina']) > 45 || strlen($_POST['titulo']) > 45) {
+				echo json_encode(array('danger', 'Os campos Título e Disciplina deve conter no máximo 45 caracteres!'));
+			} else {
+
 			if(isset($_POST['id'])) $prov['id'] = $_POST['id'];
 
 			$prov['titulo'] = $_POST['titulo'];
@@ -131,6 +147,8 @@ class ProfessorController extends Controller
 			$retorno[1] = $msg;
 			$retorno[2] = $prova->getId();
 			echo json_encode($retorno);
+			}
+
 		} else {
 			echo json_encode($valid->getErrors());
 		}

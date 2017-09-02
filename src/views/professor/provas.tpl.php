@@ -8,8 +8,10 @@
 			<table class="table table-responsive table-sm table-questoes hover j_provas" data-order='[[ 1, "asc" ]]' data-page-length='10'  >
 				<thead>
 					<tr>
+						<th>Cód</th>
 						<th>Titulo da Prova</th>
 						<th>Disciplina</th>
+						<th>Inicio-Fim</th>
 						<th>Data da Prova</th>
 						<th>Qntd Questões</th>
 						<th style="width:15%; overflow:auto;"></th>

@@ -54,8 +54,10 @@ class Prova extends Model
 		foreach ($provas as $key => $value) {
 			$html .= "
 				<tr id='j_". $value->getId()."'>
-					<th scope='row'> ".$value->getTitulo()." </th>
+					<th scope='row'> ".$value->getId()." </th>
+					<td> ".$value->getTitulo()." </td>
 					<td>".$value->getDisciplina()."</td>
+					<td>".$value->getHorario_inicio()." - ".$value->getHorario_fim()." </td>
 					<td>". date('d/m/Y', strtotime($value->getData_prova()))."</td>
 					<td>".$value->getQtd_questoes()."</td>
 					<td>

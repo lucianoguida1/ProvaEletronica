@@ -43,7 +43,7 @@
 <div class="container-fluid">
     <div class="row justify-content-md-center">
         <div class="col-md-12">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
                 <a class="navbar-brand" href="?acao=index&modulo=index">Prova Eletronica</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -76,4 +76,4 @@
     </div>
 
 <div id="content" class="container">
-    <div class="row justify-content-md-center">
+    <div class="row justify-content-md-center conteudo">

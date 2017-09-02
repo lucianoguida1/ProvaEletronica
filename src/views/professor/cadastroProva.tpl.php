@@ -9,13 +9,13 @@
 				<input type="hidden" name="id" value="<?= isset($prova)?$prova->getId():""  ?>">
 					<div class="form-group col-md-4">
 						<label for="titulo">Título da Prova</label>
-						<input type="text" class="form-control form-control-sm" id="titulo" name="titulo" placeholder="Título da Prova" required=""
+						<input type="text" class="form-control form-control-sm" id="titulo" name="titulo" placeholder="Título da Prova" required="" maxlength="45"
 						value="<?= isset($prova)?$prova->getTitulo():""  ?>"
 						oninvalid="setCustomValidity('Por favor, digite o Título.')" onchange="try{setCustomValidity('')}catch(e){}">
 					</div>
 					<div class="form-group col-md-4">
 						<label for="disciplina">Disciplina</label>
-						<input type="text" class="form-control form-control-sm" id="disciplina" name="disciplina" placeholder="Disciplina" required="" value="<?= isset($prova)?$prova->getDisciplina():""  ?>"
+						<input type="text" class="form-control form-control-sm" id="disciplina" name="disciplina" placeholder="Disciplina" required="" maxlength="45" value="<?= isset($prova)?$prova->getDisciplina():""  ?>"
 						oninvalid="setCustomValidity('Por favor, digite a Disciplina.')" onchange="try{setCustomValidity('')}catch(e){}">
 					</div>
 					<div class="form-group col-md-3">

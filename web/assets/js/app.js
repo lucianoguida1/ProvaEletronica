@@ -1,6 +1,6 @@
 $(function(){
-	var url_post = 'http://localhost/provaeletronica/web/index.php';
-	//var url_post = '../index.php';
+	//var url_post = 'http://localhost/provaeletronica/web/index.php';
+	var url_post = '../index.php';
 	var msg_error = $('#j_error_cadastro');
 	var msgAjaxx = $('#j_msgAjax');
  	msg_error.hide();
@@ -287,7 +287,6 @@ $(function(){
 			dataType: "json",
 			beforeSend: "",
 			error: function(){
-				alert("error");
 				msgAjax('danger', 'Error de comunicação!');
 			},
 			success: function(data) {

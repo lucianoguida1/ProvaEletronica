@@ -55,10 +55,11 @@ class Template {
                     break;
                 case 'professor':
                     $menu['menu']=array(
-                        "Inicio"                       => "professor/index",
+                        "Inicio"            => "professor/index",
                         "Cadastrar Prova"   => "professor/cadastroProva",
-                        "Provas"                    => "professor/provas",
-                        "Sair"                          => "usuario/logout"
+                        "Provas"            => "professor/provas",
+                        "Perfil"            => "professor/perfil",
+                        "Sair"              => "usuario/logout"
                     );
                     break;
                 case 'estudante':

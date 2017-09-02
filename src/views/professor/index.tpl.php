@@ -19,35 +19,37 @@
 			<div class="tab-content">
 				<div class="tab-pane active" id="provasapublicar" role="tabpanel">
 					<?php if(isset($provasAPublicar) && !empty($provasAPublicar)) {  ?>
-					<table class="table table-responsive table-sm table-questoes hover"">
-						<thead>
-							<tr>
-								<th>Cód.</th>
-								<th>Título</th>
-								<th>Disciplina</th>
-								<th></th>
-								<th>Qtd. Questões</th>
-								<th>Valor Prova</th>
-								<th>Data da Prova</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php foreach ($provasAPublicar as $provaAPublicar) { ?>
-							<tr>
-								<td><?=$provaAPublicar->getId()?></td>
-								<td><?=$provaAPublicar->getTitulo()?></td>
-								<td><?=$provaAPublicar->getDisciplina()?></td>
-								<td><span class="badge badge-success pull-right">Aberto</span></td>
-								<td><?=$provaAPublicar->getQtd_questoes()?></td>
-								<td><?=number_format($provaAPublicar->getValor(), 2, ',', '.')?></td>
-								<td><?=date('d/m/Y',strtotime($provaAPublicar->getData_prova()))?></td>
-								<td><a href="?acao=publicarProva&modulo=professor&id=<?=$provaAPublicar->getId()?>" class="btn btn-secondary btn-sm pull-right">Publicar</a></td>
-							</tr>
-							<?php } ?>
+						<table class="table table-responsive table-sm table-questoes table-hover"">
+							<thead>
+								<tr>
+									<th>Cód.</th>
+									<th style="width:19%;  overflow:auto;">Título</th>
+									<th style="width:19%;  overflow:auto;">Disciplina</th>
+									<th style="width:5%;  overflow:auto;"></th>
+									<th>Qtd. Questões</th>
+									<th>Valor Prova</th>
+									<th>Inicio-Fim</th>
+									<th>Data da Prova</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ($provasAPublicar as $provaAPublicar) { ?>
+								<tr>
+									<td><?=$provaAPublicar->getId()?></td>
+									<td><?=$provaAPublicar->getTitulo()?></td>
+									<td><?=$provaAPublicar->getDisciplina()?></td>
+									<td><span class="badge badge-success pull-right">Aberto</span></td>
+									<td><?=$provaAPublicar->getQtd_questoes()?></td>
+									<td><?=number_format($provaAPublicar->getValor(), 2, ',', '.')?></td>
+									<td><?=$provaAPublicar->getHorario_inicio(). " - " . $provaAPublicar->getHorario_fim() ?></td>
+									<td><?=date('d/m/Y',strtotime($provaAPublicar->getData_prova()))?></td>
+									<td><a href="?acao=publicarProva&modulo=professor&id=<?=$provaAPublicar->getId()?>" class="btn btn-secondary btn-sm pull-right">Publicar</a></td>
+								</tr>
+								<?php } ?>
 
-						</tbody>
-					</table>
+							</tbody>
+						</table>
 					<?php    } else {
 						echo "<p class='text-center'>Nenhuma prova à publicar</p>";
 					} ?>
@@ -58,9 +60,9 @@
 						<thead>
 							<tr>
 								<th>Cód.</th>
-								<th>Título</th>
-								<th>Disciplina</th>
-								<th></th>
+								<th style="width:19%;  overflow:auto;">Título</th>
+								<th style="width:19%;  overflow:auto;">Disciplina</th>
+								<th style="width:5%;  overflow:auto;"></th>
 								<th>Qtd. Questões</th>
 								<th>Valor Prova</th>
 								<th>Inicio-Fim</th>
@@ -107,9 +109,9 @@
 						<thead>
 							<tr>
 								<th>Cód.</th>
-								<th>Título</th>
-								<th>Disciplina</th>
-								<th></th>
+								<th style="width:19%;  overflow:auto;">Título</th>
+								<th style="width:19%;  overflow:auto;">Disciplina</th>
+								<th style="width:5%;  overflow:auto;"></th>
 								<th>Qtd. Questões</th>
 								<th>Valor Prova</th>
 								<th>Qtd. Alunos</th>
@@ -136,8 +138,12 @@
 					<?php }else{
 						echo "<p class='text-center'>Nenhuma prova Finalizada</p>";
 					} ?>
+					<div class="text-right">
+						<button class="btn btn-dark j_anterior"><</button>
+						<button class="btn btn-dark j_proximo">></button>
+					</div>
 				</div>
-				<div class="tab-pane" id="settings" role="tabpanel">...</div>
+
 			</div>
 		</div>
 	</div>
