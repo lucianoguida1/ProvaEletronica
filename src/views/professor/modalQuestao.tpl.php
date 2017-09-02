@@ -1,12 +1,13 @@
-<form name="form-questao" action="acao=cadastrarQuestaoAjax&modulo=professor" method="post">
+<script type="text/javascript" src="assets/js/modal.js"></script>
+<form name="form-questoes" action="acao=cadastrarQuestaoAjax&modulo=professor" method="post">
 	<input type="hidden" name="questao_id" value="<?= isset($questao)?$questao->getId():"" ?>">
 
 	<div class="form-group">
 		<label for="enunciado">Enunciado</label>
-		<textarea class="form-control form-questao" id="enunciado" name="enunciado" rows="3" required=""><?= isset($questao)? $questao->getEnunciado():"" ?></textarea>
+		<textarea class="form-control form-questoes" id="enunciado" name="enunciado" rows="3" required=""><?= isset($questao)? $questao->getEnunciado():"" ?></textarea>
 </div>
 	<div class="form-row">
-		<button type="button" class="btn btn-primary btn-sm j_adicinar_alternativa">+ Adicionar Alternativa</button>
+		<button type="button" class="btn btn-primary btn-sm j_adicinar_alternativas">+ Adicionar Alternativa</button>
 		<div class="col-md-2">
 			<div class="input-group input-group-sm">
 				<span class="input-group-addon" id="ordem">Nº</span>
@@ -16,12 +17,12 @@
 		<div class="col-md-4">
 			<div class="input-group input-group-sm">
 				<span class="input-group-addon" id="valor">Valor</span>
-				<input type="number" class="form-control" placeholder="Questão" name="valor" aria-label="valor" aria-describedby="valor" value="<?= isset($questao)? $questao->getValor():"" ?>" required="">
+				<input type="number" step="any" class="form-control" placeholder="Questão" name="valor" aria-label="valor" aria-describedby="valor" value="<?= isset($questao)? $questao->getValor():"" ?>" required="">
 			</div>
 		</div>
 	</div>
 	<hr>
-	<ul class="list-group j_lista_alternativa">
+	<ul class="list-group j_lista_alternativas">
 		<?php
 		if (isset($alternativas)) :
 			foreach ($alternativas as $alternativa) {
@@ -37,9 +38,9 @@
 							}
 							?>
 							>
-							<textarea class="form-control form-questao" id="alternativa_enun<?= $alternativa->getId() ?>" name="alternativa_enun<?= $alternativa->getId() ?>" rows="2" cols="80" required=""><?= $alternativa->getEnunciado_alter() ?></textarea>
+							<textarea class="form-control form-questoes" id="alternativa_enun<?= $alternativa->getId() ?>" name="alternativa_enun<?= $alternativa->getId() ?>" rows="2" cols="80" required=""><?= $alternativa->getEnunciado_alter() ?></textarea>
 						</label>
-						<a id="<?= $alternativa->getId() ?>" href="acao=excluirAlternativa&modulo=professor&id=<?= $alternativa->getId() ?>" class="badge badge-danger excluir-alternativa">Excluir</a>
+						<a id="<?= $alternativa->getId() ?>" href="acao=excluirAlternativa&modulo=professor&id=<?= $alternativa->getId() ?>" class="badge badge-danger excluir-alternativas">Excluir</a>
 					</div>
 				</li>
 				<?php
@@ -55,4 +56,3 @@
 	</div>
 
 </form>
- <script type="text/javascript" src="assets/js/app.js">

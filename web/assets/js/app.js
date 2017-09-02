@@ -1,10 +1,10 @@
 $(function(){
-	//var url_post = 'http://localhost/provaeletronica/web/app.php';
-	var url_post = '../index.php';
+	var url_post = 'http://localhost/provaeletronica/web/index.php';
+	//var url_post = '../index.php';
 	var msg_error = $('#j_error_cadastro');
-
+	var msgAjaxx = $('#j_msgAjax');
  	msg_error.hide();
-
+ 	msgAjaxx.hide();
  	$('#modal-adicionar-questao').modal('handleUpdate');
 
  	//FUNCÇÃO DE MENSSAGEM PADRÃO MODAL CADASTRO QUESTÃO
@@ -12,6 +12,12 @@ $(function(){
  		msg_error.addClass("alert alert-"+ tipo).text(msg);
  		msg_error.fadeIn("slow")
 		window.setTimeout(function(){ msg_error.fadeOut("slow") }, 3000);
+ 	}
+
+ 	function msgAjax(tipo, msg) {
+ 		msgAjaxx.addClass("alert alert-"+ tipo).text(msg);
+ 		msgAjaxx.fadeIn('fast');
+ 		window.setTimeout(function(){ msgAjaxx.fadeOut("slow") }, 2000);
  	}
 
  	function isEmpty(obj) {
@@ -39,8 +45,6 @@ $(function(){
 			formQuestao.find("input").val('');
 			formQuestao.find("textarea").val('');
 			$('#modal-adicionar-questao').modal("show");
-
-
 		} else {
 			$('.j_msg_modal_confirme').empty().html('Para adicionar questão é necessário salvar a prova!<p><strong>Deseja salvar a Prova?<strong></p>');
 			$('#modal-confirme').modal('show');
@@ -48,6 +52,7 @@ $(function(){
 		return false;
 	})
 	// FIM AÇÃO QUE ADICIONA A QUESTÃO NA MODAL COM FORMULÁRIO DE CADASTRO DE ESQUESTÃO
+
 
 
 	// INICIO ACAO DE EXCLUIR UMA QUESTÃO DA LISTA DE QUESTÃO
@@ -229,7 +234,6 @@ $(function(){
 			//dataType: "json",
 			beforeSend: "",
 			error: function() {
-
 				msgModalQuestao('danger', 'Valor inválido, verifique se campos foram preenchidos corretamente!');
 			},
 			success: function(data) {
@@ -268,6 +272,30 @@ $(function(){
 			});
 
 		 return false;
+	});
+
+	formProva.on('submit', function(event) {
+		var action = $(this).attr('action');
+		var dados = $(this).serialize();
+		var sender = action + '&' + dados;
+		var id = $(this).find('input[name="id"]');
+
+		$.ajax({
+			url: url_post,
+			type: "post",
+			data: sender,
+			dataType: "json",
+			beforeSend: "",
+			error: function(){
+				alert("error");
+				msgAjax('danger', 'Error de comunicação!');
+			},
+			success: function(data) {
+				msgAjax(data[0], data[1]);
+				id.val(data[2]);
+			}
+		})
+		return false;
 	});
 
 })

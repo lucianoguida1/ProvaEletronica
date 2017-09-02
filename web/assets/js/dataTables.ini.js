@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('#j_provas').DataTable({
+    $('.j_provas').DataTable({
         "language": {
                                         "decimal": ",",
                                         "thousands": ".",

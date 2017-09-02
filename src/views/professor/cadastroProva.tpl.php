@@ -4,7 +4,7 @@
 			Informações da Prova
 		</div>
 		<div class="card-body">
-			<form name="form-prova" action="?acao=salvarProva&modulo=professor" method="POST">
+			<form  name="form-prova" action="acao=salvarProva&modulo=professor" method="POST">
 				<div class="form-row">
 				<input type="hidden" name="id" value="<?= isset($prova)?$prova->getId():""  ?>">
 					<div class="form-group col-md-4">
@@ -43,7 +43,7 @@
 						<label class="sr-only" for="fim"></label>
 						<div class="input-group input-group-sm">
 							<div class="input-group-addon">Qtd.</div>
-							<input type="text" class="form-control form-control-sm" id="quantidade" name="quantidade" placeholder="Questões" required="" pattern="[0-9]+$" value="<?= isset($prova)?$prova->getQtd_questoes():""  ?>">
+							<input type="number" class="form-control form-control-sm" id="quantidade" name="quantidade" placeholder="Questões" required="" min="1" max="100" value="<?= isset($prova)?$prova->getQtd_questoes():"" ?>">
 						</div>
 					</div>
 				</div>
@@ -115,13 +115,13 @@
 							<div class="col-md-2">
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="ordem">Nº</span>
-									<input type="number" class="form-control" placeholder="Questão" name="ordem" aria-label="ordem" aria-describedby="ordem" value="<?= isset($questao)? $questao->getOrdem():"" ?>" required="">
+									<input type="number" pattern="[1-100]+$"  class="form-control" placeholder="Questão" name="ordem" aria-label="ordem" aria-describedby="ordem" value="<?= isset($questao)? $questao->getOrdem():"" ?>" required="">
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="valor">Valor</span>
-									<input type="number" class="form-control" placeholder="Questão" name="valor" aria-label="valor" aria-describedby="valor" value="<?= isset($questao)? $questao->getValor():"" ?>" required="">
+									<input type="number" step="any"  class="form-control" placeholder="Questão" name="valor" aria-label="valor" aria-describedby="valor" value="<?= isset($questao)? $questao->getValor():"" ?>" required="">
 								</div>
 							</div>
 						</div>
@@ -164,26 +164,23 @@
 			</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
-
-
-
-				<div class="modal" id="modal-confirme">
-					<div class="modal-dialog" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Confirme</h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body j_msg_modal_confirme">
-								<!-- CONTEÚDO PREENCHIDO VIA JAVASCRIPT-->
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-primary btn-sm j_confirme-sim">SIM</button>
-								<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">NÃO</button>
-							</div>
-						</div>
-					</div>
+	<div class="modal" id="modal-confirme">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirme</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
 				</div>
+				<div class="modal-body j_msg_modal_confirme">
+					<!-- CONTEÚDO PREENCHIDO VIA JAVASCRIPT-->
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary btn-sm j_confirme-sim">SIM</button>
+					<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">NÃO</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

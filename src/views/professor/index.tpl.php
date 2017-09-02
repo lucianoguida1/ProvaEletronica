@@ -40,7 +40,7 @@
 								<td><?=$provaAPublicar->getDisciplina()?></td>
 								<td><span class="badge badge-success pull-right">Aberto</span></td>
 								<td><?=$provaAPublicar->getQtd_questoes()?></td>
-								<td><?=number_format($provaAPublicar->getValor(), 3, ',', '.')?></td>
+								<td><?=number_format($provaAPublicar->getValor(), 2, ',', '.')?></td>
 								<td><?=date('d/m/Y',strtotime($provaAPublicar->getData_prova()))?></td>
 								<td><a href="?acao=publicarProva&modulo=professor&id=<?=$provaAPublicar->getId()?>" class="btn btn-secondary btn-sm pull-right">Publicar</a></td>
 							</tr>
@@ -77,14 +77,19 @@
 								<td>
 									<?php
 									$dataAtual = date('Y-m-d');
-									if($provaPublicada->getData_prova() <= $dataAtual) {?>
-									<span class="badge badge-info pull-right">Em Andamento</span>
-									<?php } else { ?>
-									<span class="badge badge-info pull-right">A Realizar</span>
+									$horaAtual = date('H:i:s');
+									if($provaPublicada->getData_prova() == $dataAtual && $provaPublicada->getHorario_inicio() < $horaAtual
+										&& $provaPublicada->getHorario_fim() > $horaAtual) {?>
+									<span class="badge badge-warning pull-right">Em Andamento</span>
+									<?php }elseif ($provaPublicada->getData_prova() == $dataAtual && $provaPublicada->getHorario_inicio() < $horaAtual
+										&& $provaPublicada->getHorario_fim() < $horaAtual) { ?>
+										<span class="badge badge-dark pull-right">Realizado</span>
+									<?php }else{ ?>
+										<span class="badge badge-info pull-right">A Realizar</span>
 									<?php } ?>
 								</td>
 								<td><?=$provaPublicada->getQtd_questoes()?></td>
-								<td><?=number_format($provaPublicada->getValor(), 3, ',', '.')?></td>
+								<td><?=number_format($provaPublicada->getValor(), 2, ',', '.')?></td>
 								<td><?=$provaPublicada->getHorario_inicio(). " - " . $provaPublicada->getHorario_fim() ?></td>
 								<td><?=date('d/m/Y',strtotime($provaPublicada->getData_prova()))?> </td>
 								<td><a href="" ><i class="fa fa-search"></i></a></td>

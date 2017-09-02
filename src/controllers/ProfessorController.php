@@ -10,14 +10,49 @@ class ProfessorController extends Controller
 	}
 	public function index()
 	{
-		$data['provasPublicadas'] = Prova::getProvas("provas.status= 1 and provas.data_prova >='". date('Y-m-d')."'");
-		$data['provasFinalizadas'] = Prova::getProvas("provas.status= 1 and provas.data_prova <'". date('Y-m-d')."'");
-		$data['provasAPublicar'] = Prova::getProvas("provas.status=0");
+		$data['provasPublicadas'] = Prova::getProvas("provas.status= 1 and provas.data_prova >='". date('Y-m-d')."'", "data_prova");
+		$data['provasFinalizadas'] = Prova::getProvas("provas.status= 1 and provas.data_prova <'". date('Y-m-d')."'", "data_prova");
+		$data['provasAPublicar'] = Prova::getProvas("provas.status=0", "data_prova");
 		$this->render("professor/index", $data,["title" => "Bem-vindo"]);
 	}
 
-	public function verPerfilProf()
+	public function perfil()
 	{
+		$usuario = Usuario::selecionarUm($_SESSION['user_id']);
+        $professor = Professor::selecionar("usuario_id = '".$_SESSION['user_id']."'");
+
+        if(isset($_GET['id']) && !empty($_GET['id']))
+        {
+            $valid = new Validator($_POST);
+            $valid->field_email('email');
+            $valid->field_cadastropessoa('cpf');
+            $valid->field_filledIn($_POST);
+            if($valid->valid)
+            {
+                $usuario->setLogin($_POST['email']);
+                if(!empty($_POST['senha']))
+                    $usuario->setSenha(md5($_POST['senha']));
+                $usuario->save();
+                $professor[0]->setNome_prof($_POST['nome']);
+                $professor[0]->setMatricula_prof($_POST['matricula']);
+                $professor[0]->setCpf_prof($_POST['cpf']);
+                $professor[0]->setEmail_prof($_POST['email']);
+                $professor[0]->setSexo_prof($_POST['sexo']);
+                $professor[0]->setUsuario_id($usuario->getId());
+                $professor[0]->save();
+                $this->render('aluno/perfil',array(),array('title'=>'Prova Eletronica','msg'=>array(
+                    'success',
+                    'Cadastro realizado com sucesso.',
+                    'Seu cadastro esta aguardando aprovação, em breve você pode utilizar o sistema!'
+                    )));
+            }else{
+                $this->render('aluno/perfil',array(),array('title'=>'Prova Eletronica','msg'=>$valid->getErrors()));
+            }
+        }
+        else
+        {
+        $this->render("aluno/perfil",['estudante' => $estudante, 'usuario' => $usuario],[]);
+        }
 	}
 
 	public function publicarProva()
@@ -79,7 +114,7 @@ class ProfessorController extends Controller
 
 			$prova = new Prova($prov);
 			$prova->save();
-			$data['prova'] = $prova;
+
 
 			if(isset($_POST['id'])) {
 				$data['questoes'] = Questao::selecionar("prova_id='".$prova->getId()."'");
@@ -92,15 +127,12 @@ class ProfessorController extends Controller
 			}
 
 
-			$this->render('professor/cadastroProva', $data,array('title'=>'Prova Eletronica','msg'=>array(
-				'success',
-				$msg,
-				'Agora você já pode adicionar Questões!'
-				)));;
-
+			$retorno[0] = 'success';
+			$retorno[1] = $msg;
+			$retorno[2] = $prova->getId();
+			echo json_encode($retorno);
 		} else {
-			$this->render('professor/cadastroProva',array(),array('title'=>'Prova Eletronica','msg'=>$valid->getErrors()));
-			$this->redirectTo('professor/cadastroProva');
+			echo json_encode($valid->getErrors());
 		}
 	}
 
@@ -155,7 +187,7 @@ class ProfessorController extends Controller
 
 					$html = "
 					<tr id='j_".$questao->getId()."'>
-						<th scope='row'>".$questao->getOrdem().".</th>
+						<th scope='row'>".$questao->getOrdem()."</th>
 						<td>".$questao->getEnunciado()."</td>
 						<td>
 							<a id='".$questao->getId()."' href='acao=editarQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-primary j_editar'>Editar</a>
@@ -168,7 +200,7 @@ class ProfessorController extends Controller
 
 					$html = "
 
-					<th scope='row'>".$questao->getOrdem().".</th>
+					<th scope='row'>".$questao->getOrdem()."</th>
 					<td>".$questao->getEnunciado()."</td>
 					<td>
 						<a id='".$questao->getId()."' href='acao=editarQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-primary j_editar'>Editar</a>

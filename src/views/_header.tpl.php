@@ -70,8 +70,10 @@
                     <p><?=$msg[2]?></p>
                 </div>
                 <?php } ?>
+                <div id="j_msgAjax"></div>
             </div>
         </div>
     </div>
+
 <div id="content" class="container">
     <div class="row justify-content-md-center">

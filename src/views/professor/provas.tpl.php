@@ -5,7 +5,7 @@
 			Relação de Provas
 		</div>
 		<div class="card-body">
-			<table id="j_provas" class="table table-responsive table-sm table-questoes hover" data-order='[[ 1, "asc" ]]' data-page-length='10'  >
+			<table class="table table-responsive table-sm table-questoes hover j_provas" data-order='[[ 1, "asc" ]]' data-page-length='10'  >
 				<thead>
 					<tr>
 						<th>Titulo da Prova</th>

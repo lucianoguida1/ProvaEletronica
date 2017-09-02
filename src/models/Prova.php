@@ -56,7 +56,7 @@ class Prova extends Model
 				<tr id='j_". $value->getId()."'>
 					<th scope='row'> ".$value->getTitulo()." </th>
 					<td>".$value->getDisciplina()."</td>
-					<td>".$value->getData_prova()."</td>
+					<td>". date('d/m/Y', strtotime($value->getData_prova()))."</td>
 					<td>".$value->getQtd_questoes()."</td>
 					<td>
 						<a  href='?acao=editarProva&modulo=professor&id=".$value->getId()." ' class='badge badge-primary'>Editar</a>
@@ -123,7 +123,7 @@ class Prova extends Model
 		provas.id,
 		provas.titulo,
 		provas.disciplina,
-		provas.data_prova,
+		provas.data_prova as data_prova,
 		provas.horario_inicio,
 		provas.horario_fim,
 		provas.professor_id,
@@ -133,10 +133,10 @@ class Prova extends Model
 		FROM " . static::$tabela
 		." INNER JOIN questoes ON questoes.prova_id = provas.id "
 		. (!is_null($condicao) ? " WHERE $condicao" : '')
-		. (!is_null($ordem) ? " ORDER BY $ordem" : '')
-		. (!is_null($limite) ? " LIMIT $limite" : '')
 		. "  group by provas.id, provas.titulo, provas.disciplina, provas.data_prova, provas.horario_inicio,
-		provas.horario_fim, provas.professor_id, provas.qtd_questoes, provas.status";
+		provas.horario_fim, provas.professor_id, provas.qtd_questoes, provas.status"
+		. (!is_null($ordem) ? " ORDER BY $ordem" : '')
+		. (!is_null($limite) ? " LIMIT $limite" : '');
 
 		$statement = $pdo->prepare($selectSQL);
 		$statement->execute();
