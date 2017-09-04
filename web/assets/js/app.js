@@ -226,7 +226,7 @@ $(function(){
 		var action = $(this).attr('action');
 		var sender = action + '&' + dados + '&prova_id=' + idProva;
 		var trquestao = tabelaQuestoes.find('tr[id="j_'+idQuestao+'"]');
-
+		var ordem = $(this).find('input[name="ordem"]');
 		 $.ajax({
 			url: url_post,
 			type: "post",
@@ -244,7 +244,11 @@ $(function(){
 					if (data == 1) {
 						msgModalQuestao('danger', 'Error ao salvar a questão, verifique as campos!');
 					} else {
-						if (isEmpty(idQuestao)) {
+						if(data==2) {
+							ordem.css('border', '1px solid red');
+							msgModalQuestao('danger', 'Ordem já cadastrada escolha outra numeração!');
+						} else {
+							if (isEmpty(idQuestao)) {
 
 							formQuestao.find("input").val('');
 							formQuestao.find("textarea").val('');
@@ -260,8 +264,7 @@ $(function(){
 							window.setTimeout(function(){ $('.j_carregando').empty().html('<i  class="fa fa-check" aria-hidden="true"></i>');
 							}, 1000);
 						}
-
-
+						}
 					}
 				}
 			},
