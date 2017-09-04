@@ -84,7 +84,7 @@
  	        
  	        tempo--;
  	    } else {
-         //window.open('../controllers/logout.php', '_self');
+         window.location.href = '?acao=index&modulo=aluno';
      }
  }
  

@@ -109,7 +109,5 @@ class AlunoController extends Controller
         $sessions->init();
         $this->render("aluno/responder_prova",[],[],false);
     }
-
-    
     
 }

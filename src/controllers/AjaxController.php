@@ -45,6 +45,7 @@ class AjaxController extends controller{
             $callback = Session::checkTempo($_REQUEST['id_prova'],$_REQUEST['id_estudante']);
             echo $callback;
         }
+
     }
 }
 
