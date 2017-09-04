@@ -19,11 +19,11 @@
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Senha</label>
-            <input type="password" name="senha" class="form-control" id="senha" placeholder="Senha" required="" value="<?=isset($usuario) ? $usuario->getSenha()?>">
+            <input type="password" name="senha" class="form-control" id="senha" placeholder="Senha" required="" value="<?=isset($usuario) ? $usuario->getSenha(): ''?>">
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Confirme a senha</label>
-            <input type="password" class="form-control" id="senha2" placeholder="Confrime a senha" required="" value="<?=isset($usuario) ? $usuario->getSenha()?>">
+            <input type="password" class="form-control" id="senha2" placeholder="Confrime a senha" required="" value="<?=isset($usuario) ? $usuario->getSenha(): ''?>">
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Nome completo</label>
@@ -40,8 +40,8 @@
         <div class="form-group">
             <label class="mr-sm-2" for="inlineFormCustomSelectPref">Sexo</label>
             <select class="custom-select mb-2 mr-sm-2 mb-sm-0" name="sexo" id="inlineFormCustomSelectPref" required="">
-                <option value="M" <?=isset($professor) ? ($professor->getSexo() == 'M') ? 'selected=""': '' : ''?> >Masculino</option>
-                <option value="F" <?=isset($professor) ? ($professor->getSexo() == 'F') ? 'selected=""': '' : ''?> >Feminino</option>
+                <option value="M" <?=isset($professor) ? ($professor->getSexo_prof() == 'M') ? 'selected=""': '' : ''?> >Masculino</option>
+                <option value="F" <?=isset($professor) ? ($professor->getSexo_prof() == 'F') ? 'selected=""': '' : ''?> >Feminino</option>
             </select>
         </div>
         <button type="submit" class="btn btn-primary form-control" id="envia">Salvar Alterações</button>

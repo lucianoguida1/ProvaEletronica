@@ -49,24 +49,8 @@ class Prova extends Model
 	}
 	public function allProvas()
 	{
-		$provas = Prova::selecionar("status <= 1");
-		$html = "";
-		foreach ($provas as $key => $value) {
-			$html .= "
-				<tr id='j_". $value->getId()."'>
-					<th scope='row'> ".$value->getId()." </th>
-					<td> ".$value->getTitulo()." </td>
-					<td>".$value->getDisciplina()."</td>
-					<td>".$value->getHorario_inicio()." - ".$value->getHorario_fim()." </td>
-					<td>". date('d/m/Y', strtotime($value->getData_prova()))."</td>
-					<td>".$value->getQtd_questoes()."</td>
-					<td>
-						<a  href='?acao=editarProva&modulo=professor&id=".$value->getId()." ' class='badge badge-primary'>Editar</a>
-						<a id='".$value->getId()."' href='acao=anularProva&modulo=professor&id=".$value->getId()."' class='badge badge-secondary j_anular'>Anular</a>
-						<a id='".$value->getId()."' href='acao=excluirProva&modulo=professor&id=".$value->getId()."' class='badge badge-danger j_excluir'>Excluir</a></td>
-					</tr>";
-			}
-		return $html;
+
+
 	}
 
 	public function allProvasAluno()
@@ -153,5 +137,43 @@ class Prova extends Model
         return $objects;
     }
 
+    public static function getProvasFinalizadas(
+		$condicao = null,
+		$ordem = null,
+		$limite = null,
+		$deslocamento = null) {
+
+		if(!is_null($limite)) {
+			if (!is_null($deslocamento)) {
+				$limite = "$deslocamento , $limite";
+			}
+		}
+
+		$pdo = Banco::instanciar();
+		$selectSQL = "SELECT
+		provas.id,
+		provas.titulo,
+		provas.disciplina,
+		provas.data_prova as data_prova,
+		provas.horario_inicio,
+		provas.horario_fim,
+		provas.professor_id,
+		provas.qtd_questoes,
+		provas.status,
+		format(sum(questoes.valor),2,'de_DE') as valor
+		FROM " . static::$tabela
+		." INNER JOIN questoes ON questoes.prova_id = provas.id "
+		. (!is_null($condicao) ? " WHERE $condicao" : '')
+		. "  group by provas.id, provas.titulo, provas.disciplina, provas.data_prova, provas.horario_inicio,
+		provas.horario_fim, provas.professor_id, provas.qtd_questoes, provas.status"
+		. (!is_null($ordem) ? " ORDER BY $ordem" : '')
+		. (!is_null($limite) ? " LIMIT $limite" : '');
+
+		$statement = $pdo->prepare($selectSQL);
+		$statement->execute();
+		$results = $statement->fetchAll();
+
+        return $results;
+    }
 
 }

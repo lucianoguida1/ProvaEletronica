@@ -103,7 +103,7 @@
 				</div>
 
 				<div id="conteudo-modal" class="modal-body">
-					<form name="form-questao" action="acao=cadastrarQuestaoAjax&modulo=professor" method="post">
+					<form name="form-questao" action="acao=cadastrarQuestao&modulo=professor" method="post">
 						<input type="hidden" name="questao_id" value="<?= isset($questao)?$questao->getId():"" ?>">
 
 						<div class="form-group">

@@ -1,5 +1,5 @@
 <script type="text/javascript" src="assets/js/modal.js"></script>
-<form name="form-questoes" action="acao=cadastrarQuestaoAjax&modulo=professor" method="post">
+<form name="form-questoes" action="acao=cadastrarQuestao&modulo=professor" method="post">
 	<input type="hidden" name="questao_id" value="<?= isset($questao)?$questao->getId():"" ?>">
 
 	<div class="form-group">
