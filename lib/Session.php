@@ -30,7 +30,8 @@ class Session
         }
         else
         {
-            $dados['status_responder_prova'] = "1";
+
+            $dados = ['status_responder_prova' => "1",'estudante_id' => $this->id_estudante,'prova_id' => $this->id_prova];
             $provaEstudante = new EstudanteProva($dados);
             $provaEstudante->save();
         }
