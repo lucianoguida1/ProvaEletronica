@@ -10,16 +10,17 @@ class ProfessorController extends Controller
 	}
 	public function index()
 	{
-		$data['provasPublicadas'] = Prova::getProvas("provas.status= 1 and provas.data_prova >='". date('Y-m-d')."'", "data_prova");
-		//$data['provasFinalizadas'] = Prova::getProvas("provas.status= 1 and provas.data_prova <'". date('Y-m-d')."'", "data_prova");
-		$data['provasAPublicar'] = Prova::getProvas("provas.status=0", "data_prova");
+
+		$data['provasPublicadas'] = Prova::getProvas("provas.professor_id=". $_SESSION['user_id'] ." and provas.status= 1 and provas.data_prova >='". date('Y-m-d')."'", "data_prova");
+		$data['provasFinalizadas'] = Prova::getProvas("provas.professor_id=". $_SESSION['user_id'] . " and provas.status= 1 and provas.data_prova <'". date('Y-m-d')."'", "data_prova", 15);
+		$data['provasAPublicar'] = Prova::getProvas("provas.professor_id=". $_SESSION['user_id'] . " and provas.status=0", "data_prova");
 		$data['apublicarActive'] = true;
 		$this->render("professor/index", $data,["title" => "Bem-vindo"]);
 	}
 
 	public function pagFinalizados()
 	{
-	  $data =	Prova::getProvasFinalizadas("provas.status= 1 and provas.data_prova <'". date('Y-m-d')."'", "data_prova", $_GET['limit'], $_GET['offset']);
+	  $data = Prova::getProvasFinalizadas("provas.professor_id=". $_SESSION['user_id'] ." and provas.status= 1 and provas.data_prova <'". date('Y-m-d')."'", "data_prova", $_GET['limit'], $_GET['offset']);
 	  echo json_encode($data);
 	}
 
@@ -101,7 +102,7 @@ class ProfessorController extends Controller
 
 	public function provas()
 	{
-		$data['provas'] = Prova::selecionar("status <= 1");
+		$data['provas'] = Prova::selecionar("professor_id=". $_SESSION['user_id'] ." and status <= 1");
 		$this->render("professor/provas",$data,[]);
 	}
 
@@ -283,5 +284,10 @@ class ProfessorController extends Controller
 		} else{
 			echo "0";
 		}
+	}
+
+	public function alunosProva()
+	{
+		$this->render("professor/alunos",[],[]);
 	}
 }

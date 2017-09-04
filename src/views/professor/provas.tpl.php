@@ -1,5 +1,4 @@
 <div class="col-md-12">
-	<div class="alert alert-success msg-provas text-center"></div>
 	<div class="card border-primary m-0">
 		<div class="card-header">
 			Relação de Provas

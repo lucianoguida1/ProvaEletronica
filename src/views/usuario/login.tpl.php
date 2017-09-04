@@ -1,7 +1,7 @@
 
 <div class="col-md-12 ">
 	<div class="form-login">
-		<h2 class="text-center title-login">Prova eletrônica</h2>
+		<h2 class="text-center title-login">Prova Eletrônica</h2>
 		<form action="?acao=login&modulo=usuario" method="POST">
 			<div class="form-group">
 				<label for="exampleInputEmail1">E-mail *</label>
