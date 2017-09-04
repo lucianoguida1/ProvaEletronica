@@ -19,8 +19,9 @@ class ProfessorController extends Controller
 	public function perfil()
 	{
 		$usuario = Usuario::selecionarUm($_SESSION['user_id']);
-        $professor = Professor::selecionar("usuario_id = '".$_SESSION['user_id']."'");
-
+        $professor = Professor::selecionar("usuario_id = ".$_SESSION['user_id']);
+        var_dump($professor);
+        var_dump($usuario);
         if(isset($_GET['id']) && !empty($_GET['id']))
         {
             $valid = new Validator($_POST);
@@ -33,17 +34,17 @@ class ProfessorController extends Controller
                 if(!empty($_POST['senha']))
                     $usuario->setSenha(md5($_POST['senha']));
                 $usuario->save();
-                $professor[0]->setNome_prof($_POST['nome']);
-                $professor[0]->setMatricula_prof($_POST['matricula']);
-                $professor[0]->setCpf_prof($_POST['cpf']);
-                $professor[0]->setEmail_prof($_POST['email']);
-                $professor[0]->setSexo_prof($_POST['sexo']);
-                $professor[0]->setUsuario_id($usuario->getId());
-                $professor[0]->save();
+                $professor->setNome_prof($_POST['nome']);
+                $professor->setMatricula_prof($_POST['matricula']);
+                $professor->setCpf_prof($_POST['cpf']);
+                $professor->setEmail_prof($_POST['email']);
+                $professor->setSexo_prof($_POST['sexo']);
+                $professor->setUsuario_id($usuario->getId());
+                $professor->save();
                 $this->render('aluno/perfil',array(),array('title'=>'Prova Eletronica','msg'=>array(
                     'success',
-                    'Cadastro realizado com sucesso.',
-                    'Seu cadastro esta aguardando aprovação, em breve você pode utilizar o sistema!'
+                    'Cadastro Atualizado com sucesso.',
+                    ''
                     )));
             }else{
                 $this->render('aluno/perfil',array(),array('title'=>'Prova Eletronica','msg'=>$valid->getErrors()));
@@ -51,7 +52,7 @@ class ProfessorController extends Controller
         }
         else
         {
-        $this->render("aluno/perfil",['estudante' => $estudante, 'usuario' => $usuario],[]);
+        $this->render("aluno/perfil",['professor' => $professor, 'usuario' => $usuario],[]);
         }
 	}
 

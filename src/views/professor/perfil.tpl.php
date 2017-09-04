@@ -19,29 +19,29 @@
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Senha</label>
-            <input type="password" name="senha" class="form-control" id="senha" placeholder="Senha" required="">
+            <input type="password" name="senha" class="form-control" id="senha" placeholder="Senha" required="" value="<?=isset($usuario) ? $usuario->getSenha()?>">
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Confirme a senha</label>
-            <input type="password" class="form-control" id="senha2" placeholder="Confrime a senha" required="">
+            <input type="password" class="form-control" id="senha2" placeholder="Confrime a senha" required="" value="<?=isset($usuario) ? $usuario->getSenha()?>">
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Nome completo</label>
-            <input type="text" value="<?=isset($professor[0]) ? $professor[0]->getNome_professor():""?>" class="form-control" name="nome" placeholder="Nome" required="">
+            <input type="text" value="<?=isset($professor) ? $professor->getNome_prof():""?>" class="form-control" name="nome" placeholder="Nome" required="">
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Matricula</label>
-            <input type="text" value="<?=isset($professor[0]) ? $professor[0]->getMatricula_professor():""?>" class="form-control" name="matricula" placeholder="Matricula" required="">
+            <input type="text" value="<?=isset($professor) ? $professor->getMatricula_prof():""?>" class="form-control" name="matricula" placeholder="Matricula" required="">
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">CPF</label>
-            <input type="text" value="<?=isset($professor[0]) ? $professor[0]->getCpf_professor():""?>" class="form-control" name="cpf" placeholder="CPF" required="">
+            <input type="text" value="<?=isset($professor) ? $professor->getCpf_prof():""?>" class="form-control" name="cpf" placeholder="CPF" required="">
         </div>
         <div class="form-group">
             <label class="mr-sm-2" for="inlineFormCustomSelectPref">Sexo</label>
             <select class="custom-select mb-2 mr-sm-2 mb-sm-0" name="sexo" id="inlineFormCustomSelectPref" required="">
-                <option value="M" selected="">Masculino</option>
-                <option value="F">Feminino</option>
+                <option value="M" <?=isset($professor) ? ($professor->getSexo() == 'M') ? 'selected=""': '' : ''?> >Masculino</option>
+                <option value="F" <?=isset($professor) ? ($professor->getSexo() == 'F') ? 'selected=""': '' : ''?> >Feminino</option>
             </select>
         </div>
         <button type="submit" class="btn btn-primary form-control" id="envia">Salvar Alterações</button>
