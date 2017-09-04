@@ -165,7 +165,7 @@ class ProfessorController extends Controller
 		}
 
 		if ($existeResposta == 1 ) {
-			$existe = Questao::selecionar(" ordem=".$_POST['ordem']);
+			$existe = Questao::selecionar("prova_id=". $_POST['prova_id'] ." and ordem=".$_POST['ordem']);
 			if(!empty($existe)) {
 				//ORDEM JÁ CADASTRADA
 				echo "2";
