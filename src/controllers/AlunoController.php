@@ -13,9 +13,35 @@ class AlunoController extends Controller
 
     public function index()
     {       
-        $provas = new Prova;
-        $this->render("aluno/index",['provas' => $provas->allProvasAluno()],[]);
-    }
+        $hora_atual = date("H:i:s");
+        $data_atual = date("Y-m-d");
+        $provas = Prova::selecionar("status <= 1 AND data_prova >= '".$data_atual."'");
+        $html = "";
+        $status = ['0' => 'Inativa', '1' => 'Ativa'];
+        foreach ($provas as $key => $value) {
+            $html .= "
+                <tr id='j_". $value->getId()."'>
+                    <th scope='row'> ".$value->getTitulo()." </th>
+                    <td>".$value->getDisciplina()."</td>
+                    <td>".date('d/m/y',strtotime($value->getData_prova()))."</td>
+                    <td>".date('H:i',strtotime($value->getHorario_inicio()))." as ".date('H:i',strtotime($value->getHorario_fim()))."</td>
+                    <td>".$status[$value->getStatus()]."</td>
+                    <td>";
+
+                    if($value->getStatus() == 1 && Prova::validarDataHora(['inicio' => $value->getHorario_inicio(),'fim' => $value->getHorario_fim(),'data' => $value->getData_prova()]))
+                    {
+                        $html .= "<a class='btn btn-light' href='?acao=responderProva&modulo=aluno&id=".$value->getId()."' role='button'> Responder</a>";
+                    }
+                    else
+                    {
+                        $html .= "<button class='btn btn-light' disabled> Indisponivel</button>";
+                    }
+                    $html .= "<td/></tr>";
+        }
+        $this->render("aluno/index",['provas' => $html],[]);
+
+        
+}
 
     public function perfil()
     {
@@ -74,8 +100,16 @@ class AlunoController extends Controller
     public function responderProva()
     {
         $id_prova = $_GET['id'];
+        $usuario = Usuario::selecionarUm($_SESSION['user_id']);
+        $dados = [
+                'estudante_id' => $usuario->getEstudante()->getId(),
+                'prova_id' => $id_prova,
+             ];
+        $sessions = new Session($dados);
+        $sessions->init();
         $this->render("aluno/responder_prova",[],[],false);
     }
 
+    
     
 }

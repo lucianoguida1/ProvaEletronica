@@ -47,40 +47,8 @@ class Prova extends Model
 		$return = new Professor();
         return $return->selecionar("id = ".$this->getId())[0];
 	}
-	public function allProvas()
-	{
 
-
-	}
-
-	public function allProvasAluno()
-	{
-		$provas = Prova::selecionar("status <= 1");
-		$html = "";
-		$status = ['0' => 'Inativa', '1' => 'Ativa'];
-		foreach ($provas as $key => $value) {
-			$html .= "
-				<tr id='j_". $value->getId()."'>
-					<th scope='row'> ".$value->getTitulo()." </th>
-					<td>".$value->getDisciplina()."</td>
-					<td>".date('d/m/y',strtotime($value->getData_prova()))."</td>
-					<td>".date('H:i',strtotime($value->getHorario_inicio()))." as ".date('H:i',strtotime($value->getHorario_fim()))."</td>
-					<td>".$status[$value->getStatus()]."</td>
-					<td>";
-					if($value->getStatus() == 1 && $this->validarDataHora(['inicio' => $value->getHorario_inicio(),'fim' => $value->getHorario_fim(),'data' => $value->getData_prova()]))
-					{
-						$html .= "<a class='btn btn-light' href='?acao=responderProva&modulo=aluno&id=".$value->getId()."' role='button'> Responder</a>";
-					}
-					else
-					{
-						$html .= "<button class='btn btn-light' disabled> Indisponivel</button>";
-					}
-					$html .= "<td/></tr>";
-			}
-		return $html;
-	}
-
-	public function validarDataHora(array $array)
+	public static function validarDataHora(array $array)
 	{
 		$data_start = $array['data']." ".$array['inicio'];
 		$data_fim = $array['data']." ".$array['fim'];
