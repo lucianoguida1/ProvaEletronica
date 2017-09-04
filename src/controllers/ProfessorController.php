@@ -165,6 +165,11 @@ class ProfessorController extends Controller
 		}
 
 		if ($existeResposta == 1 ) {
+			$existe = Questao::selecionar("prova_id=". $_POST['prova_id'] ." and ordem=".$_POST['ordem']);
+			if(!empty($existe)) {
+				//ORDEM JÁ CADASTRADA
+				echo "2";
+			} else {
 			if(!empty($_POST['questao_id'])){
 				$quest['id'] = $_POST['questao_id'];
 			}
@@ -225,9 +230,11 @@ class ProfessorController extends Controller
 				}
 
 				echo $html;
+
 			} else {
 					//ERRO AO SALVAR A QUESTÃO;
 				echo '1';
+			}
 			}
 		} else {
 				// DEFINA UMA RESPOSTA CERTA
@@ -288,6 +295,7 @@ class ProfessorController extends Controller
 
 	public function alunosProva()
 	{
+
 		$this->render("professor/alunos",[],[]);
 	}
 }
