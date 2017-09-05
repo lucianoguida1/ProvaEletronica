@@ -45,6 +45,15 @@ class AjaxController extends controller{
             }
         }
     }
+    public function alunoResponderProvaCheckTempo()
+    {
+        if(isset($_REQUEST['id_prova']) && isset($_REQUEST['id_estudante']))
+        {
+            $callback = Session::checkTempo($_REQUEST['id_prova'],$_REQUEST['id_estudante']);
+            echo $callback;
+        }
+
+    }
 
 }
 
