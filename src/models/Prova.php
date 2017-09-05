@@ -80,7 +80,7 @@ class Prova extends Model
 		return $html;
 	}
 
-	public function validarDataHora(array $array)
+	public static function validarDataHora(array $array)
 	{
 		$data_start = $array['data']." ".$array['inicio'];
 		$data_fim = $array['data']." ".$array['fim'];

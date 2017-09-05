@@ -1,31 +1,9 @@
+<form action="?acao=finalizarprova&modulo=aluno" name="formprova" method="POST">
 <p>
 	greuiwfklçejwhfwegjfklsjdgaFLÇAKGFasjbghaLKJFVJHNBAFJKLWEABHljkçdvçbahqFKLÇJABLifuajkFHDSJKAFHVBWCJEHFUIhuiawehf
 </p>
-
-<div class="form-check">
-	<label class="form-check-label">
-		<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-		Option one is this and that&mdash;be sure to include why it's great
-	</label>
-</div>
-<div class="form-check">
-	<label class="form-check-label">
-		<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-		Option two can be something else and selecting it will deselect option one
-	</label>
-</div>
-<div class="form-check">
-	<label class="form-check-label">
-		<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-		Option one is this and that&mdash;be sure to include why it's great
-	</label>
-</div>
-<div class="form-check">
-	<label class="form-check-label">
-		<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-		Option two can be something else and selecting it will deselect option one
-	</label>
-</div>
+<a href="javascript: finalizarprova()">Envie</a>
+</form>
 <input  style="display: none;" id="id_estudante" value="<?=$_SESSION['prova_em_progresso']['estudante']?>" />
 <input  style="display: none;" id="id_prova" value="<?=$_SESSION['prova_em_progresso']['prova'] ?>" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
@@ -84,8 +62,12 @@
  	        
  	        tempo--;
  	    } else {
-         window.location.href = '?acao=index&modulo=aluno';
+         finalizarprova();
      }
+ }
+ function finalizarprova()
+ {
+ 	document.formprova.submit();
  }
  
  

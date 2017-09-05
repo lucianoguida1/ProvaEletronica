@@ -5,7 +5,7 @@ class AlunoController extends Controller
 
 	function __construct()
 	{
-		if(isset($_SESSION['login']) && $_SESSION['tipo'] != 'estudante') {
+		if(isset($_SESSION['login']) && $_SESSION['tipo'] != 'estudante' || !isset($_SESSION['login'])) {
             $this->redirectCheck();
         }
 
@@ -107,7 +107,23 @@ class AlunoController extends Controller
              ];
         $sessions = new Session($dados);
         $sessions->init();
+
+        $html = "
+        <p>
+            
+        </p>
+        <div class='form-check'>
+                    <label class='form-check-label'>
+                        <input class='form-check-input' type='radio' name='exampleRadios' id='exampleRadios1' value='option1' checked>
+                        ".$prova->alternativa()."
+                    </label>
+                </div>";
+
         $this->render("aluno/responder_prova",[],[],false);
     }
     
+    public function finalizarprova()
+    {
+        var_dump($_POST);
+    }
 }

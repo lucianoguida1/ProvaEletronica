@@ -25,7 +25,7 @@ class Session
             }
             else
             {
-                $this->closeOrStop();
+                self::closeOrStop();
             }
         }
         else
@@ -63,10 +63,9 @@ class Session
 		}
 	}
 
-	private function closeOrStop()
+	private static function closeOrStop()
 	{
 		unset($_SESSION['prova_em_progresso']);
-		header("Location: ?acao=index&modulo=aluno");
 	}
 
 	public static function checkTempo($id_prova,$id_estudante)
