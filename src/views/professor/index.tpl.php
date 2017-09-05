@@ -1,3 +1,45 @@
+<script type="text/javascript">
+	$(document).ready(function() {
+		var offset = 0;
+		var conteudoFinalizados = $('.j_finalizados');
+
+		$('.j_proximo').click(function(){
+			offset += 15;
+			listarFinalizados(offset);
+		})
+		$('.j_anterior').click(function(){
+			if(offset != 0) {
+				offset -= 15;
+			}
+			listarFinalizados(offset);
+		})
+		var dadosAjax;
+		function listarFinalizados(val){
+			$.ajax({
+				url: "index.php",
+				type: 'get',
+				data: "acao=pagFinalizados&modulo=professor&limit=15&offset=" + val,
+				dataType: 'json',
+				error: function(){
+					msgAjax('danger', 'Error de comunicação');
+				},
+				success: function(data){
+					conteudoFinalizados.empty();
+					 $.each(data, function(index, el) {
+					 	conteudoFinalizados.append('<tr><td>'+el.id+'</td><td>'+el.titulo+'</td><td>'+el.disciplina+'</td><td><span class="badge badge-danger pull-right">Finalizado</span></td><td>'+el.qtd_questoes+'</td><td>'+el.valor+'</td><td></td><td>'+el.data_prova+'</td><td><a href="?acao=alunosProva&modulo=professor&id='+el.id+'"><i class="fa fa-search"></i></a></td></tr>');
+					 });
+
+					if(data.length < 15) {
+						$('.j_proximo').fadeOut("fast");
+					} else {
+						$('.j_proximo').fadeIn("fast");
+					}
+				}
+			})
+		}
+		listarFinalizados(0);
+	});
+</script>
 <div class="col-md-12">
 	<div class="card border-primary m-0">
 		<div class="card-body">

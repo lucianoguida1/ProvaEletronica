@@ -20,8 +20,8 @@
 					</div>
 					<div class="form-group col-md-3">
 						<label for="data_prova">Data da Prova</label>
-						<input type="date" class="form-control form-control-sm" id="data_prova" name="data_prova" placeholder="Data da Prova" required="" pattern="[0-9]{2}\/[0-9]{2}\/[0-9]{4}$" min="<?= date("Y-m-d"); ?>" max="2020-02-18" value="<?= isset($prova)?$prova->getData_prova():""  ?>"
-						>
+						<input type="date" class="form-control form-control-sm" id="data_prova" name="data_prova" placeholder="Data da Prova" required="" pattern="[0-9]{2}\/[0-9]{2}\/[0-9]{4}$" min="<?= date("Y-m-d"); ?>" max="<?= date("Y-m-d", strtotime("+365 days", strtotime(date("Y-m-d")))) ?>"
+						value="<?= isset($prova)?$prova->getData_prova():""  ?>">
 					</div>
 				</div>
 				<div class="form-row">
@@ -43,13 +43,12 @@
 						<label class="sr-only" for="fim"></label>
 						<div class="input-group input-group-sm">
 							<div class="input-group-addon">Qtd.</div>
-							<input type="number" class="form-control form-control-sm" id="quantidade" name="quantidade" placeholder="Questões" required="" min="1" max="100" value="<?= isset($prova)?$prova->getQtd_questoes():"" ?>">
+							<input type="number" class="form-control form-control-sm" id="quantidade" name="quantidade" placeholder="Questões" required="" min="1" max="200" value="<?= isset($prova)?$prova->getQtd_questoes():"" ?>">
 						</div>
 					</div>
 				</div>
 
 				<button type="submit" class="btn btn-success btn-sm j_salva_prova">Salvar Prova</button>
-
 				<button type="button" class="btn btn-info btn-sm j_adicionar_questao">Adicionar Questão</button>
 			</form>
 
@@ -115,13 +114,13 @@
 							<div class="col-md-2">
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="ordem">Nº</span>
-									<input type="number" pattern="[1-100]+$"  class="form-control" placeholder="Questão" name="ordem" aria-label="ordem" aria-describedby="ordem" value="<?= isset($questao)? $questao->getOrdem():"" ?>" required="">
+									<input type="number" min="1" max="200" class="form-control" placeholder="Questão" name="ordem" aria-label="ordem" aria-describedby="ordem" value="<?= isset($questao)? $questao->getOrdem():"" ?>" required="">
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="valor">Valor</span>
-									<input type="number" step="any"  class="form-control" placeholder="Questão" name="valor" aria-label="valor" aria-describedby="valor" value="<?= isset($questao)? $questao->getValor():"" ?>" required="">
+									<input type="number" step="0.01" min="0" class="form-control" placeholder="Questão" name="valor" aria-label="valor" aria-describedby="valor" value="<?= isset($questao)? $questao->getValor():"" ?>" required="">
 								</div>
 							</div>
 						</div>
@@ -135,9 +134,9 @@
 										<input type="hidden" name="id_alternativa<?= $alternativa->getId() ?>" value="<?= $alternativa->getId() ?>">
 										<div class="form-check">
 											<label class="form-check-label">
-												<input class="form-check-input" type="checkbox" id="certa_alternativa<?= $alternativa->getId() ?>" name="certa_alternativa<?= $alternativa->getId() ?>"  value="true" aria-label="...">
+												<input class="form-check-input" type="radio" id="resposta<?= $alternativa->getId() ?>" name="resposta"  value="<?= $alternativa->getId() ?>" aria-label="...">
 												<?php
-												if($alternativa->getAlternativa_certa() == 1) {
+												if($alternativa->getId() == $questao->getResposta()) {
 													echo "checked";
 												}
 												?>

@@ -19,11 +19,11 @@
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Senha</label>
-            <input type="password" name="senha" class="form-control" id="senha" placeholder="Senha" required="" value="<?=isset($usuario) ? $usuario->getSenha(): ''?>">
+            <input type="password" name="senha" class="form-control" id="senha" placeholder="Senha" required="" value="">
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Confirme a senha</label>
-            <input type="password" class="form-control" id="senha2" placeholder="Confrime a senha" required="" value="<?=isset($usuario) ? $usuario->getSenha(): ''?>">
+            <input type="password" class="form-control" id="senha2" placeholder="Confirme a senha" required="" value="">
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Nome completo</label>

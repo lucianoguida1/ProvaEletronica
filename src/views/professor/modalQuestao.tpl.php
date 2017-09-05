@@ -11,13 +11,13 @@
 		<div class="col-md-2">
 			<div class="input-group input-group-sm">
 				<span class="input-group-addon" id="ordem">Nº</span>
-				<input type="number" class="form-control" placeholder="Questão" name="ordem" aria-label="ordem" aria-describedby="ordem" value="<?= isset($questao)? $questao->getOrdem():"" ?>" required="">
+				<input type="number" min="1" max="200" class="form-control" placeholder="Questão" name="ordem" aria-label="ordem" aria-describedby="ordem" value="<?= isset($questao)? $questao->getOrdem():"" ?>" required="">
 			</div>
 		</div>
 		<div class="col-md-4">
 			<div class="input-group input-group-sm">
 				<span class="input-group-addon" id="valor">Valor</span>
-				<input type="number" step="any" class="form-control" placeholder="Questão" name="valor" aria-label="valor" aria-describedby="valor" value="<?= isset($questao)? $questao->getValor():"" ?>" required="">
+				<input type="number" step="0.01" min="0" class="form-control" placeholder="Questão" name="valor" aria-label="valor" aria-describedby="valor" value="<?= isset($questao)? $questao->getValor():"" ?>" required="">
 			</div>
 		</div>
 	</div>
@@ -31,9 +31,9 @@
 					<input type="hidden" name="id_alternativa<?= $alternativa->getId() ?>" value="<?= $alternativa->getId() ?>">
 					<div class="form-check">
 						<label class="form-check-label">
-							<input class="form-check-input" type="checkbox" id="certa_alternativa<?= $alternativa->getId() ?>" name="certa_alternativa<?= $alternativa->getId() ?>"  value="true" aria-label="..."
+							<input class="form-check-input" type="radio" id="resposta<?= $alternativa->getId() ?>" name="resposta"  value="<?= $alternativa->getId() ?>" aria-label="..."
 							<?php
-							if($alternativa->getAlternativa_certa() == 1) {
+							if($alternativa->getId() == $questao->getResposta()) {
 								echo "checked";
 							}
 							?>
