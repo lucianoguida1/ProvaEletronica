@@ -12,7 +12,8 @@ class Questao extends Model
 		  $valor,
 		  $status,
 		  $ordem,
-		  $prova_id;
+		  $prova_id,
+		  $resposta;
 
 	public function getTabela()
 	{
@@ -26,13 +27,15 @@ class Questao extends Model
 				'enunciado'		=> array('rotulo' => 'enunciado'),
 				'valor'			=> array('rotulo' => 'valor'),
 				'status'		=> array('rotulo' => 'status'),
-				'prova_id'		=> array('rotulo' => 'prova_id')
+				'prova_id'		=> array('rotulo' => 'prova_id'),
+				'ordem'			=> array('rotulo' => 'ordem'),
+				'resposta'		=> array('rotulo' => 'resposta')
 			);
 	}
 
 	public function getCamposObrigatorios()
 	{
-		return array('enunciado', 'valor', 'status', 'prova_id');
+		return array('enunciado', 'valor', 'status', 'prova_id', 'ordem');
 	}
 	public function getAlternativas(){
 		$return = new Alternativa();

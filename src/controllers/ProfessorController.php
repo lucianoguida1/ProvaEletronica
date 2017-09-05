@@ -12,7 +12,7 @@ class ProfessorController extends Controller
 	{
 
 		$data['provasPublicadas'] = Prova::getProvas("provas.professor_id=". $_SESSION['user_id'] ." and provas.status= 1 and provas.data_prova >='". date('Y-m-d')."'", "data_prova");
-		$data['provasFinalizadas'] = Prova::getProvas("provas.professor_id=". $_SESSION['user_id'] . " and provas.status= 1 and provas.data_prova <'". date('Y-m-d')."'", "data_prova", 15);
+		//$data['provasFinalizadas'] = Prova::getProvas("provas.professor_id=". $_SESSION['user_id'] . " and provas.status= 1 and provas.data_prova <'". date('Y-m-d')."'", "data_prova", 15);
 		$data['provasAPublicar'] = Prova::getProvas("provas.professor_id=". $_SESSION['user_id'] . " and provas.status=0", "data_prova");
 		$data['apublicarActive'] = true;
 		$this->render("professor/index", $data,["title" => "Bem-vindo"]);
@@ -155,56 +155,47 @@ class ProfessorController extends Controller
 
 	public function cadastrarQuestao()
 	{
-		$existeResposta = false;
-		$data = array();
-		foreach ($_POST as $key => $value) {
-			if(substr($key, 0, 5) === 'certa') {
-				$existeResposta = true;
-				break;
-			}
-		}
 
-		if ($existeResposta == 1 ) {
+		if (!empty($_POST['resposta'])) {
 			$existe = Questao::selecionar("prova_id=". $_POST['prova_id'] ." and ordem=".$_POST['ordem']);
-			if(!empty($existe)) {
-				//ORDEM JÁ CADASTRADA
-				echo "2";
+			if(!empty($existe) && empty($_POST['questao_id'])) {
+				$resposta[0] = 'danger';
+				$resposta[1] = 'Ordem já cadastrada escolha outra numeração!';
 			} else {
 			if(!empty($_POST['questao_id'])){
 				$quest['id'] = $_POST['questao_id'];
 			}
 			$quest['enunciado']	= $_POST['enunciado'];
-			$quest['valor'] 		= $_POST['valor'];
+			$quest['valor'] 	= $_POST['valor'];
 			$quest['prova_id'] 	= $_POST['prova_id'];
 			$quest['ordem']		= $_POST['ordem'];
-			$quest['status'] 		= true;
+			$quest['status'] 	= true;
 			$questao = new Questao($quest);
 			if($questao->save()){
 
 				foreach($_POST as $key => $value) {
 					if(substr($key, 0, 11) == 'alternativa') {
 						$id = substr($key, 16);
-
 						if(!empty($_POST["id_alternativa".$id])){
 							$alter['id'] = $_POST["id_alternativa".$id];
-
-						}
-						if(isset($_POST["certa_alternativa".$id])){
-							$alter["alternativa_certa"] = 1;
-
-						} else {
-							$alter["alternativa_certa"] = 0;
 						}
 						$alter['enunciado_alter'] = $_POST[$key];
 						$alter['questao_id'] = $questao->getId();
-						$alternativa = new Alternativa($alter);
-						$alternativa->save();
+
+						if($id == $_POST['resposta']){
+							$alternativa = new Alternativa($alter);
+							$alternativa->save();
+							$questao->setResposta($alternativa->getId());
+						} else {
+							$alternativa = new Alternativa($alter);
+							$alternativa->save();
+						}
 						unset($alter);
 					}
 				}
+				$questao->save();
 				if(empty($_POST['questao_id'])) {
-
-					$html = "
+					$resposta[2] = "
 					<tr id='j_".$questao->getId()."'>
 						<th scope='row'>".$questao->getOrdem()."</th>
 						<td>".$questao->getEnunciado()."</td>
@@ -217,7 +208,7 @@ class ProfessorController extends Controller
 					</tr>";
 				} else {
 
-					$html = "
+					$resposta[2] = "
 
 					<th scope='row'>".$questao->getOrdem()."</th>
 					<td>".$questao->getEnunciado()."</td>
@@ -229,17 +220,16 @@ class ProfessorController extends Controller
 					</td>";
 				}
 
-				echo $html;
-
 			} else {
-					//ERRO AO SALVAR A QUESTÃO;
-				echo '1';
+				$resposta[0] = 'danger';
+				$resposta[1] = 'Error ao salvar a questão, verifique as campos!';
 			}
 			}
 		} else {
-				// DEFINA UMA RESPOSTA CERTA
-			echo '0';
+			$resposta[0] = 'info';
+			$resposta[1] = 'Defina a resposta correta!';
 		}
+		echo json_encode($resposta);
 	}
 
 	public function excluirQuestao()
@@ -276,10 +266,14 @@ class ProfessorController extends Controller
 	public function editarQuestao()
 	{
 		$questao = Questao::selecionarUm($_POST['id']);
-		$data['questao'] = $questao;
-		$alternativas = Alternativa::selecionar("questao_id='".$questao->getId()."'");
-		$data['alternativas'] = $alternativas;
-		Template::exibir('professor/modalQuestao', $data);
+
+		if($questao->getStatus()) {
+			$data['questao'] = $questao;
+			$data['alternativas'] = Alternativa::selecionar("questao_id='".$questao->getId()."'");
+			Template::exibir('professor/modalQuestao', $data);
+		} else {
+			echo "0";
+		}
 	}
 
 	public function excluirAlternativa()
@@ -295,7 +289,6 @@ class ProfessorController extends Controller
 
 	public function alunosProva()
 	{
-
 		$this->render("professor/alunos",[],[]);
 	}
 }
