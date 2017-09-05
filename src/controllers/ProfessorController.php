@@ -10,25 +10,18 @@ class ProfessorController extends Controller
 	}
 	public function index()
 	{
-
-		$data['provasPublicadas'] = Prova::getProvas("provas.professor_id=". $_SESSION['user_id'] ." and provas.status= 1 and provas.data_prova >='". date('Y-m-d')."'", "data_prova");
-		$data['provasFinalizadas'] = Prova::getProvas("provas.professor_id=". $_SESSION['user_id'] . " and provas.status= 1 and provas.data_prova <'". date('Y-m-d')."'", "data_prova", 15);
-		$data['provasAPublicar'] = Prova::getProvas("provas.professor_id=". $_SESSION['user_id'] . " and provas.status=0", "data_prova");
-		$data['apublicarActive'] = true;
+		$data['provasPublicadas'] = Prova::getProvas("provas.status= 1 and provas.data_prova >='". date('Y-m-d')."'", "data_prova");
+		$data['provasFinalizadas'] = Prova::getProvas("provas.status= 1 and provas.data_prova <'". date('Y-m-d')."'", "data_prova");
+		$data['provasAPublicar'] = Prova::getProvas("provas.status=0", "data_prova");
 		$this->render("professor/index", $data,["title" => "Bem-vindo"]);
-	}
-
-	public function pagFinalizados()
-	{
-	  $data = Prova::getProvasFinalizadas("provas.professor_id=". $_SESSION['user_id'] ." and provas.status= 1 and provas.data_prova <'". date('Y-m-d')."'", "data_prova", $_GET['limit'], $_GET['offset']);
-	  echo json_encode($data);
 	}
 
 	public function perfil()
 	{
 		$usuario = Usuario::selecionarUm($_SESSION['user_id']);
         $professor = Professor::selecionar("usuario_id = ".$_SESSION['user_id']);
-
+        var_dump($professor);
+        var_dump($usuario);
         if(isset($_GET['id']) && !empty($_GET['id']))
         {
             $valid = new Validator($_POST);
@@ -41,23 +34,25 @@ class ProfessorController extends Controller
                 if(!empty($_POST['senha']))
                     $usuario->setSenha(md5($_POST['senha']));
                 $usuario->save();
-                $professor[0]->setNome_prof($_POST['nome']);
-                $professor[0]->setMatricula_prof($_POST['matricula']);
-                $professor[0]->setCpf_prof($_POST['cpf']);
-                $professor[0]->setEmail_prof($_POST['email']);
-                $professor[0]->setSexo_prof($_POST['sexo']);
-                $professor[0]->setUsuario_id($usuario->getId());
-                $professor[0]->save();
-                $this->render('professor/perfil',['professor' => $professor[0], 'usuario' => $usuario],array('title'=>'Prova Eletronica','msg'=>array(
+                $professor->setNome_prof($_POST['nome']);
+                $professor->setMatricula_prof($_POST['matricula']);
+                $professor->setCpf_prof($_POST['cpf']);
+                $professor->setEmail_prof($_POST['email']);
+                $professor->setSexo_prof($_POST['sexo']);
+                $professor->setUsuario_id($usuario->getId());
+                $professor->save();
+                $this->render('aluno/perfil',array(),array('title'=>'Prova Eletronica','msg'=>array(
                     'success',
                     'Cadastro Atualizado com sucesso.',
                     ''
                     )));
             }else{
-                $this->render('professor/perfil',array(),array('title'=>'Prova Eletronica','msg'=>$valid->getErrors()));
+                $this->render('aluno/perfil',array(),array('title'=>'Prova Eletronica','msg'=>$valid->getErrors()));
             }
-        }else{
-        	$this->render("professor/perfil",['professor' => $professor[0], 'usuario' => $usuario],[]);
+        }
+        else
+        {
+        $this->render("aluno/perfil",['professor' => $professor, 'usuario' => $usuario],[]);
         }
 	}
 
@@ -78,16 +73,17 @@ class ProfessorController extends Controller
 	{
 		$prova = Prova::selecionarUm($_GET['id']);
 		if($prova->getData_prova() < date('Y-m-d')) {
-			$data['provas'] = Prova::selecionar("status <= 1");
-			$this->render("professor/provas",$data,array('msg' => array(
+			$provas = new Prova;
+			$this->render("professor/provas",['provas' => $provas->allProvas()],array('msg' => array(
 				'info',
 				'Edição não disponível',
 				'Não é possível editar uma prova finalizada'
 			)));
 
 		} else {
+			$questoes = Questao::selecionar("prova_id='".$prova->getId()."'", 'ordem');
 			$data['prova'] = $prova;
-			$data['questoes'] = Questao::selecionar("prova_id='".$prova->getId()."'", 'ordem');
+			$data['questoes'] = $questoes;
 			$this->render("professor/cadastroProva", $data);
 		}
 	}
@@ -102,12 +98,17 @@ class ProfessorController extends Controller
 
 	public function provas()
 	{
-		$data['provas'] = Prova::selecionar("professor_id=". $_SESSION['user_id'] ." and status <= 1");
-		$this->render("professor/provas",$data,[]);
+		$provas = new Prova;
+		$this->render("professor/provas",['provas' => $provas->allProvas()],[]);
+	}
+
+	public function buscarProva()
+	{
 	}
 
 	public function salvarProva()
 	{
+
 		if(empty($_POST['id'])) unset($_POST['id']);
 		$valid = new Validator($_POST);
 		$valid->field_filledIn($_POST);
@@ -142,6 +143,7 @@ class ProfessorController extends Controller
 				$msg = 'Prova cadastrada com sucesso.';
 			}
 
+
 			$retorno[0] = 'success';
 			$retorno[1] = $msg;
 			$retorno[2] = $prova->getId();
@@ -153,8 +155,9 @@ class ProfessorController extends Controller
 		}
 	}
 
-	public function cadastrarQuestao()
+	public function cadastrarQuestaoAjax()
 	{
+
 		$existeResposta = false;
 		$data = array();
 		foreach ($_POST as $key => $value) {
@@ -162,14 +165,11 @@ class ProfessorController extends Controller
 				$existeResposta = true;
 				break;
 			}
+
 		}
 
+
 		if ($existeResposta == 1 ) {
-			$existe = Questao::selecionar("prova_id=". $_POST['prova_id'] ." and ordem=".$_POST['ordem']);
-			if(!empty($existe)) {
-				//ORDEM JÁ CADASTRADA
-				echo "2";
-			} else {
 			if(!empty($_POST['questao_id'])){
 				$quest['id'] = $_POST['questao_id'];
 			}
@@ -230,11 +230,9 @@ class ProfessorController extends Controller
 				}
 
 				echo $html;
-
 			} else {
 					//ERRO AO SALVAR A QUESTÃO;
 				echo '1';
-			}
 			}
 		} else {
 				// DEFINA UMA RESPOSTA CERTA
@@ -284,6 +282,7 @@ class ProfessorController extends Controller
 
 	public function excluirAlternativa()
 	{
+
 		$alternativa =  Alternativa::selecionarUm($_POST['id']);
 
 		if($alternativa->deletar()) {
@@ -291,11 +290,5 @@ class ProfessorController extends Controller
 		} else{
 			echo "0";
 		}
-	}
-
-	public function alunosProva()
-	{
-
-		$this->render("professor/alunos",[],[]);
 	}
 }

@@ -13,7 +13,7 @@ class UsuarioController extends Controller
 	        {
 	            $_SESSION['user_id'] = $callback['user']['id_user'];
 	            $_SESSION['tipo'] = $callback['user']['tipo'];
-	            $_SESSION['user_email'] = $callback['user']['user_name'];
+	            $_SESSION['user_email'] = $callback['user']['tipo'];
 	            $_SESSION['login'] = $callback['status'];
 	            switch ($callback['user']['tipo']) {
 	            	case 'professor':

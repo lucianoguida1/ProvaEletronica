@@ -27,18 +27,19 @@ $(document).ready(function() {
 
         }
         });
-    // $('.msg-provas').hide();
-    // function msgprovas(msg) {
-    //     $('.msg-provas').text(msg);
-    //     window.setTimeout(function(){ $('.msg-provas').fadeOut("slow") }, 3000);
-    // }
+    $('.msg-provas').hide();
+    function msgprovas(msg) {
+        $('.msg-provas').text(msg);
+        window.setTimeout(function(){ $('.msg-provas').fadeOut("slow") }, 3000);
+    }
 
-     var table = $('.j_provas').DataTable();
+     var table = $('#j_provas').DataTable();
 
-         $('.j_provas tbody').on('click', '.j_excluir', function () {
-         	var tr = $(this).parent().parent();
-                tr.css( "background-color", "#f8d7da" );
-                window.setTimeout(function(){  table.row(tr).remove().draw( false ) }, 300);
+         $('#j_provas tbody').on('click', '.j_excluir', function () {
+         	var tr = $(this).attr('id');
+            window.setTimeout(function(){  table.row("#j_" + tr).remove().draw( false ) }, 100);
+
 	return false;
              } );
+
 });

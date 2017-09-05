@@ -75,6 +75,7 @@ class Template {
                         "Inicio"        => "administrador/index",
                         "Professores"   => "administrador/professores",
                         "Estudantes"    => "administrador/estudantes",
+                        "Solicitações"  => "administrador/solicitacao",
                         "Prova"         => "administrador/provas",
                         "Sair"          => "usuario/logout",
                     ];

@@ -23,4 +23,9 @@ class AdministradorController extends Controller
 		$data['provas'] = $us->selecionar();
 		$this->render('admin/provas',$data);
 	}
+	public function solicitacao(){
+		$us = New Usuario();
+		$data['usuarios'] = $us->selecionar('status = 2');
+		$this->render('admin/solicitacao',$data);
+	}
 }

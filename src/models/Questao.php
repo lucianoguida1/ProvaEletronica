@@ -25,14 +25,17 @@ class Questao extends Model
 				'id'			=> array('rotulo' => 'id'),
 				'enunciado'		=> array('rotulo' => 'enunciado'),
 				'valor'			=> array('rotulo' => 'valor'),
-				'status'			=> array('rotulo' => 'status'),
-				'ordem'			=> array('rotulo' => 'ordem'),
+				'status'		=> array('rotulo' => 'status'),
 				'prova_id'		=> array('rotulo' => 'prova_id')
 			);
 	}
 
 	public function getCamposObrigatorios()
 	{
-		return array('enunciado', 'valor', 'status', 'prova_id', 'ordem');
+		return array('enunciado', 'valor', 'status', 'prova_id');
+	}
+	public function getAlternativas(){
+		$return = new Alternativa();
+        return $return->selecionar("questao_id = ".$this->getId());
 	}
 }

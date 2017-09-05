@@ -26,37 +26,32 @@
 		Option two can be something else and selecting it will deselect option one
 	</label>
 </div>
-<input  style="display: none;" id="id_estudante" value="<?=$_SESSION['prova_em_progresso']['estudante']?>" />
-<input  style="display: none;" id="id_prova" value="<?=$_SESSION['prova_em_progresso']['prova'] ?>" />
+<div id="sessao"></div>
+<div style="display: none;" id="tempo"><?php //(); ?></div>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 <script src="assets/js/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-<div id="sessao"></div>
+
 <script type="text/javascript">
 	
 	$(document).ready(function($) {
-		verificar();
-
+		var ver = $("#tempo").val();
+		verificar(ver)
 	});
 	var tempo = new Number();
  // Tempo em segundos
  
- function verificar()
+ function verificar(tempo_exist)
  {
- 	var prova = $("#id_prova").val(),estudante = $("#id_estudante").val();
- 	var valor = 0;
- 	$.ajax({
-				url: '?acao=alunoResponderProvaCheckTempo&modulo=ajax',
-				type: 'POST',
-				dataType: 'html',
-				data: "id_prova="+prova+"&id_estudante="+estudante,
-				success: function(e){
-					tempo = e;
-					startCountdown();
-				}
-			});
- 	
+ 	if(tempo_exist != 0 || tempo_exist != ""){
+ 		tempo = tempo_exist;
+ 	}
+ 	else
+ 	{
+ 		tempo = 55;
+ 	}
+ 	startCountdown();
  }
  function duas_casas(numero){
  	if (numero <= 9){
@@ -73,7 +68,7 @@
  	        var min = duas_casas(Math.round((tempo%3600)/60));
  	        var seg = duas_casas((tempo%3600)%60);
  	        
- 	       
+ 	        
  	        
  	        var horaImprimivel = hr+':' + min + ':' + seg;
  	        
@@ -84,7 +79,7 @@
  	        
  	        tempo--;
  	    } else {
-         window.location.href = '?acao=index&modulo=aluno';
+         //window.open('../controllers/logout.php', '_self');
      }
  }
  
