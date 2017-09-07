@@ -74,7 +74,7 @@ $(function(){
 		var acaoDelete = $(this).attr('href');
 		var aId = $(this).attr('id');
 		var traction = $('tr[id="j_' + aId +'"]');
-
+        var quantidade = formProva.find('input[name="quantidade"]');
 		traction.addClass('alert alert-danger');
 		$.ajax({
 			url: url_post,
@@ -88,6 +88,8 @@ $(function(){
 				if(data == 1) {
 					traction.fadeOut("slow");
                     excluirDaTabela();
+                    var qtd = parseInt(quantidade.val()) ;
+                    quantidade.val(qtd-1);
 				} else {
 					if(data == 2) {
 						msgAjax('info', "Exclusão não disponível! Não é possível excluir uma prova finalizada ou publicada");
@@ -242,6 +244,7 @@ $(function(){
 		var action = $(this).attr('action');
 		var sender = action + '&' + dados + '&prova_id=' + idProva;
 		var trquestao = tabelaQuestoes.find('tr[id="j_'+idQuestao+'"]');
+		var quantidade = formProva.find('input[name="quantidade"]');
 		var ordem = $(this).find('input[name="ordem"]');
 		 $.ajax({
 			url: url_post,
@@ -262,6 +265,8 @@ $(function(){
 						formQuestao.find("textarea").val('');
 						$('#modal-adicionar-questao').modal("hide");
 						$('.j_linha_tabela_questoes').append(data[2]);
+						var qtd = parseInt(quantidade.val()) ;
+                        quantidade.val(qtd+1);
 					} else {
 						formQuestao.find("input").val('');
 						formQuestao.find("textarea").val('');

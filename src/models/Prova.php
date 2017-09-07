@@ -14,7 +14,6 @@ class Prova extends Model
 		  $horario_inicio,
 		  $horario_fim,
 		  $professor_id,
-		  $qtd_questoes,
 		  $status;
 
 	public function getTabela()
@@ -32,14 +31,13 @@ class Prova extends Model
 				'horario_inicio'		 => array('rotulo' => 'horario_inicio'),
 				'horario_fim'		=> array('rotulo' => 'horario_fim'),
 				'professor_id'		=> array('rotulo' => 'professor_id'),
-				'qtd_questoes' 		 => array('rotulo' => 'qtd_questoes'),
 				'status' => array('rotulo' => 'status')
 			);
 	}
 
 	public function getCamposObrigatorios()
 	{
-		return array('titulo', 'disciplina', 'data_prova', 'horario_inicio', 'horario_fim', 'professor_id', 'qtd_questoes');
+		return array('titulo', 'disciplina', 'data_prova', 'horario_inicio', 'horario_fim', 'professor_id');
 
 	}
 
@@ -112,15 +110,16 @@ class Prova extends Model
 		provas.data_prova as data_prova,
 		provas.horario_inicio,
 		provas.horario_fim,
-		provas.professor_id,
-		provas.qtd_questoes,
+		provas.professor_id,		
 		provas.status,
-		sum(questoes.valor) as valor
+		COUNT(questoes.id) as qtd_questoes,
+		sum(questoes.valor) as valor,
+		COUNT(DISTINCT estudante_has_provas.estudante_id) as qtdEst
 		FROM " . static::$tabela
-		." INNER JOIN questoes ON questoes.prova_id = provas.id "
+		." LEFT JOIN questoes ON questoes.prova_id = provas.id LEFT JOIN estudante_has_provas ON estudante_has_provas.prova_id=provas.id"
 		. (!is_null($condicao) ? " WHERE $condicao" : '')
 		. "  group by provas.id, provas.titulo, provas.disciplina, provas.data_prova, provas.horario_inicio,
-		provas.horario_fim, provas.professor_id, provas.qtd_questoes, provas.status"
+		provas.horario_fim, provas.professor_id, provas.status"
 		. (!is_null($ordem) ? " ORDER BY $ordem" : '')
 		. (!is_null($limite) ? " LIMIT $limite" : '');
 
@@ -137,7 +136,7 @@ class Prova extends Model
         return $objects;
     }
 
-    public static function getProvasFinalizadas(
+    public static function getArrayProvas(
 		$condicao = null,
 		$ordem = null,
 		$limite = null,
@@ -157,16 +156,16 @@ class Prova extends Model
 		provas.data_prova as data_prova,
 		provas.horario_inicio,
 		provas.horario_fim,
-		provas.professor_id,
-		provas.qtd_questoes,
+		provas.professor_id,		
 		provas.status,
+		COUNT(questoes.id) as qtd_questoes,
 		format(sum(questoes.valor),2,'de_DE') as valor,
 		COUNT(DISTINCT estudante_has_provas.estudante_id) as qtdEst
 		FROM " . static::$tabela
             . " INNER JOIN questoes ON questoes.prova_id = provas.id INNER JOIN estudante_has_provas ON estudante_has_provas.prova_id=provas.id"
             . (!is_null($condicao) ? " WHERE $condicao" : '')
             . "  group by provas.id, provas.titulo, provas.disciplina, provas.data_prova, provas.horario_inicio,
-		provas.horario_fim, provas.professor_id, provas.qtd_questoes, provas.status"
+		provas.horario_fim, provas.professor_id, provas.status"
             . (!is_null($ordem) ? " ORDER BY $ordem" : '')
             . (!is_null($limite) ? " LIMIT $limite" : '');
 

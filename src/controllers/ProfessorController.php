@@ -19,7 +19,7 @@ class ProfessorController extends Controller
 
     public function pagFinalizados()
     {
-        $data = Prova::getProvasFinalizadas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status= 1 and provas.data_prova <'" . date('Y-m-d') . "'", "data_prova", $_GET['limit'], $_GET['offset']);
+        $data = Prova::getArrayProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status= 1 and provas.data_prova <'" . date('Y-m-d') . "'", "data_prova", $_GET['limit'], $_GET['offset']);
         echo json_encode($data);
     }
 
@@ -60,10 +60,22 @@ class ProfessorController extends Controller
 
     public function publicarProva()
     {
-        $prova = Prova::selecionarUm($_GET['id']);
-        $prova->setStatus(1);
-        $prova->save();
-        $this->redirectTo("professor/index");
+        $p = Prova::getProvas("provas.id='" . $_GET['id'] . "'");
+        if($p[0]->getQtd_questoes() != 0){
+            $prova = Prova::selecionarUm($_GET['id']);
+            $prova->setStatus(1);
+            $prova->save();
+            $this->redirectTo("professor/index", "publicar = true");
+        } else {
+            $data['provasPublicadas'] = Prova::getProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status= 1 and provas.data_prova >='" . date('Y-m-d') . "'", "data_prova");
+            $data['provasAPublicar'] = Prova::getProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status=0", "data_prova");
+            $data['apublicarActive'] = true;
+            $this->render("professor/index", $data, ["title" => "Bem-vindo", "msg" => array(
+                'info',
+                'Prova não publicada',
+                'Não é possível publicar uma prova sem questão!'
+            )]);
+        }
     }
 
     public function cadastroProva()
@@ -74,9 +86,9 @@ class ProfessorController extends Controller
     public function editarProva()
     {
         if(isset($_GET['id'])) {
-            $prova = Prova::selecionarUm($_GET['id']);
-            if ($prova->getData_prova() < date('Y-m-d') || $prova->getStatus() == 1) {
-                $data['provas'] = Prova::selecionar("status <= 1");
+            $prova = Prova::getProvas("provas.id = " . $_GET['id']);
+            if ($prova[0]->getData_prova() < date('Y-m-d') || $prova[0]->getStatus() == 1) {
+                $data['provas'] = Prova::getProvas("provas.status <= 1");
                 $this->render("professor/provas", $data, array('msg' => array(
                     'info',
                     'Edição não disponível',
@@ -84,13 +96,13 @@ class ProfessorController extends Controller
                 )));
 
             } else {
-                $data['prova'] = $prova;
-                $data['questoes'] = Questao::selecionar("prova_id='" . $prova->getId() . "'", 'ordem');
+                $data['prova'] = $prova[0];
+                $data['questoes'] = Questao::selecionar("prova_id='" . $prova[0]->getId() . "'", 'ordem');
                 $this->render("professor/cadastroProva", $data);
             }
         } else {
             $this->render("professor/provas", [], array('msg' => array(
-                'info',
+                'danger',
                 'Edição não disponível',
                 'Prova não encontrada, atualize a página e click em editar novamente'
             )));
@@ -113,7 +125,7 @@ class ProfessorController extends Controller
 
 	public function provas()
 	{
-		$data['provas'] = Prova::selecionar("professor_id=". $_SESSION['user_id'] ." and status <= 1");
+		$data['provas'] = Prova::getProvas("provas.professor_id=". $_SESSION['user_id'] ." and provas.status <= 1");
 		$this->render("professor/provas",$data,[]);
 	}
 
@@ -136,7 +148,6 @@ class ProfessorController extends Controller
 			$prov['horario_inicio'] = $_POST['inicio'];
 			$prov['horario_fim'] = $_POST['fim'];
 			$prov['professor_id'] = $_SESSION['user_id'];
-			$prov['qtd_questoes'] = $_POST['quantidade'];
 			$prov['status'] = 0;
 
 			$prova = new Prova($prov);
@@ -307,28 +318,28 @@ class ProfessorController extends Controller
         if (isset($_GET['id'])) {
             $prova = Prova::selecionarUm($_GET['id']);
             if(!empty($prova)) {
-                if ($prova->getData_prova() < date('Y-m-d') && $prova->getHorario_inicio() > date('H:i:s')) {
-                    $prova->setStatus(0);
-                    $prova->save();
-                    $this->redirectTo('professor/provas');
-                } else {
-                    $data['provas'] = Prova::selecionar("professor_id=" . $_SESSION['user_id'] . " and status <= 1");
+                if ($prova->getData_prova() <= date('Y-m-d') && $prova->getHorario_inicio() < date('H:i:s')) {
+                    $data['provas'] = Prova::getProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status <= 1");
                     $this->render("professor/provas", $data, array('msg' => array(
                         'info',
                         'Prova não cancelada',
                         'Prova já iniciada ou finalizada'
                     )));
+                } else {
+                    $prova->setStatus(0);
+                    $prova->save();
+                    $this->redirectTo('professor/provas');
                 }
             } else {
-                $data['provas'] = Prova::selecionar("professor_id=" . $_SESSION['user_id'] . " and status <= 1");
+                $data['provas'] = Prova::getProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status <= 1");
                 $this->render("professor/provas", $data, array('msg' => array(
-                    'info',
+                    'danger',
                     'Prova não encontrada',
-                    ''
+                    'Atualize a página e tente novamente!'
                 )));
             }
         } else {
-            $data['provas'] = Prova::selecionar("professor_id=" . $_SESSION['user_id'] . " and status <= 1");
+            $data['provas'] = Prova::getProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status <= 1");
             $this->render("professor/provas", $data, array('msg' => array(
                 'info',
                 'Prova não encontrada',

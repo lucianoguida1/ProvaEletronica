@@ -43,7 +43,7 @@
 						<label class="sr-only" for="fim"></label>
 						<div class="input-group input-group-sm">
 							<div class="input-group-addon">Qtd.</div>
-							<input type="number" class="form-control form-control-sm" id="quantidade" name="quantidade" placeholder="Questões" required="" min="1" max="200" value="<?= isset($prova)?$prova->getQtd_questoes():"" ?>">
+							<input type="number" class="form-control form-control-sm" id="quantidade" name="quantidade" required="" min="0" max="200" disabled value="<?= isset($prova)?$prova->getQtd_questoes():"0" ?>">
 						</div>
 					</div>
 				</div>

@@ -21,7 +21,7 @@ class Controller {
 
                 $classeInstancia = new $classe;
                 if (!method_exists($classeInstancia, $acao)){
-                    throw new Exception("Não existe acao $acao no controller $classe!");
+                    throw new Exception("Nï¿½o existe acao $acao no controller $classe!");
                 }
 
                 $classeInstancia->$acao();
@@ -36,10 +36,16 @@ class Controller {
 
 
 
-    public function redirectTo($endereco)
+    public function redirectTo($endereco, $val = null)
     {
-        $separado = explode("/",$endereco);
-        header("Location: ?acao=$separado[1]&modulo=$separado[0]");
+        if(!is_null($val)) {
+            $separado = explode("/",$endereco);
+            header("Location: ?acao=$separado[1]&modulo=$separado[0]&" . $val);
+        } else {
+            $separado = explode("/",$endereco);
+            header("Location: ?acao=$separado[1]&modulo=$separado[0]");
+        }
+
     }
 
     public function render($arquivo = 'erro404',$data = array(),$adicionais=array()){

@@ -178,7 +178,7 @@
 								<td><span class="badge badge-danger pull-right">Finalizado</span></td>
 								<td><?= $provaFinalizada->getQtd_questoes() ?></td>
 								<td><?=number_format($provaFinalizada->getValor(), 2, ',', '.')?></td>
-								<td></td>
+								<td><?=$provaFinalizada->getQtdEst()?></td>
 								<td><?=date('d/m/Y',strtotime($provaFinalizada->getData_prova()))?></td>
 								<td><a href="?acao=alunosProva&modulo=professor&id=<?=$provaFinalizada->getId()?>"><i class="fa fa-search"></i></a></td>
 							</tr>

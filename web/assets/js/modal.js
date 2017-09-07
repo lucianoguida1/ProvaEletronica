@@ -64,7 +64,7 @@ formQuestoes.submit(function() {
         var action = $(this).attr('action');
         var sender = action + '&' + dados + '&prova_id=' + idProva;
         var trquestao = tabelaQuestoes.find('tr[id="j_'+idQuestao+'"]');
-
+        var quantidade = formProva.find('input[name="quantidade"]');
          $.ajax({
             url: url_posts,
             type: "post",
@@ -84,6 +84,8 @@ formQuestoes.submit(function() {
                         formQuestoes.find("textarea").val('');
                         $('#modal-adicionar-questao').modal("hide");
                         $('.j_linha_tabela_questoes').append(data[2]);
+                        var qtd = parseInt(quantidade.val()) ;
+                        quantidade.val(qtd+1);
                     } else {
 
                         formQuestoes.find("input").val('');
