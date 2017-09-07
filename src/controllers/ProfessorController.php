@@ -2,43 +2,40 @@
 
 class ProfessorController extends Controller
 {
-	function __construct()
-	{
-		if(isset($_SESSION['login']) && $_SESSION['tipo'] != 'professor') {
-			$this->redirectCheck();
-		}
-	}
-	public function index()
-	{
+    function __construct()
+    {
+        if (isset($_SESSION['login']) && $_SESSION['tipo'] != 'professor' || !isset($_SESSION['login'])) {
+            $this->redirectCheck();
+        }
+    }
 
-		$data['provasPublicadas'] = Prova::getProvas("provas.professor_id=". $_SESSION['user_id'] ." and provas.status= 1 and provas.data_prova >='". date('Y-m-d')."'", "data_prova");
-		//$data['provasFinalizadas'] = Prova::getProvas("provas.professor_id=". $_SESSION['user_id'] . " and provas.status= 1 and provas.data_prova <'". date('Y-m-d')."'", "data_prova", 15);
-		$data['provasAPublicar'] = Prova::getProvas("provas.professor_id=". $_SESSION['user_id'] . " and provas.status=0", "data_prova");
-		$data['apublicarActive'] = true;
-		$this->render("professor/index", $data,["title" => "Bem-vindo"]);
-	}
+    public function index()
+    {
+        $data['provasPublicadas'] = Prova::getProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status= 1 and provas.data_prova >='" . date('Y-m-d') . "'", "data_prova");
+        $data['provasAPublicar'] = Prova::getProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status=0", "data_prova");
+        $data['apublicarActive'] = true;
+        $this->render("professor/index", $data, ["title" => "Bem-vindo"]);
+    }
 
-	public function pagFinalizados()
-	{
-	  $data = Prova::getProvasFinalizadas("provas.professor_id=". $_SESSION['user_id'] ." and provas.status= 1 and provas.data_prova <'". date('Y-m-d')."'", "data_prova", $_GET['limit'], $_GET['offset']);
-	  echo json_encode($data);
-	}
+    public function pagFinalizados()
+    {
+        $data = Prova::getProvasFinalizadas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status= 1 and provas.data_prova <'" . date('Y-m-d') . "'", "data_prova", $_GET['limit'], $_GET['offset']);
+        echo json_encode($data);
+    }
 
-	public function perfil()
-	{
-		$usuario = Usuario::selecionarUm($_SESSION['user_id']);
-        $professor = Professor::selecionar("usuario_id = ".$_SESSION['user_id']);
+    public function perfil()
+    {
+        $usuario = Usuario::selecionarUm($_SESSION['user_id']);
+        $professor = Professor::selecionar("usuario_id = " . $_SESSION['user_id']);
 
-        if(isset($_GET['id']) && !empty($_GET['id']))
-        {
+        if (isset($_GET['id']) && !empty($_GET['id'])) {
             $valid = new Validator($_POST);
             $valid->field_email('email');
             $valid->field_cadastropessoa('cpf');
             $valid->field_filledIn($_POST);
-            if($valid->valid)
-            {
+            if ($valid->valid) {
                 $usuario->setLogin($_POST['email']);
-                if(!empty($_POST['senha']))
+                if (!empty($_POST['senha']))
                     $usuario->setSenha(md5($_POST['senha']));
                 $usuario->save();
                 $professor[0]->setNome_prof($_POST['nome']);
@@ -48,57 +45,71 @@ class ProfessorController extends Controller
                 $professor[0]->setSexo_prof($_POST['sexo']);
                 $professor[0]->setUsuario_id($usuario->getId());
                 $professor[0]->save();
-                $this->render('professor/perfil',['professor' => $professor[0], 'usuario' => $usuario],array('title'=>'Prova Eletronica','msg'=>array(
+                $this->render('professor/perfil', ['professor' => $professor[0], 'usuario' => $usuario], array('title' => 'Prova Eletronica', 'msg' => array(
                     'success',
                     'Cadastro Atualizado com sucesso.',
                     ''
-                    )));
-            }else{
-                $this->render('professor/perfil',array(),array('title'=>'Prova Eletronica','msg'=>$valid->getErrors()));
+                )));
+            } else {
+                $this->render('professor/perfil', array(), array('title' => 'Prova Eletronica', 'msg' => $valid->getErrors()));
             }
-        }else{
-        	$this->render("professor/perfil",['professor' => $professor[0], 'usuario' => $usuario],[]);
+        } else {
+            $this->render("professor/perfil", ['professor' => $professor[0], 'usuario' => $usuario], []);
         }
-	}
+    }
 
-	public function publicarProva()
-	{
-		$prova = Prova::selecionarUm($_GET['id']);
-		$prova->setStatus(1);
-		$prova->save();
-		$this->redirectTo("professor/index");
-	}
+    public function publicarProva()
+    {
+        $prova = Prova::selecionarUm($_GET['id']);
+        $prova->setStatus(1);
+        $prova->save();
+        $this->redirectTo("professor/index");
+    }
 
-	public function cadastroProva()
-	{
-		$this->render("professor/cadastroProva",[],[]);
-	}
+    public function cadastroProva()
+    {
+        $this->render("professor/cadastroProva", [], []);
+    }
 
-	public function editarProva()
-	{
-		$prova = Prova::selecionarUm($_GET['id']);
-		if($prova->getData_prova() < date('Y-m-d')) {
-			$data['provas'] = Prova::selecionar("status <= 1");
-			$this->render("professor/provas",$data,array('msg' => array(
-				'info',
-				'Edição não disponível',
-				'Não é possível editar uma prova finalizada'
-			)));
+    public function editarProva()
+    {
+        if(isset($_GET['id'])) {
+            $prova = Prova::selecionarUm($_GET['id']);
+            if ($prova->getData_prova() < date('Y-m-d') || $prova->getStatus() == 1) {
+                $data['provas'] = Prova::selecionar("status <= 1");
+                $this->render("professor/provas", $data, array('msg' => array(
+                    'info',
+                    'Edição não disponível',
+                    'Não é possível editar uma prova finalizada ou publicada'
+                )));
 
-		} else {
-			$data['prova'] = $prova;
-			$data['questoes'] = Questao::selecionar("prova_id='".$prova->getId()."'", 'ordem');
-			$this->render("professor/cadastroProva", $data);
-		}
-	}
+            } else {
+                $data['prova'] = $prova;
+                $data['questoes'] = Questao::selecionar("prova_id='" . $prova->getId() . "'", 'ordem');
+                $this->render("professor/cadastroProva", $data);
+            }
+        } else {
+            $this->render("professor/provas", [], array('msg' => array(
+                'info',
+                'Edição não disponível',
+                'Prova não encontrada, atualize a página e click em editar novamente'
+            )));
+        }
 
-	public function excluirProva()
-	{
-		$questao = Prova::selecionarUm($_POST['id']);
-		$questao->setStatus(2);
-		$questao->save();
-		echo "1";
-	}
+    }
+
+    public function excluirProva()
+    {
+        $prova = Prova::selecionarUm($_POST['id']);
+        if ($prova->getData_prova() < date('Y-m-d') || $prova->getStatus() == 1) {
+            echo '2';
+        } else {
+            $data['provas'] = Prova::selecionar("status <= 1");
+            $prova->setStatus(2);
+            $prova->save();
+            echo "1";
+        }
+    }
 
 	public function provas()
 	{
@@ -155,7 +166,6 @@ class ProfessorController extends Controller
 
 	public function cadastrarQuestao()
 	{
-
 		if (!empty($_POST['resposta'])) {
 			$existe = Questao::selecionar("prova_id=". $_POST['prova_id'] ." and ordem=".$_POST['ordem']);
 			if(!empty($existe) && empty($_POST['questao_id'])) {
@@ -276,19 +286,54 @@ class ProfessorController extends Controller
 		}
 	}
 
-	public function excluirAlternativa()
-	{
-		$alternativa =  Alternativa::selecionarUm($_POST['id']);
+    public function excluirAlternativa()
+    {
+        $alternativa = Alternativa::selecionarUm($_POST['id']);
 
-		if($alternativa->deletar()) {
-			echo "1";
-		} else{
-			echo "0";
-		}
-	}
+        if ($alternativa->deletar()) {
+            echo "1";
+        } else {
+            echo "0";
+        }
+    }
 
 	public function alunosProva()
 	{
 		$this->render("professor/alunos",[],[]);
 	}
+
+    public function cancelarProva()
+    {
+        if (isset($_GET['id'])) {
+            $prova = Prova::selecionarUm($_GET['id']);
+            if(!empty($prova)) {
+                if ($prova->getData_prova() < date('Y-m-d') && $prova->getHorario_inicio() > date('H:i:s')) {
+                    $prova->setStatus(0);
+                    $prova->save();
+                    $this->redirectTo('professor/provas');
+                } else {
+                    $data['provas'] = Prova::selecionar("professor_id=" . $_SESSION['user_id'] . " and status <= 1");
+                    $this->render("professor/provas", $data, array('msg' => array(
+                        'info',
+                        'Prova não cancelada',
+                        'Prova já iniciada ou finalizada'
+                    )));
+                }
+            } else {
+                $data['provas'] = Prova::selecionar("professor_id=" . $_SESSION['user_id'] . " and status <= 1");
+                $this->render("professor/provas", $data, array('msg' => array(
+                    'info',
+                    'Prova não encontrada',
+                    ''
+                )));
+            }
+        } else {
+            $data['provas'] = Prova::selecionar("professor_id=" . $_SESSION['user_id'] . " and status <= 1");
+            $this->render("professor/provas", $data, array('msg' => array(
+                'info',
+                'Prova não encontrada',
+                ''
+            )));
+        }
+    }
 }

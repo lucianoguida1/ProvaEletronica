@@ -33,12 +33,5 @@ $(document).ready(function() {
     //     window.setTimeout(function(){ $('.msg-provas').fadeOut("slow") }, 3000);
     // }
 
-     var table = $('.j_provas').DataTable();
 
-         $('.j_provas tbody').on('click', '.j_excluir', function () {
-         	var tr = $(this).parent().parent();
-                tr.css( "background-color", "#f8d7da" );
-                window.setTimeout(function(){  table.row(tr).remove().draw( false ) }, 300);
-	return false;
-             } );
 });

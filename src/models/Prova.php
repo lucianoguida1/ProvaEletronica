@@ -149,8 +149,8 @@ class Prova extends Model
 			}
 		}
 
-		$pdo = Banco::instanciar();
-		$selectSQL = "SELECT
+        $pdo = Banco::instanciar();
+        $selectSQL = "SELECT
 		provas.id,
 		provas.titulo,
 		provas.disciplina,
@@ -160,14 +160,15 @@ class Prova extends Model
 		provas.professor_id,
 		provas.qtd_questoes,
 		provas.status,
-		format(sum(questoes.valor),2,'de_DE') as valor
+		format(sum(questoes.valor),2,'de_DE') as valor,
+		COUNT(DISTINCT estudante_has_provas.estudante_id) as qtdEst
 		FROM " . static::$tabela
-		." INNER JOIN questoes ON questoes.prova_id = provas.id "
-		. (!is_null($condicao) ? " WHERE $condicao" : '')
-		. "  group by provas.id, provas.titulo, provas.disciplina, provas.data_prova, provas.horario_inicio,
+            . " INNER JOIN questoes ON questoes.prova_id = provas.id INNER JOIN estudante_has_provas ON estudante_has_provas.prova_id=provas.id"
+            . (!is_null($condicao) ? " WHERE $condicao" : '')
+            . "  group by provas.id, provas.titulo, provas.disciplina, provas.data_prova, provas.horario_inicio,
 		provas.horario_fim, provas.professor_id, provas.qtd_questoes, provas.status"
-		. (!is_null($ordem) ? " ORDER BY $ordem" : '')
-		. (!is_null($limite) ? " LIMIT $limite" : '');
+            . (!is_null($ordem) ? " ORDER BY $ordem" : '')
+            . (!is_null($limite) ? " LIMIT $limite" : '');
 
 		$statement = $pdo->prepare($selectSQL);
 		$statement->execute();

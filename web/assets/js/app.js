@@ -56,6 +56,17 @@ $(function(){
 
 
 	// INICIO ACAO DE EXCLUIR UMA QUESTÃO DA LISTA DE QUESTÃO
+    var table = $('.j_provas').DataTable();
+
+	function excluirDaTabela() {
+        $('.j_provas tbody').on('click', '.j_excluir', function () {
+            var tr = $(this).parent().parent();
+            tr.css( "background-color", "#f8d7da" );
+            window.setTimeout(function(){  table.row(tr).remove().draw( false ) }, 300);
+            return false;
+        } );
+    }
+
 	var tabelaQuestoes = $('.j_linha_tabela_questoes');
 
 
@@ -76,9 +87,14 @@ $(function(){
 			success: function(data){
 				if(data == 1) {
 					traction.fadeOut("slow");
+                    excluirDaTabela();
 				} else {
-					alert('error.........Entre em contfsfato com Administrador!');
+					if(data == 2) {
+						msgAjax('info', "Exclusão não disponível! Não é possível excluir uma prova finalizada ou publicada");
+					}
 				}
+
+
 			},
 			complete: function(){
 			}

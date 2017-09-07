@@ -29,7 +29,7 @@
 								<td><?=$prova->getQtd_questoes()?></td>
 								<td>
 									<a  href="?acao=editarProva&modulo=professor&id=<?=$prova->getId()?>" class="badge badge-primary">Editar</a>
-									<a id="<?=$prova->getId()?>" href="acao=anularProva&modulo=professor&id=<?=$prova->getId()?>" class="badge badge-secondary j_anular">Anular</a>
+									<a id="<?=$prova->getId()?>" href="?acao=cancelarProva&modulo=professor&id=<?=$prova->getId()?>" class="badge badge-secondary">Cancelar</a>
 									<a id="<?=$prova->getId()?>" href="acao=excluirProva&modulo=professor&id=<?=$prova->getId()?>" class="badge badge-danger j_excluir">Excluir</a>
 								</td>
 							</tr>
