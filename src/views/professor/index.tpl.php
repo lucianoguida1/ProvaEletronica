@@ -24,7 +24,6 @@
 					msgAjax('danger', 'Error de comunicação');
 				},
                 success: function (data) {
-
                     conteudoFinalizados.empty();
                     $.each(data, function (index, el) {
                         conteudoFinalizados.append('<tr><td>' + el.id + '</td><td>' + el.titulo + '</td><td>' + el.disciplina + '</td><td><span class="badge badge-danger pull-right">Finalizado</span></td><td>' + el.qtd_questoes + '</td><td>' + el.valor + '</td><td>' + el.qtdEst + '</td><td>' + el.data_prova + '</td><td><a href="?acao=alunosProva&modulo=professor&id=' + el.id + '"><i class="fa fa-search"></i></a></td></tr>');
@@ -144,7 +143,7 @@
 								<td><?=number_format($provaPublicada->getValor(), 2, ',', '.')?></td>
 								<td><?=$provaPublicada->getHorario_inicio(). " - " . $provaPublicada->getHorario_fim() ?></td>
 								<td><?=date('d/m/Y',strtotime($provaPublicada->getData_prova()))?> </td>
-								<td><a href="" ><i class="fa fa-search"></i></a></td>
+								<td><a href="?acao=alunosProva&modulo=professor&id=<?=$provaPublicada->getId()?>" ><i class="fa fa-search"></i></a></td>
 							</tr>
 							<?php } ?>
 						</tbody>

@@ -37,4 +37,36 @@ class Estudante extends Usuario
 	{
 		return array('nome_estudante', 'matricula_estudante', 'cpf_estudante', 'email_estudante', 'sexo_estudante', 'usuario_id');
 	}
+
+	public static function getEstProva(
+            $condicao = null,
+            $ordem = null,
+            $limite = null,
+            $deslocamento = null) {
+
+            if(!is_null($limite)) {
+                if (!is_null($deslocamento)) {
+                    $limite = "$deslocamento , $limite";
+                }
+            }
+            $pdo = Banco::instanciar();
+            $selectSQL = "SELECT * FROM " . static::$tabela
+                ." INNER JOIN resultados ON resultados.estudante_id = estudantes.id LEFT JOIN estudante_has_provas ON estudante_has_provas.prova_id=provas.id"
+                . (!is_null($condicao) ? " WHERE $condicao" : '')
+                . "  group by "
+                . (!is_null($ordem) ? " ORDER BY $ordem" : '')
+                . (!is_null($limite) ? " LIMIT $limite" : '');
+
+            $statement = $pdo->prepare($selectSQL);
+            $statement->execute();
+            $results = $statement->fetchAll();
+            $objects = array();
+            $classe = static::$classe;
+
+            foreach ($results as $row) {
+                $objects[] = new $classe($row);
+            }
+
+            return $objects;
+    }
 }

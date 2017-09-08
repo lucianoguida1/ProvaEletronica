@@ -19,8 +19,9 @@ class ProfessorController extends Controller
 
     public function pagFinalizados()
     {
-        $data = Prova::getArrayProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status= 1 and provas.data_prova <'" . date('Y-m-d') . "'", "data_prova", $_GET['limit'], $_GET['offset']);
-        echo json_encode($data);
+        $provas = Prova::getArrayProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status= 1 and provas.data_prova <'" . date('Y-m-d') . "'", "data_prova", $_GET['limit'], $_GET['offset']);
+        echo json_encode($provas);
+
     }
 
     public function perfil()
@@ -310,6 +311,11 @@ class ProfessorController extends Controller
 
 	public function alunosProva()
 	{
+
+
+
+
+
 		$this->render("professor/alunos",[],[]);
 	}
 

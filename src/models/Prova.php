@@ -107,7 +107,7 @@ class Prova extends Model
 		provas.id,
 		provas.titulo,
 		provas.disciplina,
-		provas.data_prova as data_prova,
+		provas.data_prova,
 		provas.horario_inicio,
 		provas.horario_fim,
 		provas.professor_id,		
@@ -137,41 +137,41 @@ class Prova extends Model
     }
 
     public static function getArrayProvas(
-		$condicao = null,
-		$ordem = null,
-		$limite = null,
-		$deslocamento = null) {
+        $condicao = null,
+        $ordem = null,
+        $limite = null,
+        $deslocamento = null) {
 
-		if(!is_null($limite)) {
-			if (!is_null($deslocamento)) {
-				$limite = "$deslocamento , $limite";
-			}
-		}
+        if(!is_null($limite)) {
+            if (!is_null($deslocamento)) {
+                $limite = "$deslocamento , $limite";
+            }
+        }
 
         $pdo = Banco::instanciar();
         $selectSQL = "SELECT
 		provas.id,
 		provas.titulo,
 		provas.disciplina,
-		provas.data_prova as data_prova,
+		provas.data_prova,
 		provas.horario_inicio,
 		provas.horario_fim,
 		provas.professor_id,		
 		provas.status,
 		COUNT(questoes.id) as qtd_questoes,
-		format(sum(questoes.valor),2,'de_DE') as valor,
+		sum(questoes.valor) as valor,
 		COUNT(DISTINCT estudante_has_provas.estudante_id) as qtdEst
 		FROM " . static::$tabela
-            . " INNER JOIN questoes ON questoes.prova_id = provas.id INNER JOIN estudante_has_provas ON estudante_has_provas.prova_id=provas.id"
+            ." LEFT JOIN questoes ON questoes.prova_id = provas.id LEFT JOIN estudante_has_provas ON estudante_has_provas.prova_id=provas.id"
             . (!is_null($condicao) ? " WHERE $condicao" : '')
             . "  group by provas.id, provas.titulo, provas.disciplina, provas.data_prova, provas.horario_inicio,
 		provas.horario_fim, provas.professor_id, provas.status"
             . (!is_null($ordem) ? " ORDER BY $ordem" : '')
             . (!is_null($limite) ? " LIMIT $limite" : '');
 
-		$statement = $pdo->prepare($selectSQL);
-		$statement->execute();
-		$results = $statement->fetchAll();
+        $statement = $pdo->prepare($selectSQL);
+        $statement->execute();
+        $results = $statement->fetchAll();
 
         return $results;
     }
