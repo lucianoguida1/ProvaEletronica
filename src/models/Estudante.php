@@ -50,10 +50,19 @@ class Estudante extends Usuario
                 }
             }
             $pdo = Banco::instanciar();
-            $selectSQL = "SELECT * FROM " . static::$tabela
-                ." INNER JOIN resultados ON resultados.estudante_id = estudantes.id LEFT JOIN estudante_has_provas ON estudante_has_provas.prova_id=provas.id"
-                . (!is_null($condicao) ? " WHERE $condicao" : '')
-                . "  group by "
+            $selectSQL = "SELECT 
+                estudantes.nome_estudante,
+                estudantes.matricula_estudante,
+                estudantes.cpf_estudante,
+                estudantes.email_estudante,
+                estudantes.sexo_estudante,
+                estudantes.usuario_id,
+                sum(questoes.valor) as nota  
+                FROM " . static::$tabela
+                ." INNER JOIN prova_eletronica.resultados ON resultados.estudante_id=estudantes.id
+                   INNER JOIN prova_eletronica.questoes ON questoes.id = resultados.questoes_id "
+                . (!is_null($condicao) ? " WHERE $condicao" : '') . " and resultados.resposta=questoes.resposta "
+                . "  group by estudantes.nome_estudante, estudantes.matricula_estudante, estudantes.cpf_estudante, estudantes.email_estudante, estudantes.sexo_estudante, estudantes.usuario_id "
                 . (!is_null($ordem) ? " ORDER BY $ordem" : '')
                 . (!is_null($limite) ? " LIMIT $limite" : '');
 

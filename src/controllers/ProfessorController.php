@@ -88,7 +88,7 @@ class ProfessorController extends Controller
     {
         if(isset($_GET['id'])) {
             $prova = Prova::getProvas("provas.id = " . $_GET['id']);
-            if ($prova[0]->getData_prova() < date('Y-m-d') || $prova[0]->getStatus() == 1) {
+            if ($prova[0]->getData_prova() < date('Y-m-d') && $prova[0]->getStatus() == 1) {
                 $data['provas'] = Prova::getProvas("provas.status <= 1");
                 $this->render("professor/provas", $data, array('msg' => array(
                     'info',
@@ -311,12 +311,10 @@ class ProfessorController extends Controller
 
 	public function alunosProva()
 	{
-
-
-
-
-
-		$this->render("professor/alunos",[],[]);
+        $prova = Prova::getProvas(" provas.id=".$_GET['id']);
+        $data['prova'] =  $prova[0];
+        $data['estProva'] = Estudante::getEstProva(" resultados.prova_id=" . $prova[0]->getId());
+		$this->render("professor/alunos",$data,[]);
 	}
 
     public function cancelarProva()

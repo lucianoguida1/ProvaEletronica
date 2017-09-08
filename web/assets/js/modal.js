@@ -1,6 +1,6 @@
 $(function(){
-    //var url_posts = 'http://localhost/provaeletronica/web/index.php';
-    var url_posts = 'index.php';
+    var url_posts = 'http://localhost/provaeletronica/web/index.php';
+    //var url_posts = 'index.php';
     function isEmpty(obj) {
             for(var prop in obj) {
                 if(obj.hasOwnProperty(prop))

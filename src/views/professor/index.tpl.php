@@ -16,7 +16,7 @@
 		var dadosAjax;
 		function listarFinalizados(val){
 			$.ajax({
-				url: "index.php",
+				url: "http://localhost/provaeletronica/web/index.php",
 				type: 'get',
 				data: "acao=pagFinalizados&modulo=professor&limit=15&offset=" + val,
 				dataType: 'json',
