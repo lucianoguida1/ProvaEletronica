@@ -25,13 +25,14 @@ class Session
             }
             else
             {
-                self::closeOrStop();
+                $this->closeOrStop();
             }
         }
         else
         {
 
-            $dados = ['status_responder_prova' => "1",'estudante_id' => $this->id_estudante,'prova_id' => $this->id_prova];
+            $dados = ['status_responder_prova' => '1','estudante_id' => $this->id_estudante,'prova_id' => $this->id_prova];
+            $this->status_log = true;
             $provaEstudante = new EstudanteProva($dados);
             $provaEstudante->save();
         }
@@ -63,10 +64,15 @@ class Session
 		}
 	}
 
-	private static function closeOrStop()
+	public function closeOrStop()
 	{
 		unset($_SESSION['prova_em_progresso']);
-		header("Location: ?acao=index&modulo=aluno&");
+		$provaEstudante = EstudanteProva::selecionar('estudante_id = "'.$this->id_estudante.'" AND prova_id = "'.$this->id_prova.'"');
+    	$provaEstudante[0]->setStatus_responder_prova('0');
+        $provaEstudante[0]->save();
+        $this->status_log = false;
+		header("Location: ?acao=index&modulo=aluno");
+
 	}
 
 	public static function checkTempo($id_prova,$id_estudante)

@@ -2,7 +2,6 @@
 
 class AlunoController extends Controller
 {
-
 	function __construct()
 	{
 		if(isset($_SESSION['login']) && $_SESSION['tipo'] != 'estudante' || !isset($_SESSION['login'])) {
@@ -15,28 +14,57 @@ class AlunoController extends Controller
     {       
         $hora_atual = date("H:i:s");
         $data_atual = date("Y-m-d");
+        $usuario = Usuario::selecionarUm($_SESSION['user_id']);
         $provas = Prova::selecionar("status <= 1 AND data_prova >= '".$data_atual."'");
         $html = "";
         $status = ['0' => 'Inativa', '1' => 'Ativa'];
         foreach ($provas as $key => $value) {
-            $html .= "
-                <tr id='j_". $value->getId()."'>
-                    <th scope='row'> ".$value->getTitulo()." </th>
-                    <td>".$value->getDisciplina()."</td>
-                    <td>".date('d/m/y',strtotime($value->getData_prova()))."</td>
-                    <td>".date('H:i',strtotime($value->getHorario_inicio()))." as ".date('H:i',strtotime($value->getHorario_fim()))."</td>
-                    <td>".$status[$value->getStatus()]."</td>
-                    <td>";
+            $verificar_prova_feita = EstudanteProva::selecionar('prova_id = "'.$value->getId().'" AND estudante_id = "'.$usuario->getEstudante()->getId().'"');
+            if(empty($verificar_prova_feita[0])){
+                $html .= "
+                    <tr id='j_". $value->getId()."'>
+                        <th scope='row'> ".$value->getTitulo()." </th>
+                        <td>".$value->getDisciplina()."</td>
+                        <td>".date('d/m/y',strtotime($value->getData_prova()))."</td>
+                        <td>".date('H:i',strtotime($value->getHorario_inicio()))." as ".date('H:i',strtotime($value->getHorario_fim()))."</td>
+                        <td>".$status[$value->getStatus()]."</td>
+                        <td>";
 
-                    if($value->getStatus() == 1 && Prova::validarDataHora(['inicio' => $value->getHorario_inicio(),'fim' => $value->getHorario_fim(),'data' => $value->getData_prova()]))
-                    {
-                        $html .= "<a class='btn btn-light' href='?acao=responderProva&modulo=aluno&id=".$value->getId()."' role='button'> Responder</a>";
-                    }
-                    else
-                    {
-                        $html .= "<button class='btn btn-light' disabled> Indisponivel</button>";
-                    }
-                    $html .= "<td/></tr>";
+                        if($value->getStatus() == 1 && Prova::validarDataHora(['inicio' => $value->getHorario_inicio(),'fim' => $value->getHorario_fim(),'data' => $value->getData_prova()]))
+                        {
+                            $html .= "<a class='btn btn-light' href='?acao=responderProva&modulo=aluno&id=".$value->getId()."' role='button'> Responder</a>";
+                        }
+                        else
+                        {
+                            $html .= "<button class='btn btn-light' disabled> Indisponivel</button>";
+                        }
+                        $html .= "<td/></tr>";
+            }
+            elseif($verificar_prova_feita[0]->getStatus_responder_prova())
+            {
+                $html .= "
+                    <tr id='j_". $value->getId()."'>
+                        <th scope='row'> ".$value->getTitulo()." </th>
+                        <td>".$value->getDisciplina()."</td>
+                        <td>".date('d/m/y',strtotime($value->getData_prova()))."</td>
+                        <td>".date('H:i',strtotime($value->getHorario_inicio()))." as ".date('H:i',strtotime($value->getHorario_fim()))."</td>
+                        <td>".$status[$value->getStatus()]."</td>
+                        <td>";
+
+                        if($value->getStatus() == 1 && Prova::validarDataHora(['inicio' => $value->getHorario_inicio(),'fim' => $value->getHorario_fim(),'data' => $value->getData_prova()]))
+                        {
+                            $html .= "<a class='btn btn-light' href='?acao=responderProva&modulo=aluno&id=".$value->getId()."' role='button'> Continuar</a>";
+                        }
+                        else
+                        {
+                            $html .= "<button class='btn btn-light' disabled> Indisponivel</button>";
+                        }
+                        $html .= "<td/></tr>";
+            }
+            else
+            {
+                $html .= "";
+            }
         }
         $this->render("aluno/index",['provas' => $html],[]);
 
@@ -85,7 +113,7 @@ class AlunoController extends Controller
     {
         $provas = new EstudanteProva();
         $html_provas = $provas->allProvasRespondidasAluno($_SESSION['user_id']);
-        /*if($html_provas)
+        if($html_provas)
         {
             
         }
@@ -93,7 +121,7 @@ class AlunoController extends Controller
         {
             $this->render("aluno/minhasprovas",[],['msg'=> ['info','Falha na busca de dados!', 'Contate o administrador do sistema.']]);
             exit();
-        }*/
+        }
         $this->render("aluno/minhasprovas",['provas' => $html_provas],[]);
     }
 
@@ -105,8 +133,8 @@ class AlunoController extends Controller
                 'estudante_id' => $usuario->getEstudante()->getId(),
                 'prova_id' => $id_prova,
              ];
-        $sessions = new Session($dados);
-        $sessions->init();
+        $session = new Session($dados);
+        $session->init();
         $html = "";
         $prova = Prova::selecionarUm($id_prova);
         $questoes = Questao::selecionar("prova_id = '".$id_prova."'");
@@ -114,7 +142,7 @@ class AlunoController extends Controller
         <h1>".$prova->getTitulo()."</h1>";
         foreach ($questoes as $key => $value) {
 
-            $html .= "<div id='questao$key' ".($key != 0 ? "style='display:none;'" : "").">
+            $html .= "<input type='text' value='$id_prova' name='prova_id' style='display:none;'/><div id='questao$key' ".($key != 0 ? "style='display:none;'" : "").">
             <p>
                 ".($key+1) ." - ".$value->getEnunciado()."
             </p>";
@@ -123,7 +151,7 @@ class AlunoController extends Controller
                 $html .= "
                 <div class='form-check'>
                             <label class='form-check-label'>
-                                <input class='form-check-input' type='radio' name='".$value->getId()."' id='exampleRadios1' value='".$alter->getId()."'>
+                                <input class='form-check-input' type='radio' name='".$value->getId()."' id='exampleRadios1' value='".$alter->getId()."' checked>
                                 ".$alter->getEnunciado_alter()."
                             </label>
                         </div>
@@ -145,6 +173,20 @@ class AlunoController extends Controller
     
     public function finalizarprova()
     {
-        var_dump($_POST);
+        
+        $usuario = Usuario::selecionarUm($_SESSION['user_id']);
+        $prova_id = $_POST['prova_id'];
+        unset($_POST['prova_id']);
+        foreach ($_POST as $key => $value) {
+            $dados = ['estudante_id' => $usuario->getEstudante()->getId(),'prova_id' => $prova_id,'questoes_id' => $key,'resposta' => $value];
+            $resultado = new Resultado($dados);
+            $resultado->save();
+        }
+        $dados = [
+                'estudante_id' => $usuario->getEstudante()->getId(),
+                'prova_id' => $prova_id,
+             ];
+        $session = new Session($dados);
+        $session->closeOrStop();
     }
 }
