@@ -66,6 +66,7 @@ class Session
 	private static function closeOrStop()
 	{
 		unset($_SESSION['prova_em_progresso']);
+		header("Location: ?acao=index&modulo=aluno&");
 	}
 
 	public static function checkTempo($id_prova,$id_estudante)
@@ -80,6 +81,10 @@ class Session
 
 				return ($hora_prova - $hora_atual);
 			}
+		}
+		else
+		{
+			return false;
 		}
 	}
 }

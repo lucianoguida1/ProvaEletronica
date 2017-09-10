@@ -1,8 +1,5 @@
 <form action="?acao=finalizarprova&modulo=aluno" name="formprova" method="POST">
-<p>
-	greuiwfklçejwhfwegjfklsjdgaFLÇAKGFasjbghaLKJFVJHNBAFJKLWEABHljkçdvçbahqFKLÇJABLifuajkFHDSJKAFHVBWCJEHFUIhuiawehf
-</p>
-<a href="javascript: finalizarprova()">Envie</a>
+	<?=$questoes?>
 </form>
 <input  style="display: none;" id="id_estudante" value="<?=$_SESSION['prova_em_progresso']['estudante']?>" />
 <input  style="display: none;" id="id_prova" value="<?=$_SESSION['prova_em_progresso']['prova'] ?>" />
@@ -15,9 +12,10 @@
 	
 	$(document).ready(function($) {
 		verificar();
-
 	});
 	var tempo = new Number();
+	var pagina = new Number();
+	pagina = 0;
  // Tempo em segundos
  
  function verificar()
@@ -70,5 +68,17 @@
  	document.formprova.submit();
  }
  
- 
+ function proximo()
+ {
+ 	$("#questao"+pagina).hide('slow/400/fast');
+	pagina++;
+	$("#questao"+pagina).show('slow/400/fast');
+ }
+
+ function anterior()
+ {
+ 	$("#questao"+pagina).hide('slow/400/fast');
+	pagina--;
+	$("#questao"+pagina).show('slow/400/fast');
+ }
 </script>

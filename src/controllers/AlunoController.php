@@ -107,19 +107,40 @@ class AlunoController extends Controller
              ];
         $sessions = new Session($dados);
         $sessions->init();
+        $html = "";
+        $prova = Prova::selecionarUm($id_prova);
+        $questoes = Questao::selecionar("prova_id = '".$id_prova."'");
+        $html .= "
+        <h1>".$prova->getTitulo()."</h1>";
+        foreach ($questoes as $key => $value) {
 
-        $html = "
-        <p>
-            
-        </p>
-        <div class='form-check'>
-                    <label class='form-check-label'>
-                        <input class='form-check-input' type='radio' name='exampleRadios' id='exampleRadios1' value='option1' checked>
-                        ".$prova->alternativa()."
-                    </label>
-                </div>";
+            $html .= "<div id='questao$key' ".($key != 0 ? "style='display:none;'" : "").">
+            <p>
+                ".($key+1) ." - ".$value->getEnunciado()."
+            </p>";
+            $alternativas = Alternativa::selecionar("questao_id = '".$value->getId()."'");
+            foreach ($alternativas as $indice => $alter) {
+                $html .= "
+                <div class='form-check'>
+                            <label class='form-check-label'>
+                                <input class='form-check-input' type='radio' name='".$value->getId()."' id='exampleRadios1' value='".$alter->getId()."'>
+                                ".$alter->getEnunciado_alter()."
+                            </label>
+                        </div>
+                ";
+            }
+            $html .= "<div class='container'><div class='row'>
+                    ";
+            $html .= ($key > 0 && $key <= count($questoes) ? "<div class='col align-self-start'><div  onclick='anterior()' class='btn btn-info'>Anterior</div></div>" : "");
+            $html .= ($key+1 == count($questoes) ? "<a class='btn btn-success' href='javascript: finalizarprova()'>Envie</a>" : "");
+            $html .= ($key+1 != count($questoes) ? "<div class='col align-self-end'><div onclick='proximo()' class='btn btn-info'>Proxima</div></div>" : "");
+            $html .= "</div></div></div>";
 
-        $this->render("aluno/responder_prova",[],[],false);
+        }
+
+
+        
+        $this->render("aluno/responder_prova",['questoes' => $html],[],false);
     }
     
     public function finalizarprova()
