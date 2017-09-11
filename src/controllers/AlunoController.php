@@ -111,18 +111,51 @@ class AlunoController extends Controller
 
     public function minhasProvas()
     {
-        $provas = new EstudanteProva();
-        $html_provas = $provas->allProvasRespondidasAluno($_SESSION['user_id']);
-        if($html_provas)
-        {
-            
-        }
-        else
+        $id_estudante = Estudante::selecionar("usuario_id = '".$_SESSION['user_id']."'");
+        $id_estudante = $id_estudante[0]->getId();  
+        $resultado = EstudanteProva::selecionar("estudante_id='".$id_estudante."'");
+        if(empty($resultado))
+            $html = "<tr><th><td>Nenhuma prova encontrada para este usuario!</td></th></tr>";
+        $html = "";
+        $status = ['0' => 'Inativa', '1' => 'Ativa'];
+        foreach ($resultado as $key => $provas) {
+            $value = Prova::selecionarUm($provas->getProva_id());
+            if($value->getStatus() <= 1){
+                $html .= "
+                    <tr id='j_". $value->getId()."'>
+                        <th scope='row'> ".$value->getTitulo()." </th>
+                        <td>".$value->getDisciplina()."</td>
+                        <td>".date('d/m/y',strtotime($value->getData_prova()))."</td>
+                        <td>".date('H:i',strtotime($value->getHorario_inicio()))." as ".date('H:i',strtotime($value->getHorario_fim()))."</td>
+                        <td>".$status[$value->getStatus()]."</td>
+                        <td>
+                            <a class='btn btn-light' href='?acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Resultado </a>
+                            <a class='btn btn-light' href='?acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Ver </a>
+                        <td/></tr>";
+                }
+            }
+        if($html == "")
         {
             $this->render("aluno/minhasprovas",[],['msg'=> ['info','Falha na busca de dados!', 'Contate o administrador do sistema.']]);
             exit();
         }
-        $this->render("aluno/minhasprovas",['provas' => $html_provas],[]);
+        $this->render("aluno/minhasprovas",['provas' => $html],[]);
+    }
+
+    public function resultadoProva()
+    {
+        if(!isset($_GET['id']) || isset($_GET['id']) && empty($_GET['id']))
+            $this->redirectTo('aluno/index');
+        $id_prova = $_GET['id'];
+        $questoes = Questao::selecionar("prova_id = '".$id_prova."'");
+        foreach ($questoes as $key => $value) {
+            $html = "<tr>
+            <td>Questão ".$value->getOrdem()."</td>
+            <td></td>
+            <td>".$value->getValor()."</td>
+            </tr>";
+        }
+        $this->render("aluno/resultado",['provas' => $html],[]);
     }
 
     public function responderProva()
@@ -151,7 +184,7 @@ class AlunoController extends Controller
                 $html .= "
                 <div class='form-check'>
                             <label class='form-check-label'>
-                                <input class='form-check-input' type='radio' name='".$value->getId()."' id='exampleRadios1' value='".$alter->getId()."' checked>
+                                <input class='form-check-input' type='radio' name='".$value->getId()."' value='".$alter->getId()."'>
                                 ".$alter->getEnunciado_alter()."
                             </label>
                         </div>
@@ -168,7 +201,7 @@ class AlunoController extends Controller
 
 
         
-        $this->render("aluno/responder_prova",['questoes' => $html],[],false);
+        $this->render("aluno/responder_prova",['questoes' => $html],[]);
     }
     
     public function finalizarprova()
