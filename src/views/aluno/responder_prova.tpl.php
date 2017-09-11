@@ -1,6 +1,7 @@
 <form action="?acao=finalizarprova&modulo=aluno" name="formprova" method="POST">
 	<?=$questoes?>
 </form>
+<?php var_dump($_SESSION);?>
 <input  style="display: none;" id="id_estudante" value="<?=$_SESSION['prova_em_progresso']['estudante']?>" />
 <input  style="display: none;" id="id_prova" value="<?=$_SESSION['prova_em_progresso']['prova'] ?>" />
 <div style="position: fixed;
@@ -21,15 +22,21 @@
  function verificar()
  {
  	var prova = $("#id_prova").val(),estudante = $("#id_estudante").val();
- 	var valor = 0;
  	$.ajax({
 				url: '?acao=alunoResponderProvaCheckTempo&modulo=ajax',
 				type: 'POST',
 				dataType: 'html',
 				data: "id_prova="+prova+"&id_estudante="+estudante,
 				success: function(e){
-					tempo = e;
-					startCountdown();
+					if(!e){
+						alert("FAil");
+
+					}
+					else
+					{
+						tempo = e;
+						startCountdown();
+					}
 				}
 			});
  	
@@ -64,7 +71,7 @@
  }
  function finalizarprova()
  {
- 	document.formprova.submit();
+	document.formprova.submit();
  }
  
  function proximo()

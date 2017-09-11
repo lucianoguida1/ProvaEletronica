@@ -35,6 +35,7 @@ class Session
             $this->status_log = true;
             $provaEstudante = new EstudanteProva($dados);
             $provaEstudante->save();
+            $_SESSION['prova_em_progresso'] = ['estudante' => $this->id_estudante,'prova' => $this->id_prova];
         }
 	}
 
@@ -79,7 +80,7 @@ class Session
 	{
 		if(isset($_SESSION['prova_em_progresso']))
 		{
-			if($_SESSION['prova_em_progresso']['estudante'] = $id_estudante && $_SESSION['prova_em_progresso']['prova'] = $id_prova)
+			if($_SESSION['prova_em_progresso']['estudante'] == $id_estudante && $_SESSION['prova_em_progresso']['prova'] == $id_prova)
 			{
 				$prova = Prova::selecionarUm($id_prova);
 				$hora_atual = strtotime(date("H:i:s"));
