@@ -130,7 +130,7 @@ class AlunoController extends Controller
                         <td>".$status[$value->getStatus()]."</td>
                         <td>
                             <a class='btn btn-light' href='?acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Resultado </a>
-                            <a class='btn btn-light' href='?acao=resultadoProva&modulo=aluno&id=".$value->getId()."' role='button'> Ver </a>
+                            <a class='btn btn-light' href='?acao=verProvaRespondida&modulo=aluno&id=".$value->getId()."' role='button'> Ver </a>
                         <td/></tr>";
                 }
             }
@@ -159,23 +159,65 @@ class AlunoController extends Controller
             <td>Questão ".$value->getOrdem()."</td>
             <td></td>";
              if(isset($resultado[0]) && !empty($resultado[0])){
-                $nota += $value->getValor();
-                $html .= "<td>".$value->getValor()."</td>";
+                if($resultado[0]->getResposta() == $value->getResposta())
+                {
+                    $nota += $value->getValor();
+                $html .= "<td>".$value->getValor()."<i class='fa fa-check' aria-hidden='true'></i></td>";
+                }
+                else
+                {
+                    $html .= "<td>".$value->getValor()."<i class='fa fa-times' aria-hidden='true'></i></td>";
+                }
             }
-            else
-            {
-                $html .= "<td>".$value->getValor()."</td>";
-            }
+            
             $html .="
             
             </tr>";
         }
         $html .= "<tr>
-            <td>Questão ".$value->getOrdem()."</td>
+            <td>Nota Final</td>
             <td> ".($nota >= 7 ? "Aprovado" : "Reprovado")." </td>
             <td>$nota</td>
             </tr>";
         $this->render("aluno/resultado",['provas' => $html],[]);
+    }
+
+    public function verProvaRespondida()
+    {
+        $usuario = Usuario::selecionarUm($_SESSION['user_id']);
+        $id_prova = $_GET['id'];
+        $html = "";
+        $prova = Prova::selecionarUm($id_prova);
+        $questoes = Questao::selecionar("prova_id = '".$id_prova."'");
+        $html .= "
+        <h1>".$prova->getTitulo()."</h1>";
+        foreach ($questoes as $key => $value) {
+            $resultado = Resultado::selecionar("estudante_id = '".$usuario->getEstudante()->getId()."' AND questoes_id = '".$value->getId()."'");
+            $html .= "<div id='questao$key' ".($key != 0 ? "style='display:none;'" : "").">
+            <p>
+                ".($key+1) ." - ".$value->getEnunciado()."
+            </p>";
+            $alternativas = Alternativa::selecionar("questao_id = '".$value->getId()."'");
+            foreach ($alternativas as $indice => $alter) {
+                $html .= "
+                <div class='form-check'>
+                            <label class='form-check-label'>
+                                <input class='form-check-input' type='radio' name='".$value->getId()."' value='".$alter->getId()."' ".($resultado[0]->getResposta() == $alter->getId() ? "checked" : "").">
+                                ".$alter->getEnunciado_alter()."".($alter->getId() == $value->getResposta() ? "<i class='fa fa-check' aria-hidden='true'></i>" : "")."
+                            </label>
+                        </div>
+                ";
+            }
+            $html .= "<div class='container'><div class='row'>
+                    ";
+            $html .= ($key > 0 && $key <= count($questoes) ? "<div class='col align-self-start'><div  onclick='anterior()' class='btn btn-info'>Anterior</div></div>" : "");
+            $html .= ($key+1 == count($questoes) ? "<a class='btn btn-success' href='?acao=minhasprovas&modulo=aluno'>Fechar</a>" : "");
+            $html .= ($key+1 != count($questoes) ? "<div class='col align-self-end'><div onclick='proximo()' class='btn btn-info'>Proxima</div></div>" : "");
+            $html .= "</div></div></div>";
+
+        }
+
+        $this->render("aluno/verprovarespondida",['prova' => $html],[]);
     }
 
     public function responderProva()
