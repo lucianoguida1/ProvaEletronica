@@ -22,7 +22,7 @@
 				</thead>
 				<tbody>
 					<?php if(empty($provas))
-					echo "<th colspan='5' class='table-success'>Nenhum novo usuário encontrado!</th>";
+					echo "<th colspan='7' class='table-success'>Nenhuma prova encontrada!</th>";
 					else{
 						foreach ($provas as $val) {
 							?>
@@ -64,9 +64,9 @@
 														<?php foreach($val->getQuestao() as $vall){?>
 															<tr>
 																<th><?=$vall->getEnunciado()?></th>
-																<td><?php foreach($vall->getAlternativas() as $alter){?>
-																	<p class="alert <?=$alter->getAlternativa_certa()?'alert-success':'alert-danger'?>"><?=$alter->getEnunciado_alter()?></p>
-																<?php } ?></td>
+<td><?php foreach($vall->getAlternativas() as $alter){?>
+	<p class="alert <?=$vall->getResposta()==$alter->getId()?'alert-success':'alert-danger'?>"><?=$alter->getEnunciado_alter()?></p>
+<?php } ?></td>
 															</tr>
 														<?php } ?>
 														</tbody>

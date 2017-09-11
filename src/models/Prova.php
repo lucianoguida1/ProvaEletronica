@@ -50,6 +50,10 @@ class Prova extends Model
 
 
 	}
+	public function getQuestao(){
+		$return = new Questao();
+        return $return->selecionar("prova_id = ".$this->getId());
+	}
 
 	public function allProvasAluno()
 	{
