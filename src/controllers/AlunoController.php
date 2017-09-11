@@ -147,14 +147,34 @@ class AlunoController extends Controller
         if(!isset($_GET['id']) || isset($_GET['id']) && empty($_GET['id']))
             $this->redirectTo('aluno/index');
         $id_prova = $_GET['id'];
+        $usuario = Usuario::selecionarUm($_SESSION['user_id']);
         $questoes = Questao::selecionar("prova_id = '".$id_prova."'");
+
+        $html = "";
+        $nota = 0;
         foreach ($questoes as $key => $value) {
-            $html = "<tr>
+            $resultado = Resultado::selecionar("estudante_id = '".$usuario->getEstudante()->getId()."' AND questoes_id = '".$value->getId()."'");
+           
+            $html .= "<tr>
             <td>Questão ".$value->getOrdem()."</td>
-            <td></td>
-            <td>".$value->getValor()."</td>
+            <td></td>";
+             if(isset($resultado[0]) && !empty($resultado[0])){
+                $nota += $value->getValor();
+                $html .= "<td>".$value->getValor()."</td>";
+            }
+            else
+            {
+                $html .= "<td>".$value->getValor()."</td>";
+            }
+            $html .="
+            
             </tr>";
         }
+        $html .= "<tr>
+            <td>Questão ".$value->getOrdem()."</td>
+            <td> ".($nota >= 7 ? "Aprovado" : "Reprovado")." </td>
+            <td>$nota</td>
+            </tr>";
         $this->render("aluno/resultado",['provas' => $html],[]);
     }
 
