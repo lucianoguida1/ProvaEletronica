@@ -90,7 +90,7 @@
 								<td><?=$provaAPublicar->getDisciplina()?></td>
 								<td><span class="badge badge-success pull-right">Aberto</span></td>
 								<td><?=$provaAPublicar->getQtd_questoes()?></td>
-								<td><?=number_format($provaAPublicar->getValor(), 2, ',', '.')?></td>
+								<td><?=$provaAPublicar->getValor()?></td>
 								<td><?=$provaAPublicar->getHorario_inicio(). " - " . $provaAPublicar->getHorario_fim() ?></td>
 								<td><?=date('d/m/Y',strtotime($provaAPublicar->getData_prova()))?></td>
 								<td><a href="?acao=publicarProva&modulo=professor&id=<?=$provaAPublicar->getId()?>" class="btn btn-secondary btn-sm pull-right">Publicar</a></td>
@@ -140,10 +140,10 @@
 									<?php } ?>
 								</td>
 								<td><?=$provaPublicada->getQtd_questoes()?></td>
-								<td><?=number_format($provaPublicada->getValor(), 2, ',', '.')?></td>
+								<td><?=$provaPublicada->getValor()?></td>
 								<td><?=$provaPublicada->getHorario_inicio(). " - " . $provaPublicada->getHorario_fim() ?></td>
 								<td><?=date('d/m/Y',strtotime($provaPublicada->getData_prova()))?> </td>
-								<td><a href="?acao=alunosProva&modulo=professor&id=<?=$provaPublicada->getId()?>" ><i class="fa fa-search"></i></a></td>
+								<td><a href="?acao=estProva&modulo=professor&id=<?=$provaPublicada->getId()?>" ><i class="fa fa-search"></i></a></td>
 							</tr>
 							<?php } ?>
 						</tbody>
@@ -176,10 +176,10 @@
 								<td><?= $provaFinalizada->getDisciplina() ?></td>
 								<td><span class="badge badge-danger pull-right">Finalizado</span></td>
 								<td><?= $provaFinalizada->getQtd_questoes() ?></td>
-								<td><?=number_format($provaFinalizada->getValor(), 2, ',', '.')?></td>
+								<td><?=$provaFinalizada->getValor()?></td>
 								<td><?=$provaFinalizada->getQtdEst()?></td>
 								<td><?=date('d/m/Y',strtotime($provaFinalizada->getData_prova()))?></td>
-								<td><a href="?acao=alunosProva&modulo=professor&id=<?=$provaFinalizada->getId()?>"><i class="fa fa-search"></i></a></td>
+								<td><a href="?acao=estProva&modulo=professor&id=<?=$provaFinalizada->getId()?>"><i class="fa fa-search"></i></a></td>
 							</tr>
 							<?php }} ?>
 						</tbody>

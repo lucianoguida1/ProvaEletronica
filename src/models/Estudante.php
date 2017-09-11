@@ -57,7 +57,7 @@ class Estudante extends Usuario
                 estudantes.email_estudante,
                 estudantes.sexo_estudante,
                 estudantes.usuario_id,
-                sum(questoes.valor) as nota  
+                format(sum(questoes.valor),2,'de_DE') as nota  
                 FROM " . static::$tabela
                 ." INNER JOIN prova_eletronica.resultados ON resultados.estudante_id=estudantes.id
                    INNER JOIN prova_eletronica.questoes ON questoes.id = resultados.questoes_id "

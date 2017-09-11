@@ -9,17 +9,19 @@ class ProfessorController extends Controller
         }
     }
 
-    public function index()
+    public function index($msg = null)
     {
-        $data['provasPublicadas'] = Prova::getProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status= 1 and provas.data_prova >='" . date('Y-m-d') . "'", "data_prova");
-        $data['provasAPublicar'] = Prova::getProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status=0", "data_prova");
+        $professor = Professor::selecionar("usuario_id=" . $_SESSION['user_id']);
+        $data['provasPublicadas'] = Prova::getProvas("provas.professor_id=" . $professor[0]->getId() . " and provas.status= 1 and provas.data_prova >='" . date('Y-m-d') . "'", "data_prova");
+        $data['provasAPublicar'] = Prova::getProvas("provas.professor_id=" . $professor[0]->getId() . " and provas.status=0", "data_prova");
         $data['apublicarActive'] = true;
-        $this->render("professor/index", $data, ["title" => "Bem-vindo"]);
+        $this->render("professor/index", $data, $msg);
     }
 
     public function pagFinalizados()
     {
-        $provas = Prova::getArrayProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status= 1 and provas.data_prova <'" . date('Y-m-d') . "'", "data_prova", $_GET['limit'], $_GET['offset']);
+        $professor = Professor::selecionar("usuario_id=" . $_SESSION['user_id']);
+        $provas = Prova::getArrayProvas("provas.professor_id=" . $professor[0]->getId() . " and provas.status= 1 and provas.data_prova <'" . date('Y-m-d') . "'", "data_prova", $_GET['limit'], $_GET['offset']);
         echo json_encode($provas);
 
     }
@@ -62,20 +64,16 @@ class ProfessorController extends Controller
     public function publicarProva()
     {
         $p = Prova::getProvas("provas.id='" . $_GET['id'] . "'");
-        if($p[0]->getQtd_questoes() != 0){
+        if ($p[0]->getQtd_questoes() != 0) {
             $prova = Prova::selecionarUm($_GET['id']);
             $prova->setStatus(1);
             $prova->save();
             $this->redirectTo("professor/index", "publicar = true");
         } else {
-            $data['provasPublicadas'] = Prova::getProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status= 1 and provas.data_prova >='" . date('Y-m-d') . "'", "data_prova");
-            $data['provasAPublicar'] = Prova::getProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status=0", "data_prova");
-            $data['apublicarActive'] = true;
-            $this->render("professor/index", $data, ["title" => "Bem-vindo", "msg" => array(
+            $this->index(['msg' => array(
                 'info',
                 'Prova não publicada',
-                'Não é possível publicar uma prova sem questão!'
-            )]);
+                'Não é possível publicar uma prova sem questão!')]);
         }
     }
 
@@ -86,7 +84,7 @@ class ProfessorController extends Controller
 
     public function editarProva()
     {
-        if(isset($_GET['id'])) {
+        if (isset($_GET['id'])) {
             $prova = Prova::getProvas("provas.id = " . $_GET['id']);
             if ($prova[0]->getData_prova() < date('Y-m-d') && $prova[0]->getStatus() == 1) {
                 $data['provas'] = Prova::getProvas("provas.status <= 1");
@@ -124,184 +122,183 @@ class ProfessorController extends Controller
         }
     }
 
-	public function provas()
-	{
-		$data['provas'] = Prova::getProvas("provas.professor_id=". $_SESSION['user_id'] ." and provas.status <= 1");
-		$this->render("professor/provas",$data,[]);
-	}
+    public function provas()
+    {
+        $professor = Professor::selecionar("usuario_id=" . $_SESSION['user_id']);
+        $data['provas'] = Prova::getProvas("provas.professor_id=" . $professor[0]->getId() . " and provas.status <= 1");
+        $this->render("professor/provas", $data, []);
+    }
 
-	public function salvarProva()
-	{
-		if(empty($_POST['id'])) unset($_POST['id']);
-		$valid = new Validator($_POST);
-		$valid->field_filledIn($_POST);
-		if ($valid->valid) {
+    public function salvarProva()
+    {
+        if (empty($_POST['id'])) unset($_POST['id']);
+        $valid = new Validator($_POST);
+        $valid->field_filledIn($_POST);
+        if ($valid->valid) {
 
-			if(strlen($_POST['disciplina']) > 45 || strlen($_POST['titulo']) > 45) {
-				echo json_encode(array('danger', 'Os campos Título e Disciplina deve conter no máximo 45 caracteres!'));
-			} else {
+            if (strlen($_POST['disciplina']) > 45 || strlen($_POST['titulo']) > 45) {
+                echo json_encode(array('danger', 'Os campos Título e Disciplina deve conter no máximo 45 caracteres!'));
+            } else {
 
-			if(isset($_POST['id'])) $prov['id'] = $_POST['id'];
+                if (isset($_POST['id'])) $prov['id'] = $_POST['id'];
+                $professor = Professor::selecionar("usuario_id=" . $_SESSION['user_id']);
+                $prov['professor_id'] = $professor[0]->getId();
+                $prov['titulo'] = $_POST['titulo'];
+                $prov['disciplina'] = $_POST['disciplina'];
+                $prov['data_prova'] = $_POST['data_prova'];
+                $prov['horario_inicio'] = $_POST['inicio'];
+                $prov['horario_fim'] = $_POST['fim'];
+                $prov['status'] = 0;
 
-			$prov['titulo'] = $_POST['titulo'];
-			$prov['disciplina'] = $_POST['disciplina'];
-			$prov['data_prova'] = $_POST['data_prova'];
-			$prov['horario_inicio'] = $_POST['inicio'];
-			$prov['horario_fim'] = $_POST['fim'];
-			$prov['professor_id'] = $_SESSION['user_id'];
-			$prov['status'] = 0;
-
-			$prova = new Prova($prov);
-			$prova->save();
+                $prova = new Prova($prov);
+                $prova->save();
 
 
-			if(isset($_POST['id'])) {
-				$data['questoes'] = Questao::selecionar("prova_id='".$prova->getId()."'");
-			}
+                if (isset($_POST['id'])) {
+                    $data['questoes'] = Questao::selecionar("prova_id='" . $prova->getId() . "'");
+                }
 
-			if(isset($_POST['id'])) {
-				$msg = 'Prova atualizada com sucesso.';
-			} else {
-				$msg = 'Prova cadastrada com sucesso.';
-			}
+                if (isset($_POST['id'])) {
+                    $msg = 'Prova atualizada com sucesso.';
+                } else {
+                    $msg = 'Prova cadastrada com sucesso.';
+                }
 
-			$retorno[0] = 'success';
-			$retorno[1] = $msg;
-			$retorno[2] = $prova->getId();
-			echo json_encode($retorno);
-			}
+                $retorno[0] = 'success';
+                $retorno[1] = $msg;
+                $retorno[2] = $prova->getId();
+                echo json_encode($retorno);
+            }
 
-		} else {
-			echo json_encode($valid->getErrors());
-		}
-	}
+        } else {
+            echo json_encode($valid->getErrors());
+        }
+    }
 
-	public function cadastrarQuestao()
-	{
-		if (!empty($_POST['resposta'])) {
-			$existe = Questao::selecionar("prova_id=". $_POST['prova_id'] ." and ordem=".$_POST['ordem']);
-			if(!empty($existe) && empty($_POST['questao_id'])) {
-				$resposta[0] = 'danger';
-				$resposta[1] = 'Ordem já cadastrada escolha outra numeração!';
-			} else {
-			if(!empty($_POST['questao_id'])){
-				$quest['id'] = $_POST['questao_id'];
-			}
-			$quest['enunciado']	= $_POST['enunciado'];
-			$quest['valor'] 	= $_POST['valor'];
-			$quest['prova_id'] 	= $_POST['prova_id'];
-			$quest['ordem']		= $_POST['ordem'];
-			$quest['status'] 	= true;
-			$questao = new Questao($quest);
-			if($questao->save()){
+    public function cadastrarQuestao()
+    {
+        if (!empty($_POST['resposta'])) {
+            $existe = Questao::selecionar("prova_id=" . $_POST['prova_id'] . " and ordem=" . $_POST['ordem']);
+            if (!empty($existe) && empty($_POST['questao_id'])) {
+                $resposta[0] = 'danger';
+                $resposta[1] = 'Ordem já cadastrada escolha outra numeração!';
+            } else {
+                if (!empty($_POST['questao_id'])) {
+                    $quest['id'] = $_POST['questao_id'];
+                }
+                $quest['prova_id'] = $_POST['prova_id'];
+                $quest['enunciado'] = $_POST['enunciado'];
+                $quest['valor'] = $_POST['valor'];
+                $quest['ordem'] = $_POST['ordem'];
+                $quest['status'] = true;
+                $questao = new Questao($quest);
+                if ($questao->save()) {
 
-				foreach($_POST as $key => $value) {
-					if(substr($key, 0, 11) == 'alternativa') {
-						$id = substr($key, 16);
-						if(!empty($_POST["id_alternativa".$id])){
-							$alter['id'] = $_POST["id_alternativa".$id];
-						}
-						$alter['enunciado_alter'] = $_POST[$key];
-						$alter['questao_id'] = $questao->getId();
+                    foreach ($_POST as $key => $value) {
+                        if (substr($key, 0, 11) == 'alternativa') {
+                            $id = substr($key, 16);
+                            if (!empty($_POST["id_alternativa" . $id])) {
+                                $alter['id'] = $_POST["id_alternativa" . $id];
+                            }
+                            $alter['enunciado_alter'] = $_POST[$key];
+                            $alter['questao_id'] = $questao->getId();
 
-						if($id == $_POST['resposta']){
-							$alternativa = new Alternativa($alter);
-							$alternativa->save();
-							$questao->setResposta($alternativa->getId());
-						} else {
-							$alternativa = new Alternativa($alter);
-							$alternativa->save();
-						}
-						unset($alter);
-					}
-				}
-				$questao->save();
-				if(empty($_POST['questao_id'])) {
-					$resposta[2] = "
-					<tr id='j_".$questao->getId()."'>
-						<th scope='row'>".$questao->getOrdem()."</th>
-						<td>".$questao->getEnunciado()."</td>
+                            if ($id == $_POST['resposta']) {
+                                $alternativa = new Alternativa($alter);
+                                $alternativa->save();
+                                $questao->setResposta($alternativa->getId());
+                            } else {
+                                $alternativa = new Alternativa($alter);
+                                $alternativa->save();
+                            }
+                            unset($alter);
+                        }
+                    }
+                    $questao->save();
+                    if (empty($_POST['questao_id'])) {
+                        $resposta[2] = "
+					<tr id='j_" . $questao->getId() . "'>
+						<th scope='row'>" . $questao->getOrdem() . "</th>
+						<td>" . $questao->getEnunciado() . "</td>
 						<td>
-							<a id='".$questao->getId()."' href='acao=editarQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-primary j_editar'>Editar</a>
-							<a id='".$questao->getId()."' href='acao=anularQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-secondary j_anular'>Anular</a>
-							<a id='".$questao->getId()."' href='acao=excluirQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-danger j_excluir'>Excluir</a>
+							<a id='" . $questao->getId() . "' href='acao=editarQuestao&modulo=professor&id=" . $questao->getId() . "' class='badge badge-primary j_editar'>Editar</a>
+							<a id='" . $questao->getId() . "' href='acao=anularQuestao&modulo=professor&id=" . $questao->getId() . "' class='badge badge-secondary j_anular'>Anular</a>
+							<a id='" . $questao->getId() . "' href='acao=excluirQuestao&modulo=professor&id=" . $questao->getId() . "' class='badge badge-danger j_excluir'>Excluir</a>
 							<i  class='fa fa-check' aria-hidden='true'></i>
 						</td>
 					</tr>";
-				} else {
+                    } else {
 
-					$resposta[2] = "
+                        $resposta[2] = "
 
-					<th scope='row'>".$questao->getOrdem()."</th>
-					<td>".$questao->getEnunciado()."</td>
+					<th scope='row'>" . $questao->getOrdem() . "</th>
+					<td>" . $questao->getEnunciado() . "</td>
 					<td>
-						<a id='".$questao->getId()."' href='acao=editarQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-primary j_editar'>Editar</a>
-						<a id='".$questao->getId()."' href='acao=anularQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-secondary j_anular'>Anular</a>
-						<a id='".$questao->getId()."' href='acao=excluirQuestao&modulo=professor&id=".$questao->getId()."' class='badge badge-danger j_excluir'>Excluir</a>
+						<a id='" . $questao->getId() . "' href='acao=editarQuestao&modulo=professor&id=" . $questao->getId() . "' class='badge badge-primary j_editar'>Editar</a>
+						<a id='" . $questao->getId() . "' href='acao=anularQuestao&modulo=professor&id=" . $questao->getId() . "' class='badge badge-secondary j_anular'>Anular</a>
+						<a id='" . $questao->getId() . "' href='acao=excluirQuestao&modulo=professor&id=" . $questao->getId() . "' class='badge badge-danger j_excluir'>Excluir</a>
 						<span class='j_carregando'><i  class='fa fa-spinner fa-spin' aria-hidden='true'></i></span>
 					</td>";
-				}
+                    }
 
-			} else {
-				$resposta[0] = 'danger';
-				$resposta[1] = 'Error ao salvar a questão, verifique as campos!';
-			}
-			}
-		} else {
-			$resposta[0] = 'info';
-			$resposta[1] = 'Defina a resposta correta!';
-		}
-		echo json_encode($resposta);
-	}
+                } else {
+                    $resposta[0] = 'danger';
+                    $resposta[1] = 'Error ao salvar a questão, verifique as campos!';
+                }
+            }
+        } else {
+            $resposta[0] = 'info';
+            $resposta[1] = 'Defina a resposta correta!';
+        }
+        echo json_encode($resposta);
+    }
 
-	public function excluirQuestao()
-	{
-		$questao = Questao::selecionarUm($_POST['id']);
-		$alternativas = Alternativa::selecionar("questao_id='".$questao->getId()."'");
+    public function excluirQuestao()
+    {
+        $questao = Questao::selecionarUm($_POST['id']);
+        $alternativas = Alternativa::selecionar("questao_id='" . $questao->getId() . "'");
 
-		foreach ($alternativas as $alternativa) {
-			$alternativa->deletar();
-		}
-		if($questao->deletar()) {
-			//VALOR ENVIAR PARA O AJAX
-			echo "1";
-		} else {
-			//VALOR ENVIAR PARA O AJAX
-			echo "0";
-		}
-	}
+        foreach ($alternativas as $alternativa) {
+            $alternativa->deletar();
+        }
+        if ($questao->deletar()) {
+            //VALOR ENVIAR PARA O AJAX
+            echo "1";
+        } else {
+            //VALOR ENVIAR PARA O AJAX
+            echo "0";
+        }
+    }
 
-	public function anularQuestao()
-	{
-		$questao = Questao::selecionarUm($_POST['id']);
-		if ($questao->getStatus() == 1) {
-			$questao->setStatus(0);
-			$questao->save();
-			echo "1";
-		} else {
-			$questao->setStatus(1);
-			$questao->save();
-			echo "2";
-		}
-	}
+    public function anularQuestao()
+    {
+        $questao = Questao::selecionarUm($_POST['id']);
+        if ($questao->getStatus() == 1) {
+            $questao->setStatus(0);
+            $questao->save();
+            echo "1";
+        } else {
+            $questao->setStatus(1);
+            $questao->save();
+            echo "2";
+        }
+    }
 
-	public function editarQuestao()
-	{
-		$questao = Questao::selecionarUm($_POST['id']);
-
-		if($questao->getStatus()) {
-			$data['questao'] = $questao;
-			$data['alternativas'] = Alternativa::selecionar("questao_id='".$questao->getId()."'");
-			Template::exibir('professor/modalQuestao', $data);
-		} else {
-			echo "0";
-		}
-	}
+    public function editarQuestao()
+    {
+        $questao = Questao::selecionarUm($_POST['id']);
+        if ($questao->getStatus()) {
+            $data['questao'] = $questao;
+            $data['alternativas'] = Alternativa::selecionar("questao_id='" . $questao->getId() . "'");
+            Template::exibir('professor/modalQuestao', $data);
+        } else {
+            echo "0";
+        }
+    }
 
     public function excluirAlternativa()
     {
         $alternativa = Alternativa::selecionarUm($_POST['id']);
-
         if ($alternativa->deletar()) {
             echo "1";
         } else {
@@ -309,21 +306,23 @@ class ProfessorController extends Controller
         }
     }
 
-	public function alunosProva()
-	{
-        $prova = Prova::getProvas(" provas.id=".$_GET['id']);
-        $data['prova'] =  $prova[0];
+    public function estProva()
+    {
+        $prova = Prova::getProvas(" provas.id=" . $_GET['id']);
+        $data['prova'] = $prova[0];
         $data['estProva'] = Estudante::getEstProva(" resultados.prova_id=" . $prova[0]->getId());
-		$this->render("professor/alunos",$data,[]);
-	}
+        $this->render("professor/alunos", $data, []);
+    }
 
     public function cancelarProva()
     {
+        $professor = Professor::selecionar("usuario_id=" . $_SESSION['user_id']);
         if (isset($_GET['id'])) {
             $prova = Prova::selecionarUm($_GET['id']);
-            if(!empty($prova)) {
+            if (!empty($prova)) {
                 if ($prova->getData_prova() <= date('Y-m-d') && $prova->getHorario_inicio() < date('H:i:s')) {
-                    $data['provas'] = Prova::getProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status <= 1");
+
+                    $data['provas'] = Prova::getProvas("provas.professor_id=" . $professor[0]->getId() . " and provas.status <= 1");
                     $this->render("professor/provas", $data, array('msg' => array(
                         'info',
                         'Prova não cancelada',
@@ -335,7 +334,7 @@ class ProfessorController extends Controller
                     $this->redirectTo('professor/provas');
                 }
             } else {
-                $data['provas'] = Prova::getProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status <= 1");
+                $data['provas'] = Prova::getProvas("provas.professor_id=" . $professor[0]->getId() . " and provas.status <= 1");
                 $this->render("professor/provas", $data, array('msg' => array(
                     'danger',
                     'Prova não encontrada',
@@ -343,7 +342,7 @@ class ProfessorController extends Controller
                 )));
             }
         } else {
-            $data['provas'] = Prova::getProvas("provas.professor_id=" . $_SESSION['user_id'] . " and provas.status <= 1");
+            $data['provas'] = Prova::getProvas("provas.professor_id=" . $professor[0]->getId() . " and provas.status <= 1");
             $this->render("professor/provas", $data, array('msg' => array(
                 'info',
                 'Prova não encontrada',

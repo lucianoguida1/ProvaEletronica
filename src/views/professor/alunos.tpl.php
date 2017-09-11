@@ -4,7 +4,7 @@
             <label class="text-left"><strong>Título:</strong> <?= isset($prova)?$prova->getTitulo():"" ?></label><br>
             <label class="text-left"><strong>Disciplina:</strong> <?= isset($prova)?$prova->getDisciplina():"" ?></label>
             <label class="text-left"><strong>Valor:</strong> <?= isset($prova)?$prova->getValor():"" ?> </label><br>
-            <?php if(isset($estProva)){ ?>
+            <?php if(isset($estProva) && !empty($estProva)){ ?>
             <table class="table table-responsive table-hover  table-questoes">
                 <thead>
                 <tr>
