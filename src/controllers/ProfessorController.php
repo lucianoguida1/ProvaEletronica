@@ -306,7 +306,7 @@ class ProfessorController extends Controller
         }
     }
 
-    public function estProva()
+    public function alunosProva()
     {
         $prova = Prova::getProvas(" provas.id=" . $_GET['id']);
         $data['prova'] = $prova[0];

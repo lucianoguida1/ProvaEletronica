@@ -57,11 +57,11 @@ class Estudante extends Usuario
                 estudantes.email_estudante,
                 estudantes.sexo_estudante,
                 estudantes.usuario_id,
-                format(sum(questoes.valor),2,'de_DE') as nota  
+                sum(questoes.valor) as nota  
                 FROM " . static::$tabela
                 ." INNER JOIN prova_eletronica.resultados ON resultados.estudante_id=estudantes.id
                    INNER JOIN prova_eletronica.questoes ON questoes.id = resultados.questoes_id "
-                . (!is_null($condicao) ? " WHERE $condicao" : '') . " and resultados.resposta=questoes.resposta "
+                . (!is_null($condicao) ? " WHERE $condicao" : '') . " and resultados.resposta!=questoes.resposta "
                 . "  group by estudantes.nome_estudante, estudantes.matricula_estudante, estudantes.cpf_estudante, estudantes.email_estudante, estudantes.sexo_estudante, estudantes.usuario_id "
                 . (!is_null($ordem) ? " ORDER BY $ordem" : '')
                 . (!is_null($limite) ? " LIMIT $limite" : '');
