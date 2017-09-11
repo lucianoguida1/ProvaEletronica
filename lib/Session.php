@@ -41,10 +41,10 @@ class Session
 	private function check_existe()
 	{
 		$result = null;
-		$result = EstudanteProva::selecionar("estudante_id = '".$this->id_estudante."' AND prova_id = '".$this->id_prova."'")[0];
-		if(is_null($result) || empty($result))
+		$result = EstudanteProva::selecionar("estudante_id = '".$this->id_estudante."' AND prova_id = '".$this->id_prova."'");
+		if(!isset($result) && is_null($result[0]) || empty($result[0]))
 			return false;
-		$this->status_log = $result->getStatus_responder_prova();
+		$this->status_log = $result[0]->getStatus_responder_prova();
 		return true;
 	}
 

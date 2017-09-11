@@ -68,7 +68,7 @@
  }
  function finalizarprova()
  {
- 	document.formprova.submit();
+ 	//document.formprova.submit();
  }
  
  function proximo()
