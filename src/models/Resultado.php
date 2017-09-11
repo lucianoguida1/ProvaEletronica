@@ -33,4 +33,6 @@ class Resultado extends Model
 	{
 		return array('resposta', 'estudante_id', 'prova_id', 'questoes_id');
 	}
+
+
 }

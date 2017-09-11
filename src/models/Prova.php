@@ -113,7 +113,7 @@ class Prova extends Model
 		provas.professor_id,		
 		provas.status,
 		COUNT(questoes.id) as qtd_questoes,
-		format(sum(questoes.valor),2,'de_DE') as valor,
+		sum(questoes.valor) as valor,
 		COUNT(DISTINCT estudante_has_provas.estudante_id) as qtdEst
 		FROM " . static::$tabela
 		." LEFT JOIN questoes ON questoes.prova_id = provas.id LEFT JOIN estudante_has_provas ON estudante_has_provas.prova_id=provas.id"
