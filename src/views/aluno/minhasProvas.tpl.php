@@ -18,7 +18,7 @@
 					</tr>
 				</thead>
 				<tbody class="j_linha_tabela_questoes">					
-					<?php (isset($provas) ? $provas : "");?>
+					<?=(isset($provas) ? $provas : "")?>
 				</tbody>
 			</table>
 		</div>
