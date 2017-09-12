@@ -310,7 +310,9 @@ class ProfessorController extends Controller
     {
         $prova = Prova::getProvas(" provas.id=" . $_GET['id']);
         $data['prova'] = $prova[0];
-        $data['estProva'] = Estudante::getEstProva(" resultados.prova_id=" . $prova[0]->getId());
+        $acertProva = Estudante::getEstProva(" resultados.prova_id=" . $prova[0]->getId());
+        $zeroProva =  Resultado::getEstZero(" resultados.prova_id=" . $prova[0]->getId(), $prova[0]->getQtd_questoes());
+        $data['estProva'] = array_merge($acertProva, $zeroProva);
         $this->render("professor/alunos", $data, []);
     }
 

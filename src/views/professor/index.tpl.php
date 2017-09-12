@@ -26,7 +26,7 @@
                 success: function (data) {
                     conteudoFinalizados.empty();
                     $.each(data, function (index, el) {
-                        conteudoFinalizados.append('<tr><td>' + el.id + '</td><td>' + el.titulo + '</td><td>' + el.disciplina + '</td><td><span class="badge badge-danger pull-right">Finalizado</span></td><td>' + el.qtd_questoes + '</td><td>' + el.valor + '</td><td>' + el.qtdEst + '</td><td>' + el.data_prova + '</td><td><a href="?acao=alunosProva&modulo=professor&id=' + el.id + '"><i class="fa fa-search"></i></a></td></tr>');
+                        conteudoFinalizados.append('<tr><td>' + el.id + '</td><td>' + el.titulo + '</td><td>' + el.disciplina + '</td><td><span class="badge badge-danger pull-right">Finalizado</span></td><td>' + el.qtd_questoes + '</td><td>' + el.valor + '</td><td>' + el.data_prova + '</td><td><a href="?acao=alunosProva&modulo=professor&id=' + el.id + '"><i class="fa fa-search"></i></a></td></tr>');
                     });
                     if (data.length == 0) {
                         $('#provasfinalizadas').empty();
@@ -162,7 +162,6 @@
 								<th></th>
 								<th>Qtd. Questões</th>
 								<th>Valor Prova</th>
-								<th>Qtd. Alunos</th>
 								<th>Data da Prova</th>
 								<th></th>
 							</tr>
@@ -177,7 +176,6 @@
 								<td><span class="badge badge-danger pull-right">Finalizado</span></td>
 								<td><?= $provaFinalizada->getQtd_questoes() ?></td>
 								<td><?=$provaFinalizada->getValor()?></td>
-								<td><?=$provaFinalizada->getQtdEst()?></td>
 								<td><?=date('d/m/Y',strtotime($provaFinalizada->getData_prova()))?></td>
 								<td><a href="?acao=alunosProva&modulo=professor&id=<?=$provaFinalizada->getId()?>"><i class="fa fa-search"></i></a></td>
 							</tr>

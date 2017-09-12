@@ -117,10 +117,9 @@ class Prova extends Model
 		provas.professor_id,		
 		provas.status,
 		COUNT(questoes.id) as qtd_questoes,
-		sum(questoes.valor) as valor,
-		COUNT(DISTINCT estudante_has_provas.estudante_id) as qtdEst
+		sum(questoes.valor) as valor		
 		FROM " . static::$tabela
-		." LEFT JOIN questoes ON questoes.prova_id = provas.id LEFT JOIN estudante_has_provas ON estudante_has_provas.prova_id=provas.id"
+		." INNER JOIN questoes ON questoes.prova_id = provas.id "
 		. (!is_null($condicao) ? " WHERE $condicao" : '')
 		. "  group by provas.id, provas.titulo, provas.disciplina, provas.data_prova, provas.horario_inicio,
 		provas.horario_fim, provas.professor_id, provas.status"
@@ -153,7 +152,7 @@ class Prova extends Model
         }
 
         $pdo = Banco::instanciar();
-        $selectSQL = "SELECT
+        $selectSQL = "SELECT DISTINCT 
 		provas.id,
 		provas.titulo,
 		provas.disciplina,
@@ -163,10 +162,9 @@ class Prova extends Model
 		provas.professor_id,		
 		provas.status,
 		COUNT(questoes.id) as qtd_questoes,
-		format(sum(questoes.valor),2,'de_DE') as valor,
-		COUNT(DISTINCT estudante_has_provas.estudante_id) as qtdEst
+		format(sum(questoes.valor),2,'de_DE') as valor		
 		FROM " . static::$tabela
-            ." LEFT JOIN questoes ON questoes.prova_id = provas.id LEFT JOIN estudante_has_provas ON estudante_has_provas.prova_id=provas.id"
+            ." INNER JOIN questoes ON questoes.prova_id = provas.id "
             . (!is_null($condicao) ? " WHERE $condicao" : '')
             . "  group by provas.id, provas.titulo, provas.disciplina, provas.data_prova, provas.horario_inicio,
 		provas.horario_fim, provas.professor_id, provas.status"
