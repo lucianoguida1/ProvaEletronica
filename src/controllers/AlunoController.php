@@ -152,9 +152,10 @@ class AlunoController extends Controller
 
         $html = "";
         $nota = 0;
+        $nota_total=0;
         foreach ($questoes as $key => $value) {
             $resultado = Resultado::selecionar("estudante_id = '".$usuario->getEstudante()->getId()."' AND questoes_id = '".$value->getId()."'");
-           
+            $nota_total += $value->getValor();
             $html .= "<tr>
             <td>Questão ".$value->getOrdem()."</td>
             <td></td>";
@@ -176,7 +177,7 @@ class AlunoController extends Controller
         }
         $html .= "<tr>
             <td>Nota Final</td>
-            <td> ".($nota >= 7 ? "Aprovado" : "Reprovado")." </td>
+            <td> ".($nota >= ($nota_total * 0.7) ? "Aprovado" : "Reprovado")." </td>
             <td>$nota</td>
             </tr>";
         $this->render("aluno/resultado",['provas' => $html],[]);

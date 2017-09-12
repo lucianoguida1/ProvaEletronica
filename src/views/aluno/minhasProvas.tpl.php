@@ -4,7 +4,7 @@
 			Relação de Provas				
 		</div>
 		<div class="card-body">
-			<table id="tabela" class="table table-responsive table-sm table-questoes">
+			<table id="tabela" class="table table-responsive table-sm table-questoes j_provas">
 			
 				<thead>
 					<tr>
