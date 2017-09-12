@@ -126,6 +126,7 @@ class ProfessorController extends Controller
     {
         $professor = Professor::selecionar("usuario_id=" . $_SESSION['user_id']);
         $data['provas'] = Prova::getProvas("provas.professor_id=" . $professor[0]->getId() . " and provas.status <= 1");
+
         $this->render("professor/provas", $data, []);
     }
 
@@ -138,8 +139,9 @@ class ProfessorController extends Controller
 
             if (strlen($_POST['disciplina']) > 45 || strlen($_POST['titulo']) > 45) {
                 echo json_encode(array('danger', 'Os campos Título e Disciplina deve conter no máximo 45 caracteres!'));
+            } elseif($_POST['inicio'] >= $_POST['fim']) {
+                echo json_encode(array('info', 'O Inicio não pode ser maior ou igual ao Fim!'));
             } else {
-
                 if (isset($_POST['id'])) $prov['id'] = $_POST['id'];
                 $professor = Professor::selecionar("usuario_id=" . $_SESSION['user_id']);
                 $prov['professor_id'] = $professor[0]->getId();
@@ -313,6 +315,7 @@ class ProfessorController extends Controller
         $acertProva = Estudante::getEstProva(" resultados.prova_id=" . $prova[0]->getId());
         $zeroProva =  Resultado::getEstZero(" resultados.prova_id=" . $prova[0]->getId(), $prova[0]->getQtd_questoes());
         $data['estProva'] = array_merge($acertProva, $zeroProva);
+
         $this->render("professor/alunos", $data, []);
     }
 

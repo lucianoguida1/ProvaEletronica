@@ -119,7 +119,7 @@ class Prova extends Model
 		COUNT(questoes.id) as qtd_questoes,
 		sum(questoes.valor) as valor		
 		FROM " . static::$tabela
-		." INNER JOIN questoes ON questoes.prova_id = provas.id "
+		." LEFT JOIN questoes ON questoes.prova_id = provas.id "
 		. (!is_null($condicao) ? " WHERE $condicao" : '')
 		. "  group by provas.id, provas.titulo, provas.disciplina, provas.data_prova, provas.horario_inicio,
 		provas.horario_fim, provas.professor_id, provas.status"
@@ -164,7 +164,7 @@ class Prova extends Model
 		COUNT(questoes.id) as qtd_questoes,
 		format(sum(questoes.valor),2,'de_DE') as valor		
 		FROM " . static::$tabela
-            ." INNER JOIN questoes ON questoes.prova_id = provas.id "
+            ." LEFT JOIN questoes ON questoes.prova_id = provas.id "
             . (!is_null($condicao) ? " WHERE $condicao" : '')
             . "  group by provas.id, provas.titulo, provas.disciplina, provas.data_prova, provas.horario_inicio,
 		provas.horario_fim, provas.professor_id, provas.status"
