@@ -3,6 +3,15 @@
 
 class AdministradorController extends Controller
 {
+
+	function __construct()
+	{
+		if(isset($_SESSION['login']) && $_SESSION['tipo'] != 'admin' || !isset($_SESSION['login'])) {
+            $this->redirectCheck();
+        }
+
+	}
+
 	public function index(){
 		$us = New Usuario();
 		$data['usuarios'] = $us->selecionar('status = 0');
