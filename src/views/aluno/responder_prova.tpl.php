@@ -1,7 +1,6 @@
 <form action="?acao=finalizarprova&modulo=aluno" name="formprova" method="POST">
 	<?=$questoes?>
 </form>
-<?php var_dump($_SESSION);?>
 <input  style="display: none;" id="id_estudante" value="<?=$_SESSION['prova_em_progresso']['estudante']?>" />
 <input  style="display: none;" id="id_prova" value="<?=$_SESSION['prova_em_progresso']['prova'] ?>" />
 <div style="position: fixed;
