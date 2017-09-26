@@ -8,6 +8,7 @@ class Controller {
             $acao = $_POST['acao'];
             $classe = ucfirst($modulo) . 'Controller';
         } else {
+            
             $modulo = isset($_GET['modulo']) ? $_GET['modulo'] : 'index';
             $acao = isset($_GET['acao']) ? $_GET['acao'] : 'index';
             $classe = ucfirst($modulo) . 'Controller';
